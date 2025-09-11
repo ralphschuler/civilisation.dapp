@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     environment: testnet
 
@@ -21,31 +21,56 @@ jobs:
         with:
           submodules: recursive
 
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'yarn' # cache npm dependencies
+          cache: 'pnpm' # cache npm dependencies
 
       - name: Install Dependencies
-        run: yarn install
+        run: pnpm install
 
-      - name: Set ENV variables
-        run: |
-          echo "REPO_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}" >> $GITHUB_ENV
+      - name: Setup Pages
+        id: setup_pages
+        uses: actions/configure-pages@v5
+
+      - name: Restore cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
 
       - name: Build Next.js App ⚒️
         env:
           NEXT_PUBLIC_APP_ID: ${{ vars.WORLD_APP_ID }}
           NEXT_PUBLIC_CONTRACT_ADDRESS: ${{ vars.WORLD_CONTRACT_ADDRESS }}
-          NEXT_PUBLIC_BASE_PATH: /${REPO_NAME}
-        run: yarn build
+          NEXT_PUBLIC_BASE_PATH: /civilisation.dapp
+        run: pnpm run build
 
       - name: Export Static Site
-        run: yarn next export
+        run: pnpm exec next export
 
-      - name: Deploy to GitHub Pages 🚀
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out
+          path: ./out
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
