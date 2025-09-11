@@ -1,0 +1,22 @@
+{
+  "name": "hunters-hut",
+  "displayName": "Hunters Hut",
+  "description": "Generates meat from hunting.",
+  "maxLevel": 5,
+  "maxBuildings": 10,
+  "upgrade": {
+    "baseCost": { "wood": 25, "clay": 5 },
+    "costScaling": 1.45,
+    "baseTime": 35,
+    "timeScaling": 1.15,
+    "requires": {
+      "town-hall": 0.6,
+      "storage": 0.4
+    }
+  },
+  "production": {
+    "interval": 45,
+    "baseProduces": { "meat": 4 },
+    "productionScaling": 1.2
+  }
+}

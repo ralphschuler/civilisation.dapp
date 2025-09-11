@@ -1,0 +1,9 @@
+{
+  "name": "coal",
+  "displayName": "Coal",
+  "description": "A black, combustible rock used for fuel.",
+  "type": "raw",
+  "stack": 999999,
+  "baseCapacity": 100,
+  "capacityPerStorageLevel": 200
+}

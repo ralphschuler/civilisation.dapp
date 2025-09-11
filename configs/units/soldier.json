@@ -1,0 +1,22 @@
+{
+  "name": "soldier",
+  "displayName": "Soldier",
+  "description": "A basic melee unit that can attack and defend.",
+
+  "health": 110,
+  "armor": 2,
+  "speed": 0.9,
+  "cost": {
+    "villager": 1,
+    "bread": 3,
+    "meat": 2,
+    "iron": 2,
+    "wood": 2
+  },
+  "time": 20,
+  "upkeep": {
+    "bread": 0.3,
+    "meat": 0.1,
+    "iron": 0.05
+  }
+}

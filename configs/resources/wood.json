@@ -1,0 +1,10 @@
+{
+  "name": "wood",
+  "displayName": "Wood",
+  "description": "A basic resource representing wood.",
+
+  "type": "raw",
+  "stack": 999999,
+  "baseCapacity": 100,
+  "capacityPerStorageLevel": 200
+}

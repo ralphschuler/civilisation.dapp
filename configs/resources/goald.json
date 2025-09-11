@@ -1,0 +1,10 @@
+{
+  "name": "gold",
+  "displayName": "Gold",
+  "description": "A precious metal used for currency and jewelry.",
+
+  "type": "currency",
+  "stack": 999999,
+  "baseCapacity": 0,
+  "capacityPerStorageLevel": 0
+}

@@ -1,0 +1,10 @@
+{
+  "name": "iron",
+  "displayName": "Iron",
+  "description": "A common metal used in construction and manufacturing.",
+
+  "type": "raw",
+  "stack": 999999,
+  "baseCapacity": 100,
+  "capPerStorageLevel": 200
+}

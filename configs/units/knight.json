@@ -1,0 +1,22 @@
+{
+  "name": "knight",
+  "displayName": "Knight",
+  "description": "A powerful melee unit that can attack and defend.",
+  "health": 160,
+  "armor": 3,
+  "speed": 1.3,
+  "cost": {
+    "villager": 2,
+    "bread": 5,
+    "meat": 4,
+    "iron": 5,
+    "wood": 3,
+    "gold": 5
+  },
+  "time": 30,
+  "upkeep": {
+    "bread": 0.4,
+    "meat": 0.2,
+    "iron": 0.1
+  }
+}

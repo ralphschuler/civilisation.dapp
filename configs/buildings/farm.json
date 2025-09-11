@@ -1,0 +1,21 @@
+{
+  "name": "farm",
+  "displayName": "Farm",
+  "description": "Grows wheat.",
+  "maxLevel": 5,
+  "maxBuildings": 10,
+  "upgrade": {
+    "baseCost": { "wood": 25, "clay": 10 },
+    "costScaling": 1.5,
+    "baseTime": 40,
+    "timeScaling": 1.2,
+    "requires": {
+      "town-hall": 0.8
+    }
+  },
+  "production": {
+    "interval": 60,
+    "baseProduces": { "wheat": 10 },
+    "productionScaling": 1.25
+  }
+}

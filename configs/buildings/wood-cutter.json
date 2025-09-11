@@ -1,0 +1,21 @@
+{
+  "name": "wood-cutter",
+  "displayName": "Wood Cutter",
+  "description": "Produces wood logs.",
+  "maxLevel": 5,
+  "maxBuildings": 10,
+  "upgrade": {
+    "baseCost": { "wood": 10, "clay": 10 },
+    "costScaling": 1.45,
+    "baseTime": 25,
+    "timeScaling": 1.15,
+    "requires": {
+      "town-hall": 0.6
+    }
+  },
+  "production": {
+    "interval": 45,
+    "baseProduces": { "wood": 10 },
+    "productionScaling": 1.25
+  }
+}

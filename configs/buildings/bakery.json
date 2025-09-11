@@ -1,0 +1,26 @@
+{
+  "name": "bakery",
+  "displayName": "Bakery",
+  "description": "Bakes bread from wheat using coal.",
+  "maxLevel": 5,
+  "maxBuildings": 10,
+  "upgrade": {
+    "baseCost": { "wood": 20, "clay": 10 },
+    "costScaling": 1.6,
+    "baseTime": 30,
+    "timeScaling": 1.25,
+    "requires": {
+      "town-hall": 0.8,
+      "farm": 0.2,
+      "coal-pit": 0.3
+    }
+  },
+  "production": {
+    "interval": 10,
+    "baseProduces": { "bread": 1 },
+    "baseConsumes": { "wheat": 3, "coal": 1 },
+    "productionScaling": 1.2,
+    "consumeScaling": 1.2
+  },
+  "limits": { "parallelQueues": 1, "parallelQueuesPerLevel": 0 }
+}

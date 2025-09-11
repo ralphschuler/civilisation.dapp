@@ -1,0 +1,10 @@
+{
+  "name": "villager",
+  "displayName": "Villager",
+  "description": "A basic resource representing a villager.",
+
+  "type": "population",
+  "stack": 999999,
+  "baseCapacity": 0,
+  "capacityPerHouseLevel": 3
+}

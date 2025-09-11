@@ -1,0 +1,22 @@
+{
+  "name": "coal-pit",
+  "displayName": "Coal Pit",
+  "description": "Mines coal for fuel.",
+  "maxLevel": 5,
+  "maxBuildings": 10,
+  "upgrade": {
+    "baseCost": { "wood": 20, "clay": 5 },
+    "costScaling": 1.5,
+    "baseTime": 30,
+    "timeScaling": 1.2,
+    "requires": {
+      "town-hall": 0.6,
+      "storage": 0.4
+    }
+  },
+  "production": {
+    "interval": 60,
+    "baseProduces": { "coal": 10 },
+    "productionScaling": 1.25
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "wall",
+  "displayName": "Wall",
+  "description": "Defensive wall segment.",
+  "maxLevel": 3,
+  "maxBuildings": 10,
+  "upgrade": {
+    "baseCost": { "wood": 15, "clay": 10, "iron": 2 },
+    "costScaling": 1.6,
+    "baseTime": 20,
+    "timeScaling": 1.2,
+    "requires": {
+      "town-hall": 0.8
+    }
+  },
+  "stats": {
+    "hpBase": 500,
+    "hpPerLevel": 300,
+    "armorBase": 2,
+    "armorPerLevel": 1
+  }
+}

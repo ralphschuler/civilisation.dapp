@@ -1,0 +1,35 @@
+{
+  "name": "market",
+  "displayName": "Market",
+  "description": "Trades gold for resources and vice versa.",
+  "maxLevel": 3,
+  "maxBuildings": 10,
+  "upgrade": {
+    "baseCost": { "wood": 40, "clay": 20 },
+    "costScaling": 1.6,
+    "baseTime": 60,
+    "timeScaling": 1.2,
+    "requires": { "town-hall": 1.0 }
+  },
+  "trades": {
+    "buyRatesPerGold": {
+      "wheat": 3,
+      "wood": 2,
+      "clay": 2,
+      "coal": 1,
+      "iron": 0.6,
+      "bread": 1.2,
+      "meat": 0.8
+    },
+    "sellRatesToGold": {
+      "wheat": 0.25,
+      "wood": 0.3,
+      "clay": 0.3,
+      "coal": 0.5,
+      "iron": 1.2,
+      "bread": 0.6,
+      "meat": 0.8
+    }
+  },
+  "limits": { "dailyGoldBuyCapBase": 50, "dailyGoldBuyCapPerLevel": 50 }
+}

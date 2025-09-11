@@ -1,0 +1,27 @@
+{
+  "name": "storage",
+  "displayName": "Storage",
+  "description": "Increases storage capacity for resources.",
+  "maxLevel": 5,
+  "maxBuildings": 10,
+  "upgrade": {
+    "baseCost": { "wood": 30, "clay": 15 },
+    "costScaling": 1.5,
+    "baseTime": 35,
+    "timeScaling": 1.15,
+    "requires": {
+      "town-hall": 0.8
+    }
+  },
+  "effects": {
+    "capPerLevel": {
+      "bread": 200,
+      "clay": 200,
+      "coal": 200,
+      "iron": 200,
+      "meat": 200,
+      "wheat": 200,
+      "wood": 200
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "iron-mine",
+  "displayName": "Iron Mine",
+  "description": "Mines iron ore.",
+  "maxLevel": 5,
+  "maxBuildings": 10,
+  "upgrade": {
+    "baseCost": { "wood": 25, "clay": 10 },
+    "costScaling": 1.55,
+    "baseTime": 45,
+    "timeScaling": 1.2,
+    "requires": {
+      "town-hall": 0.6,
+      "storage": 0.4
+    }
+  },
+  "production": {
+    "interval": 60,
+    "baseProduces": { "iron": 8 },
+    "productionScaling": 1.25
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "archer",
+  "displayName": "Archer",
+  "description": "A basic ranged unit that can attack enemies from a distance.",
+
+  "health": 60,
+  "armor": 0,
+  "speed": 1.0,
+  "cost": {
+    "villager": 1,
+    "bread": 2,
+    "meat": 1,
+    "wood": 4
+  },
+  "time": 15,
+  "upkeep": {
+    "bread": 0.2,
+    "wood": 0.1
+  }
+}

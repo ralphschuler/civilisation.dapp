@@ -1,0 +1,19 @@
+{
+  "name": "trebuchet",
+  "displayName": "Trebuchet",
+  "health": 220,
+  "armor": 1,
+  "speed": 0.6,
+  "cost": {
+    "villager": 3,
+    "wood": 50,
+    "iron": 10,
+    "clay": 8
+  },
+  "time": 120,
+  "upkeep": {
+    "wood": 0.5,
+    "iron": 0.2,
+    "clay": 0.1
+  }
+}

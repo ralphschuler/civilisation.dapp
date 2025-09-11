@@ -1,0 +1,10 @@
+{
+  "name": "meat",
+  "displayName": "Meat",
+  "description": "A nutritious food source for humans and animals.",
+
+  "type": "consumable",
+  "stack": 999999,
+  "baseCapacity": 100,
+  "capacityPerStorageLevel": 200
+}

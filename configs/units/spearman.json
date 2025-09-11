@@ -1,0 +1,19 @@
+{
+  "name": "spearman",
+  "displayName": "Spearman",
+  "description": "A basic infantry unit that can attack and defend.",
+
+  "health": 80,
+  "armor": 1,
+  "speed": 1.0,
+  "cost": {
+    "villager": 1,
+    "bread": 2,
+    "wood": 2,
+    "iron": 1
+  },
+  "time": 10,
+  "upkeep": {
+    "bread": 0.2
+  }
+}

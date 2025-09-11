@@ -1,0 +1,25 @@
+{
+  "name": "house",
+  "displayName": "House",
+  "description": "Provides housing and spawns villagers by consuming bread.",
+  "maxLevel": 5,
+  "maxBuildings": 10,
+  "upgrade": {
+    "baseCost": { "wood": 30, "clay": 15 },
+    "costScaling": 1.45,
+    "baseTime": 45,
+    "timeScaling": 1.15,
+    "requires": {
+      "town-hall": 0.6,
+      "storage": 0.4
+    }
+  },
+  "production": {
+    "interval": 60,
+    "baseProduces": { "villager": 1 },
+    "baseConsumes": { "bread": 2, "meat": 1 },
+    "productionScaling": 1.0,
+    "consumeScaling": 1.0
+  },
+  "limits": { "villagerCapPerLevel": 3, "spawnOnlyIfBelowCap": true }
+}

@@ -1,0 +1,50 @@
+name: Deploy Contracts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'contracts/**'
+      - '.github/workflows/deploy-contracts.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: latest
+
+      - name: Install Dependencies
+        working-directory: contracts
+        run: |
+          forge install worldcoin/world-id-contracts
+          forge install foundry-rs/forge-std
+          forge build
+
+      - name: Deploy Contracts
+        working-directory: contracts
+        env:
+          PRIVATE_KEY: ${{ secrets.WORLDCHAIN_WALLET_PRIVATE_KEY }}
+          RPC_URL: ${{ vars.WORLDCHAIN_RPC_URL }}
+          WORLD_APP_ID: ${{ vars.WORLD_APP_ID }}
+          WORLD_ACTION: test-action
+          WORLD_ROUTER: ${{ vars.WORLD_ID_ROUTER }}
+          # ETHERSCAN_API_KEY: ${{ secrets.WORLDSCAN_API_KEY }}
+        run: |
+          forge script script/Deploy.s.sol \
+            --rpc-url "$RPC_URL" \
+            --private-key "$PRIVATE_KEY" \
+            --broadcast \
+            -vvvv
+
+          # Optional: direkt verifizieren, wenn unterstützt
+          # forge verify-contract <DEPLOYED_ADDRESS> src/TribalGame.sol:TribalGame \
+          #   --chain-id $([[ "${{ matrix.network.name }}" == "wc-sepolia" ]] && echo 4801 || echo 480) \
+          #   --etherscan-api-key "$ETHERSCAN_API_KEY"

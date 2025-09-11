@@ -1,0 +1,10 @@
+{
+  "name": "clay",
+  "displayName": "Clay",
+  "description": "A raw material used in crafting.",
+
+  "type": "raw",
+  "stack": 999999,
+  "baseCapacity": 100,
+  "capacityPerStorageLevel": 200
+}

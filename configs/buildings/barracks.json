@@ -1,0 +1,21 @@
+{
+  "name": "barracks",
+  "displayName": "Barracks",
+  "description": "Trains military units.",
+  "maxLevel": 5,
+  "maxBuildings": 10,
+  "upgrade": {
+    "baseCost": { "wood": 40, "clay": 20, "iron": 5 },
+    "costScaling": 1.6,
+    "baseTime": 45,
+    "timeScaling": 1.2,
+    "requires": { "house": 0.2, "town-hall": 1.0 }
+  },
+  "limits": {
+    "queuesBase": 1,
+    "queuesPerLevel": 1,
+    "garrisonCapBase": 0,
+    "garrisonCapPerLevel": 4
+  },
+  "units": ["Spearman", "Archer", "Soldier", "Knight", "Trebuchet"]
+}
