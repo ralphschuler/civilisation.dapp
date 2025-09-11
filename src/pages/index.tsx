@@ -1,3 +1,5 @@
+'use_client'
+
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { IDKitWidget, ISuccessResult, useIDKit } from '@worldcoin/idkit'
