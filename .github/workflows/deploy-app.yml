@@ -55,7 +55,6 @@ jobs:
         env:
           NEXT_PUBLIC_APP_ID: ${{ vars.WORLD_APP_ID }}
           NEXT_PUBLIC_CONTRACT_ADDRESS: ${{ vars.WORLD_CONTRACT_ADDRESS }}
-          NEXT_PUBLIC_BASE_PATH: /civilisation.dapp
         run: pnpm run build
 
       - name: Export Static Site
