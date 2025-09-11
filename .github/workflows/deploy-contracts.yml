@@ -14,7 +14,7 @@ permissions:
   deployments: write
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     environment: testnet
 

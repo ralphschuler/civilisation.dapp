@@ -1,15 +1,17 @@
 name: Test Contracts
 
-on: workflow_dispatch
+on:
+  push:
+    paths:
+      - .github/workflows/test-contracts.yml
+      - contracts/**
+  workflow_dispatch:
 
 env:
   FOUNDRY_PROFILE: ci
 
 jobs:
-  check:
-    strategy:
-      fail-fast: true
-
+  test:
     name: Foundry project
     runs-on: ubuntu-latest
     steps:
