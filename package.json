@@ -10,7 +10,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@radix-ui/react-slot": "^1.2.3",
     "@tanstack/react-query": "^5.28.6",
     "@worldcoin/idkit": "^1.1.4",
     "@worldcoin/minikit-js": "^1.9.6",
@@ -38,10 +37,5 @@
     "prettier-plugin-sort-imports-desc": "^1.0.0",
     "shadcn": "^3.2.1",
     "typescript": "5.0.4"
-  },
-  "pnpm": {
-    "overrides": {
-      "@worldcoin/idkit>zustand": "^4.5"
-    }
   }
 }

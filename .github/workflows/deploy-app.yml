@@ -27,20 +27,14 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        with:
-          version: 10
-          run_install: false
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm' # cache npm dependencies
+          cache: 'yarn'
 
       - name: Install Dependencies
-        run: pnpm install
+        run: yarn install
 
       - name: Setup Pages
         id: setup_pages
@@ -53,16 +47,16 @@ jobs:
         with:
           path: |
             .next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn-lock.yaml') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn-lock.yaml') }}-
 
       - name: Build Next.js App ⚒️
         env:
           NEXT_PUBLIC_APP_ID: ${{ vars.WORLD_APP_ID }}
           NEXT_PUBLIC_CONTRACT_ADDRESS: ${{ vars.WORLD_CONTRACT_ADDRESS }}
           NEXT_BASE_PATH: ${{ steps.setup_pages.outputs.base_path }}
-        run: pnpm run build
+        run: yarn build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
