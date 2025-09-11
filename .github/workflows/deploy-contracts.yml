@@ -8,9 +8,15 @@ on:
       - '.github/workflows/deploy-contracts.yml'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  actions: write
+  deployments: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: testnet
 
     steps:
       - name: Checkout
@@ -36,7 +42,6 @@ jobs:
           WORLD_APP_ID: ${{ vars.WORLD_APP_ID }}
           WORLD_ACTION: test-action
           WORLD_ROUTER: ${{ vars.WORLD_ID_ROUTER }}
-          # ETHERSCAN_API_KEY: ${{ secrets.WORLDSCAN_API_KEY }}
         run: |
           forge script script/Deploy.s.sol \
             --rpc-url "$RPC_URL" \
@@ -44,7 +49,74 @@ jobs:
             --broadcast \
             -vvvv
 
-          # Optional: direkt verifizieren, wenn unterstützt
-          # forge verify-contract <DEPLOYED_ADDRESS> src/TribalGame.sol:TribalGame \
-          #   --chain-id $([[ "${{ matrix.network.name }}" == "wc-sepolia" ]] && echo 4801 || echo 480) \
-          #   --etherscan-api-key "$ETHERSCAN_API_KEY"
+      # - name: Verify Contracts
+      #   working-directory: contracts
+      #   env:
+      #     PRIVATE_KEY: ${{ secrets.WORLDCHAIN_WALLET_PRIVATE_KEY }}
+      #     RPC_URL: ${{ vars.WORLDCHAIN_RPC_URL }}
+      #     WORLD_APP_ID: ${{ vars.WORLD_APP_ID }}
+      #     WORLD_ACTION: test-action
+      #     WORLD_ROUTER: ${{ vars.WORLD_ID_ROUTER }}
+      #     ETHERSCAN_API_KEY: ${{ secrets.WORLDSCAN_API_KEY }}
+      #   run: |
+      #     forge verify-contract <DEPLOYED_ADDRESS> src/TribalGame.sol:TribalGame \
+      #       --chain-id ${{ vars.CHAIN_ID }} \
+      #       --etherscan-api-key "$ETHERSCAN_API_KEY"
+
+      - name: Extract Deployed Address
+        id: extract
+        working-directory: contracts
+        run: |
+          FILE="broadcast/Deploy.s.sol/${{ vars.CHAIN_ID }}/run-latest.json"
+          test -f "$FILE" || { echo "Broadcast file not found: $FILE"; exit 1; }
+
+          ADDR=$(jq -r '[.receipts[] | select(.contractAddress != null) | .contractAddress][0]' "$FILE")
+          if [ -z "$ADDR" ] || [ "$ADDR" = "null" ]; then
+            # Fallback: aus transactions mit CREATE
+            ADDR=$(jq -r '[.transactions[] | select(.transactionType=="CREATE" or .transactionType=="CREATE2") | .contractAddress][0]' "$FILE")
+          fi
+
+          if [ -z "$ADDR" ] || [ "$ADDR" = "null" ]; then
+            echo "Could not extract contract address from $FILE"
+            exit 1
+          fi
+
+          echo "Contract address: $ADDR"
+          echo "contract_address=$ADDR" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure Environment exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api \
+            --method PUT \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}" \
+            -f wait_timer=0 >/dev/null
+
+      - name: Save address as GitHub Environment variable
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          CONTRACT_ADDRESS: ${{ steps.extract.outputs.contract_address }}
+        run: |
+          set -e
+          if ! gh api \
+            --method PUT \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables/CONTRACT_ADDRESS" \
+            -f name="CONTRACT_ADDRESS" \
+            -f value="$CONTRACT_ADDRESS" >/dev/null 2>&1; then
+            gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables" \
+              -f name="CONTRACT_ADDRESS" \
+              -f value="$CONTRACT_ADDRESS" >/dev/null
+          fi
+          echo "Saved CONTRACT_ADDRESS=$CONTRACT_ADDRESS to environment '$ENVIRONMENT'"
+
+      - name: Expose address as job output
+        id: expose
+        run: |
+          echo "contract_address=${{ steps.extract.outputs.contract_address }}" >> "$GITHUB_OUTPUT"
