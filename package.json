@@ -33,7 +33,7 @@
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.1",
     "next": "14.2.32",
-    "postcss": "8.4.23",
+    "postcss": "8.4.31",
     "prettier-plugin-sort-imports-desc": "^1.0.0",
     "shadcn": "^3.2.1",
     "typescript": "5.0.4"
