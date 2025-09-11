@@ -45,27 +45,14 @@ jobs:
           RPC_URL: ${{ vars.WORLDCHAIN_RPC_URL }}
           WORLD_APP_ID: ${{ vars.WORLD_APP_ID }}
           WORLD_ACTION: test-action
-          WORLD_ROUTER: ${{ vars.WORLD_ID_ROUTER }}
+          WORLD_ID_ROUTER: ${{ vars.WORLD_ID_ROUTER }}
         run: |
-          forge script script/Deploy.s.sol \
+          forge create src/Contract.sol:Contract \
             --rpc-url "$RPC_URL" \
             --private-key "$PRIVATE_KEY" \
             --broadcast \
-            -vvvv
-
-      # - name: Verify Contracts
-      #   working-directory: contracts
-      #   env:
-      #     PRIVATE_KEY: ${{ secrets.WORLDCHAIN_WALLET_PRIVATE_KEY }}
-      #     RPC_URL: ${{ vars.WORLDCHAIN_RPC_URL }}
-      #     WORLD_APP_ID: ${{ vars.WORLD_APP_ID }}
-      #     WORLD_ACTION: test-action
-      #     WORLD_ROUTER: ${{ vars.WORLD_ID_ROUTER }}
-      #     ETHERSCAN_API_KEY: ${{ secrets.WORLDSCAN_API_KEY }}
-      #   run: |
-      #     forge verify-contract <DEPLOYED_ADDRESS> src/TribalGame.sol:TribalGame \
-      #       --chain-id ${{ vars.CHAIN_ID }} \
-      #       --etherscan-api-key "$ETHERSCAN_API_KEY"
+            -vvvv \
+             --constructor-args $WORLD_ID_ROUTER $WORLD_APP_ID $WORLD_ACTION
 
       - name: Extract Deployed Address
         id: extract
@@ -88,6 +75,21 @@ jobs:
           echo "Contract address: $ADDR"
           echo "contract_address=$ADDR" >> "$GITHUB_OUTPUT"
 
+      # - name: Verify Contracts
+      #   working-directory: contracts
+      #   env:
+      #     PRIVATE_KEY: ${{ secrets.WORLDCHAIN_WALLET_PRIVATE_KEY }}
+      #     RPC_URL: ${{ vars.WORLDCHAIN_RPC_URL }}
+      #     WORLD_APP_ID: ${{ vars.WORLD_APP_ID }}
+      #     WORLD_ACTION: test-action
+      #     WORLD_ROUTER: ${{ vars.WORLD_ID_ROUTER }}
+      #     ETHERSCAN_API_KEY: ${{ secrets.WORLDSCAN_API_KEY }}
+      #     APP_CONTRACT_ADDRESS: ${{ steps.extract.outputs.contract_address }}
+      #   run: |
+      #     forge verify-contract $APP_CONTRACT_ADDRESS src/TribalGame.sol:TribalGame \
+      #       --chain-id ${{ vars.CHAIN_ID }} \
+      #       --etherscan-api-key "$ETHERSCAN_API_KEY"
+
       - name: Ensure Environment exists
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -102,23 +104,23 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ENVIRONMENT: ${{ env.ENVIRONMENT }}
-          CONTRACT_ADDRESS: ${{ steps.extract.outputs.contract_address }}
+          APP_CONTRACT_ADDRESS: ${{ steps.extract.outputs.contract_address }}
         run: |
           set -e
           if ! gh api \
             --method PUT \
             -H "Accept: application/vnd.github+json" \
-            "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables/CONTRACT_ADDRESS" \
-            -f name="CONTRACT_ADDRESS" \
-            -f value="$CONTRACT_ADDRESS" >/dev/null 2>&1; then
+            "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables/APP_CONTRACT_ADDRESS" \
+            -f name="APP_CONTRACT_ADDRESS" \
+            -f value="$APP_CONTRACT_ADDRESS" >/dev/null 2>&1; then
             gh api \
               --method POST \
               -H "Accept: application/vnd.github+json" \
               "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables" \
-              -f name="CONTRACT_ADDRESS" \
-              -f value="$CONTRACT_ADDRESS" >/dev/null
+              -f name="APP_CONTRACT_ADDRESS" \
+              -f value="$APP_CONTRACT_ADDRESS" >/dev/null
           fi
-          echo "Saved CONTRACT_ADDRESS=$CONTRACT_ADDRESS to environment '$ENVIRONMENT'"
+          echo "Saved APP_CONTRACT_ADDRESS=$APP_CONTRACT_ADDRESS to environment '$ENVIRONMENT'"
 
       - name: Expose address as job output
         id: expose
