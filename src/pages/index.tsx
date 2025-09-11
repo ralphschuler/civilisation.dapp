@@ -1,12 +1,14 @@
 import { ethers } from 'ethers'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { IDKitWidget, ISuccessResult, useIDKit } from '@worldcoin/idkit'
 
 export default function Home() {
   const { open, setOpen } = useIDKit()
 
-  console.log(JSON.stringify(window.MiniKit.walletAddress))
+  useEffect(() => {
+    console.log(JSON.stringify(window.MiniKit.walletAddress))
+  }, [])
 
   const onSuccess = async (result: ISuccessResult) => {
     console.log('IDKit result:', JSON.stringify(result))
