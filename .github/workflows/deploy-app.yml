@@ -39,10 +39,10 @@ jobs:
           NEXT_PUBLIC_APP_ID: ${{ vars.WORLD_APP_ID }}
           NEXT_PUBLIC_CONTRACT_ADDRESS: ${{ vars.WORLD_CONTRACT_ADDRESS }}
           NEXT_PUBLIC_BASE_PATH: /${REPO_NAME}
-        run: pnpm run build
+        run: yarn build
 
       - name: Export Static Site
-        run: pnpm exec next export
+        run: yarn next export
 
       - name: Deploy to GitHub Pages 🚀
         uses: peaceiris/actions-gh-pages@v4
