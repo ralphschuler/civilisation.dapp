@@ -10,15 +10,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
     "@tanstack/react-query": "^5.28.6",
     "@wagmi/core": "^2.6.9",
     "@worldcoin/idkit": "^1.1.4",
     "@worldcoin/minikit-js": "^1.9.6",
+    "@worldcoin/minikit-react": "^1.9.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "connectkit": "^1.7.2",
     "ethers": "^6.15.0",
     "lucide-react": "^0.544.0",
+    "next-auth": "^4.24.11",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tailwind-merge": "^3.3.1",

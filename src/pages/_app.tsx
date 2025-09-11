@@ -1,7 +1,7 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
+import MiniKitProvider from '@/providers/minikit'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { MiniKitProvider } from '@worldcoin/minikit-js/minikit-provider'
 
 const queryClient = new QueryClient()
 
