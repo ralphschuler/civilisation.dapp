@@ -116,32 +116,38 @@ jobs:
       - name: Ensure Environment exists
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ENVIRONMENT: testnet
         run: |
           gh api \
             --method PUT \
             -H "Accept: application/vnd.github+json" \
+            -f wait_timer=0 \
             "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}" \
-            -f wait_timer=0 >/dev/null
+            >/dev/null
 
       - name: Save address as GitHub Environment variable
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          ENVIRONMENT: testnet
           APP_CONTRACT_ADDRESS: ${{ steps.extract.outputs.contract_address }}
         run: |
           set -e
+          # Versuche zuerst Update (PUT)
           if ! gh api \
             --method PUT \
             -H "Accept: application/vnd.github+json" \
-            "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables/APP_CONTRACT_ADDRESS" \
             -f name="APP_CONTRACT_ADDRESS" \
-            -f value="$APP_CONTRACT_ADDRESS" >/dev/null 2>&1; then
+            -f value="$APP_CONTRACT_ADDRESS" \
+            "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables/APP_CONTRACT_ADDRESS" \
+            >/dev/null 2>&1; then
+            # Fallback: anlegen (POST)
             gh api \
               --method POST \
               -H "Accept: application/vnd.github+json" \
-              "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables" \
               -f name="APP_CONTRACT_ADDRESS" \
-              -f value="$APP_CONTRACT_ADDRESS" >/dev/null
+              -f value="$APP_CONTRACT_ADDRESS" \
+              "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables" \
+              >/dev/null
           fi
           echo "Saved APP_CONTRACT_ADDRESS=$APP_CONTRACT_ADDRESS to environment '$ENVIRONMENT'"
 
