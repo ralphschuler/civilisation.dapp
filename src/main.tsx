@@ -12,7 +12,7 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Eruda>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.VITE_BASE_PATH}>
         <MiniKitProvider app-id={{appId: import.meta.env.VITE_PUBLIC_APP_ID}}>
           <QueryClientProvider client={queryClient}>
             <App />
