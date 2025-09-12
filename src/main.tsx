@@ -14,7 +14,6 @@ createRoot(document.getElementById('root')!).render(
     <Eruda>
       <HashRouter
         basename={import.meta.env.VITE_BASE_PATH}
-
       >
         <MiniKitProvider
           app-id={{appId: import.meta.env.VITE_PUBLIC_APP_ID}}
