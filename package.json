@@ -15,7 +15,9 @@
     "@worldcoin/minikit-js": "^1.9.6",
     "@worldcoin/minikit-react": "^1.9.7",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-query": "^3.39.3",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
