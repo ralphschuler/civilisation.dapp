@@ -1,8 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App'
+import App from '@/App'
+import "@/globals.css"
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { Eruda } from './providers/eruda-provider';
+import { Eruda } from '@/providers/eruda-provider';
 import { MiniKitProvider } from '@worldcoin/minikit-js/minikit-provider';
 
 const queryClient = new QueryClient();

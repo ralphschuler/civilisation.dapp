@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useMiniKit } from '@worldcoin/minikit-js/minikit-provider';
 import { MiniKit } from '@worldcoin/minikit-js';
-import { uuidv4 } from './utils/uuidv4';
+import { uuidv4 } from '@/utils/uuidv4';
+import { Button } from '@/components/ui/button';
 
 function App() {
   const { isInstalled, } = useMiniKit();
@@ -30,20 +31,21 @@ function App() {
           <p>MiniKit is installed</p>
           {authenticated ? (
             <div>
+              <img src={MiniKit.user.profilePictureUrl} alt="User Avatar" />
               <p>User ID: {MiniKit.user.username}</p>
               <p>Address: {MiniKit.user.walletAddress}</p>
             </div>
           ) : (
             <div>
               <p>Not authenticated</p>
-              <button onClick={() => authenticate()}>Authenticate</button>
+              <Button onClick={() => authenticate()}>Authenticate</Button>
             </div>
           )}
         </div>
       ) : (
         <div>
           <p>MiniKit is not installed</p>
-          <button onClick={() => MiniKit.install(import.meta.env.VITE_PUBLIC_APP_ID)}>Install MiniKit</button>
+          <Button onClick={() => MiniKit.install(import.meta.env.VITE_PUBLIC_APP_ID)}>Install MiniKit</Button>
         </div>
       )}
     </>
