@@ -28,7 +28,7 @@ jobs:
           submodules: recursive
 
       - name: Setup Bun.js
-        uses: actions/setup-bun@v2
+        uses: oven-sh/setup-bun@v2
 
       - name: Install Dependencies
         run: bun install
