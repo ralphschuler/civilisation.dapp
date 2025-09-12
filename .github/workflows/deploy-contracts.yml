@@ -74,31 +74,44 @@ jobs:
           echo "Contract address: $ADDR"
           echo "contract_address=$ADDR" >> "$GITHUB_OUTPUT"
 
-      # - name: Verify Contracts
+      # - name: Verify All Contracts
       #   working-directory: contracts
       #   env:
       #     RPC_URL: ${{ vars.WORLDCHAIN_RPC_URL }}
       #     ETHERSCAN_API_KEY: ${{ secrets.WORLDSCAN_API_KEY }}
       #     CHAIN_ID: ${{ vars.CHAIN_ID }}
       #   run: |
+      #     set -e
       #     FILE="broadcast/Deploy.s.sol/${CHAIN_ID}/run-latest.json"
 
-      #     # Adresse vom vorherigen Step auslesen
-      #     ADDR="${{ steps.extract.outputs.contract_address }}"
-
-      #     # Contract-ID (z. B. "src/Contract.sol:Contract") aus der JSON holen
-      #     CONTRACT_ID=$(jq -r '.transactions[0].contractName + ":" + .transactions[0].contractName' "$FILE")
-      #     if [ -z "$CONTRACT_ID" ] || [ "$CONTRACT_ID" = "null:null" ]; then
-      #       echo "Konnte Contract-ID nicht aus Broadcast-Datei extrahieren"
+      #     if [ ! -f "$FILE" ]; then
+      #       echo "❌ Broadcast file not found: $FILE"
       #       exit 1
       #     fi
 
-      #     echo "Verifiziere $CONTRACT_ID bei Chain $CHAIN_ID mit Adresse $ADDR"
+      #     echo "📄 Contracts to verify from $FILE"
 
-      #     forge verify-contract "$ADDR" "$CONTRACT_ID" \
-      #       --chain-id "$CHAIN_ID" \
-      #       --etherscan-api-key "$ETHERSCAN_API_KEY" \
-      #       -vvvv
+      #     # Extrahiere alle Contracts mit Adresse
+      #     jq -c '.transactions[] | select(.contractAddress != null) | {name: .contractName, addr: .contractAddress, source: .contractFile}' "$FILE" |
+      #     while read -r contract; do
+      #       NAME=$(echo "$contract" | jq -r .name)
+      #       ADDR=$(echo "$contract" | jq -r .addr)
+      #       SRC=$(echo "$contract" | jq -r .source)
+
+      #       if [ -z "$ADDR" ] || [ "$ADDR" = "null" ]; then
+      #         echo "⚠️  Keine Adresse gefunden für $NAME, überspringe..."
+      #         continue
+      #       fi
+
+      #       CONTRACT_ID="${SRC}:${NAME}"
+
+      #       echo "🔍 Verifiziere $CONTRACT_ID bei Adresse $ADDR auf Chain $CHAIN_ID"
+
+      #       forge verify-contract "$ADDR" "$CONTRACT_ID" \
+      #         --chain-id "$CHAIN_ID" \
+      #         --etherscan-api-key "$ETHERSCAN_API_KEY" \
+      #         -vvvv || echo "❌ Verifikation fehlgeschlagen für $CONTRACT_ID"
+      #     done
 
       - name: Ensure Environment exists
         env:
