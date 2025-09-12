@@ -11,7 +11,7 @@ export default function WalletConnect() {
     return (
       <div>
         <p>MiniKit is not installed</p>
-        <span>This app has to be run using the WorldCoin App.</span>
+        <span>This app has to be run using the Worldcoin app.</span>
       </div>
     );
   }
