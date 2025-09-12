@@ -2,8 +2,8 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Script.sol";
-import {Contract} from "../contracts/Contract.sol";
-import {IWorldID} from "../contracts/interfaces/IWorldID.sol";
+import {Contract} from "../src/Contract.sol";
+import {IWorldID} from "../src/interfaces/IWorldID.sol";
 
 /// @notice Deployment script for the Contract using Foundry
 contract DeployScript is Script {
