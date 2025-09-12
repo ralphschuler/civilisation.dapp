@@ -113,18 +113,6 @@ jobs:
       #         -vvvv || echo "❌ Verifikation fehlgeschlagen für $CONTRACT_ID"
       #     done
 
-      - name: Ensure Environment exists
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          ENVIRONMENT: testnet
-        run: |
-          gh api \
-            --method PUT \
-            -H "Accept: application/vnd.github+json" \
-            -f wait_timer=0 \
-            "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}" \
-            >/dev/null
-
       - name: Save address as GitHub Environment variable
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -132,7 +120,6 @@ jobs:
           APP_CONTRACT_ADDRESS: ${{ steps.extract.outputs.contract_address }}
         run: |
           set -e
-          # Versuche zuerst Update (PUT)
           if ! gh api \
             --method PUT \
             -H "Accept: application/vnd.github+json" \
@@ -140,7 +127,6 @@ jobs:
             -f value="$APP_CONTRACT_ADDRESS" \
             "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables/APP_CONTRACT_ADDRESS" \
             >/dev/null 2>&1; then
-            # Fallback: anlegen (POST)
             gh api \
               --method POST \
               -H "Accept: application/vnd.github+json" \
