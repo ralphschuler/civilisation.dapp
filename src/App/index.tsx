@@ -14,9 +14,11 @@ export function App() {
         <Routes>
           <Route path="/wallet-connect" element={<WalletConnect />} />
 
-          <Route path="/" element={<ProtectedRoute condition={authenticated} redirectTo='/wallet-connect' />}>
-            <Route path='/' element={<Home />} />
+          <Route element={<ProtectedRoute condition={authenticated} redirectTo='/wallet-connect' />}>
+            <Route index element={<Home />} />
           </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
     </>
