@@ -8,7 +8,7 @@ export default function NotFound() {
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <h1 className="text-4xl font-bold">404</h1>
       <p className="text-xl">Page not found</p>
-      <Button onCanPlay={() => navigate("/")} variant="outline" className="mt-4">
+      <Button onClick={() => navigate("/")} variant="outline" className="mt-4">
         Go back to home
       </Button>
     </div>
