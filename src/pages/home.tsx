@@ -4,7 +4,7 @@ import { MiniKit } from '@worldcoin/minikit-js';
 import { uuidv4 } from '@/utils/uuidv4';
 import { Button } from '@/components/ui/button';
 
-export const Home = () => {
+export default function Home() {
   const { isInstalled, } = useMiniKit();
   const [ authenticated, setAuthenticated ] = useState(false)
 
