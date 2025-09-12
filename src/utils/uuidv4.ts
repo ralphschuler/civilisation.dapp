@@ -1,9 +1,9 @@
 export const uuidv4: () => string = () => {
-  // 16 Bytes zufällige Werte
+  // 16 bytes of random values
   const bytes = new Uint8Array(16);
   crypto.getRandomValues(bytes);
 
-  // RFC 4122 Konformität: bestimmte Bits setzen
+  // RFC 4122 compliance: set specific bits
   bytes[6] = (bytes[6] & 0x0f) | 0x40; // Version 4
   bytes[8] = (bytes[8] & 0x3f) | 0x80; // Variant
 

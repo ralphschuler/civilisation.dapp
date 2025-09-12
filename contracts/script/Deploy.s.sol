@@ -9,10 +9,10 @@ import {IWorldID} from "../src/interfaces/IWorldID.sol";
 contract DeployScript is Script {
     function run() external {
         // --- Load env vars ---
-        // Beispiel: setze die Variablen in .env oder GitHub Actions
-        address worldId = vm.envAddress("WORLD_ID_ADDRESS"); // z.B. Router Adresse von World ID
-        string memory appId = vm.envString("WORLD_APP_ID"); // z.B. "app_staging_xxx"
-        string memory actionId = vm.envString("WORLD_ACTION"); // z.B. "vote-action"
+        // Example: set the variables in .env or GitHub Actions
+        address worldId = vm.envAddress("WORLD_ID_ROUTER"); // e.g., World ID router address
+        string memory appId = vm.envString("WORLD_APP_ID"); // e.g., "app_staging_xxx"
+        string memory actionId = vm.envString("WORLD_ACTION"); // e.g., "vote-action"
 
         uint256 deployerKey = vm.envUint("PRIVATE_KEY");
 

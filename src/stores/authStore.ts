@@ -16,8 +16,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     const result = await MiniKit.commandsAsync.walletAuth({
       nonce,
       requestId: "0",
-      expirationTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // +7 Tage
-      notBefore: new Date(Date.now() - 24 * 60 * 60 * 1000), // -1 Tag
+      expirationTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // +7 days
+      notBefore: new Date(Date.now() - 24 * 60 * 60 * 1000), // -1 day
       statement: "",
     });
 
