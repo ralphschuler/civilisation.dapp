@@ -1,24 +1,43 @@
+import { useState } from 'react';
 import { useMiniKit } from '@worldcoin/minikit-js/minikit-provider';
 import { MiniKit } from '@worldcoin/minikit-js';
+import { uuidv4 } from './utils/uuidv4';
 
 function App() {
   const { isInstalled, } = useMiniKit();
+  const [ authenticated, setAuthenticated ] = useState(false)
 
-  const { user } = MiniKit;
+  const authenticate = async () => {
+    const nonce = uuidv4().replace(/-/g, '');
+    const result = await MiniKit.commandsAsync.walletAuth({
+  		nonce: nonce,
+  		requestId: '0', // Optional
+  		expirationTime: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+  		notBefore: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+  		statement: 'This is my statement and here is a link https://worldcoin.com/apps',
+  	})
 
+  	if (result.finalPayload.status === 'error') {
+  		return
+  	}
 
+   setAuthenticated(true)
+  }
   return (
     <>
       {isInstalled ? (
         <div>
           <p>MiniKit is installed</p>
-          {user ? (
+          {authenticated ? (
             <div>
-              <p>User ID: {user.username}</p>
-              <p>Address: {user.walletAddress}</p>
+              <p>User ID: {MiniKit.user.username}</p>
+              <p>Address: {MiniKit.user.walletAddress}</p>
             </div>
           ) : (
-            <p>User not found</p>
+            <div>
+              <p>Not authenticated</p>
+              <button onClick={() => authenticate()}>Authenticate</button>
+            </div>
           )}
         </div>
       ) : (
