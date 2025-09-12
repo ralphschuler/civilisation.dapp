@@ -1,4 +1,4 @@
-name: Deploy Contracts
+name: Deploy Diamond
 
 on:
   push:
@@ -36,71 +36,67 @@ jobs:
         run: |
           forge install worldcoin/world-id-contracts
           forge install foundry-rs/forge-std
-          forge install openzeppelin/openzeppelin-contracts-upgradeable
           forge build
 
-      - name: Deploy Upgradeable Contract (Proxy + Impl)
+      - name: Deploy Diamond (Proxy + Facets)
         working-directory: contracts
         env:
           PRIVATE_KEY: ${{ secrets.WORLDCHAIN_WALLET_PRIVATE_KEY }}
           RPC_URL: ${{ vars.WORLDCHAIN_RPC_URL }}
-          WORLD_APP_ID: ${{ vars.WORLD_APP_ID }}
-          WORLD_ACTION_ID: ${{ vars.WORLD_ACTION }}
-          WORLD_ID: ${{ vars.WORLD_ID_ROUTER }}
         run: |
-          forge script script/Deploy.s.sol:Deploy \
+          forge script script/DeployDiamond.s.sol:DeployDiamond \
             --rpc-url "$RPC_URL" \
             --private-key "$PRIVATE_KEY" \
             --broadcast \
             -vvvv
 
-      - name: Extract Proxy Address
+      - name: Extract Diamond Address
         id: extract
         working-directory: contracts
         run: |
-          FILE="broadcast/Deploy.s.sol/${{ vars.CHAIN_ID }}/run-latest.json"
+          FILE="broadcast/DeployDiamond.s.sol/${{ vars.CHAIN_ID }}/run-latest.json"
           test -f "$FILE" || { echo "Broadcast file not found: $FILE"; exit 1; }
 
-          # Extract Proxy (ERC1967Proxy) Address
-          PROXY=$(jq -r '.transactions[] | select(.contractName=="ERC1967Proxy") | .contractAddress' "$FILE" | head -n1)
+          # Extract Diamond Address (der erste CREATE für Diamond)
+          DIAMOND=$(jq -r '.transactions[] | select(.contractName=="Diamond") | .contractAddress' "$FILE" | head -n1)
 
-          if [ -z "$PROXY" ] || [ "$PROXY" = "null" ]; then
-            echo "❌ Could not extract Proxy address"
+          if [ -z "$DIAMOND" ] || [ "$DIAMOND" = "null" ]; then
+            echo "❌ Could not extract Diamond address"
             exit 1
           fi
 
-          echo "Proxy address: $PROXY"
-          echo "proxy_address=$PROXY" >> "$GITHUB_OUTPUT"
+          echo "Diamond address: $DIAMOND"
+          echo "diamond_address=$DIAMOND" >> "$GITHUB_OUTPUT"
 
-          # Optional: log all implementation addresses
-          echo "Implementation contracts:"
-          jq -r '.transactions[] | select(.contractName!="ERC1967Proxy" and .contractAddress != null) | "\(.contractName): \(.contractAddress)"' "$FILE" || true
+          # Optional: log all other facets
+          echo "Deployed Facets:"
+          jq -r '.transactions[] | select(.contractName!="Diamond" and .contractAddress != null) | "\(.contractName): \(.contractAddress)"' "$FILE" || true
 
-      - name: Save Proxy Address as GitHub Environment variable
+      - name: Save Diamond Address as GitHub Environment variable
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           ENVIRONMENT: testnet
-          PROXY_ADDR: ${{ steps.extract.outputs.proxy_address }}
+          DIAMOND_ADDR: ${{ steps.extract.outputs.diamond_address }}
         run: |
           set -e
           if ! gh api \
             --method PUT \
             -H "Accept: application/vnd.github+json" \
             -f name="APP_CONTRACT_ADDRESS" \
-            -f value="$PROXY_ADDR" \
+            -f value="$DIAMOND_ADDR" \
             "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables/APP_CONTRACT_ADDRESS" \
             >/dev/null 2>&1; then
             gh api \
               --method POST \
               -H "Accept: application/vnd.github+json" \
               -f name="APP_CONTRACT_ADDRESS" \
-              -f value="$PROXY_ADDR" \
+              -f value="$DIAMOND_ADDR" \
               "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables" \
               >/dev/null
           fi
-          echo "✅ Saved APP_CONTRACT_ADDRESS=$PROXY_ADDR to environment '$ENVIRONMENT'"
+          echo "✅ Saved APP_CONTRACT_ADDRESS=$DIAMOND_ADDR to environment '$ENVIRONMENT'"
 
-      - name: Expose Proxy Address as job output
+      - name: Expose Diamond Address as job output
         id: expose
         run: |
-          echo "contract_address=${{ steps.extract.outputs.proxy_address }}" >> "$GITHUB_OUTPUT"
+          echo "contract_address=${{ steps.extract.outputs.diamond_address }}" >> "$GITHUB_OUTPUT"
