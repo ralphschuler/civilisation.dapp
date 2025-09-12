@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'contracts/**'
-      - '.github/workflows/deploy-contracts.yml'
+      - "contracts/**"
+      - ".github/workflows/deploy-contracts.yml"
   workflow_dispatch:
 
 permissions:
@@ -14,7 +14,7 @@ permissions:
   deployments: write
 
 concurrency:
-  group: 'deploy-contracts'
+  group: "deploy-contracts"
   cancel-in-progress: false
 
 jobs:
@@ -47,12 +47,11 @@ jobs:
           WORLD_ACTION: test-action
           WORLD_ID_ROUTER: ${{ vars.WORLD_ID_ROUTER }}
         run: |
-          forge create src/Contract.sol:Contract \
+          forge script script/Deploy.s.sol:DeployScript \
             --rpc-url "$RPC_URL" \
             --private-key "$PRIVATE_KEY" \
             --broadcast \
-            -vvvv \
-             --constructor-args $WORLD_ID_ROUTER $WORLD_APP_ID $WORLD_ACTION
+            -vvvv
 
       - name: Extract Deployed Address
         id: extract
@@ -78,17 +77,28 @@ jobs:
       # - name: Verify Contracts
       #   working-directory: contracts
       #   env:
-      #     PRIVATE_KEY: ${{ secrets.WORLDCHAIN_WALLET_PRIVATE_KEY }}
       #     RPC_URL: ${{ vars.WORLDCHAIN_RPC_URL }}
-      #     WORLD_APP_ID: ${{ vars.WORLD_APP_ID }}
-      #     WORLD_ACTION: test-action
-      #     WORLD_ROUTER: ${{ vars.WORLD_ID_ROUTER }}
       #     ETHERSCAN_API_KEY: ${{ secrets.WORLDSCAN_API_KEY }}
-      #     APP_CONTRACT_ADDRESS: ${{ steps.extract.outputs.contract_address }}
+      #     CHAIN_ID: ${{ vars.CHAIN_ID }}
       #   run: |
-      #     forge verify-contract $APP_CONTRACT_ADDRESS src/TribalGame.sol:TribalGame \
-      #       --chain-id ${{ vars.CHAIN_ID }} \
-      #       --etherscan-api-key "$ETHERSCAN_API_KEY"
+      #     FILE="broadcast/Deploy.s.sol/${CHAIN_ID}/run-latest.json"
+
+      #     # Adresse vom vorherigen Step auslesen
+      #     ADDR="${{ steps.extract.outputs.contract_address }}"
+
+      #     # Contract-ID (z. B. "src/Contract.sol:Contract") aus der JSON holen
+      #     CONTRACT_ID=$(jq -r '.transactions[0].contractName + ":" + .transactions[0].contractName' "$FILE")
+      #     if [ -z "$CONTRACT_ID" ] || [ "$CONTRACT_ID" = "null:null" ]; then
+      #       echo "Konnte Contract-ID nicht aus Broadcast-Datei extrahieren"
+      #       exit 1
+      #     fi
+
+      #     echo "Verifiziere $CONTRACT_ID bei Chain $CHAIN_ID mit Adresse $ADDR"
+
+      #     forge verify-contract "$ADDR" "$CONTRACT_ID" \
+      #       --chain-id "$CHAIN_ID" \
+      #       --etherscan-api-key "$ETHERSCAN_API_KEY" \
+      #       -vvvv
 
       - name: Ensure Environment exists
         env:
