@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {IDiamondCut} from "../../interfaces/IDiamondCut.sol";
+import {IDiamondCut} from "../interfaces/IDiamondCut.sol";
 
 library LibDiamond {
     bytes32 constant DIAMOND_STORAGE_POSITION =

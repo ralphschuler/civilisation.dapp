@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {LibDiamond} from "../diamond/libraries/LibDiamond.sol";
+import {LibDiamond} from "../libraries/LibDiamond.sol";
 import {IDiamondLoupe} from "../interfaces/IDiamondLoupe.sol";
 
 /// @notice DiamondLoupeFacet – liefert Übersicht über Facets und ihre Funktionen.

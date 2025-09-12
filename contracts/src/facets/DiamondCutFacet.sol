@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import {IDiamondCut} from "../interfaces/IDiamondCut.sol";
-import {LibDiamond} from "../diamond/libraries/LibDiamond.sol";
+import {LibDiamond} from "../libraries/LibDiamond.sol";
 
 contract DiamondCutFacet is IDiamondCut {
     function diamondCut(

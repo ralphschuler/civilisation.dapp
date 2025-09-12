@@ -3,6 +3,7 @@ pragma solidity ^0.8.13;
 
 import "forge-std/Script.sol";
 import {IDiamondCut} from "../src/interfaces/IDiamondCut.sol";
+import {GoldFacet} from "../src/facets/GoldFacet.sol";
 
 contract UpgradeDiamond is Script {
     function run() external {
@@ -11,19 +12,19 @@ contract UpgradeDiamond is Script {
 
         address diamondAddress = vm.envAddress("DIAMOND_PROXY");
 
-        // Neue Facet-Adresse aus env
-        address newFacet = vm.envAddress("NEW_FACET");
+        // Neue GoldFacet Implementation
+        GoldFacet newGoldFacet = new GoldFacet();
 
-        IDiamondCut.FacetCut[] memory cut = new IDiamondCut.FacetCut[](3);
-        bytes4[] memory selectors = new bytes4[](1);
-        selectors[0] = bytes4(
-            keccak256("verifyAndExecute(address,uint256,uint256,uint256[8])")
-        );
+        // Selectors von GoldFacet
+        bytes4;
+        selectors[0] = GoldFacet.claimWithWorldId.selector;
+        selectors[1] = GoldFacet.raidWithWorldId.selector;
+        selectors[2] = GoldFacet.startUpgradeWithWorldId.selector;
 
         IDiamondCut.FacetCut;
         cut[0] = IDiamondCut.FacetCut({
-            facetAddress: newFacet,
-            action: IDiamondCut.FacetCutAction.Add,
+            facetAddress: address(newGoldFacet),
+            action: IDiamondCut.FacetCutAction.Replace, // Replace für Upgrade
             functionSelectors: selectors
         });
 
@@ -31,10 +32,10 @@ contract UpgradeDiamond is Script {
         IDiamondCut(diamondAddress).diamondCut(cut, address(0), "");
 
         console.log(
-            "Upgraded Diamond at",
+            "✅ Upgraded Diamond at",
             diamondAddress,
-            "with facet",
-            newFacet
+            "with new GoldFacet at",
+            address(newGoldFacet)
         );
 
         vm.stopBroadcast();
