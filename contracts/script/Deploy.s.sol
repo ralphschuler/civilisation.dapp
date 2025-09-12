@@ -3,31 +3,36 @@ pragma solidity ^0.8.13;
 
 import "forge-std/Script.sol";
 import {Contract} from "../src/Contract.sol";
+import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {IWorldID} from "../src/interfaces/IWorldID.sol";
 
-/// @notice Deployment script for the Contract using Foundry
-contract DeployScript is Script {
+contract Deploy is Script {
     function run() external {
-        // --- Load env vars ---
-        // Example: set the variables in .env or GitHub Actions
-        address worldId = vm.envAddress("WORLD_ID_ROUTER"); // e.g., World ID router address
-        string memory appId = vm.envString("WORLD_APP_ID"); // e.g., "app_staging_xxx"
-        string memory actionId = vm.envString("WORLD_ACTION"); // e.g., "vote-action"
+        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        vm.startBroadcast(deployerPrivateKey);
 
-        uint256 deployerKey = vm.envUint("PRIVATE_KEY");
+        // Load config
+        address worldIdAddr = vm.envAddress("WORLD_ID");
+        string memory appId = vm.envString("WORLD_APP_ID");
+        string memory actionId = vm.envString("WORLD_ACTION_ID");
 
-        // --- Start Broadcasting ---
-        vm.startBroadcast(deployerKey);
+        // Deploy implementation
+        Contract impl = new Contract();
 
-        // --- Deploy Contract ---
-        Contract contractInstance = new Contract(
-            IWorldID(worldId),
+        // Encode initializer
+        bytes memory data = abi.encodeWithSelector(
+            Contract.initialize.selector,
+            IWorldID(worldIdAddr),
             appId,
             actionId
         );
 
-        vm.stopBroadcast();
+        // Deploy Proxy
+        ERC1967Proxy proxy = new ERC1967Proxy(address(impl), data);
 
-        console2.log("Contract deployed at:", address(contractInstance));
+        console.log("Proxy deployed at:", address(proxy));
+        console.log("Implementation at:", address(impl));
+
+        vm.stopBroadcast();
     }
 }

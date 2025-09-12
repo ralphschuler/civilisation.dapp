@@ -36,108 +36,71 @@ jobs:
         run: |
           forge install worldcoin/world-id-contracts
           forge install foundry-rs/forge-std
+          forge install openzeppelin/openzeppelin-contracts-upgradeable
           forge build
 
-      - name: Deploy Contracts
+      - name: Deploy Upgradeable Contract (Proxy + Impl)
         working-directory: contracts
         env:
           PRIVATE_KEY: ${{ secrets.WORLDCHAIN_WALLET_PRIVATE_KEY }}
           RPC_URL: ${{ vars.WORLDCHAIN_RPC_URL }}
           WORLD_APP_ID: ${{ vars.WORLD_APP_ID }}
-          WORLD_ACTION: test-action
-          WORLD_ID_ROUTER: ${{ vars.WORLD_ID_ROUTER }}
+          WORLD_ACTION_ID: ${{ vars.WORLD_ACTION }}
+          WORLD_ID: ${{ vars.WORLD_ID_ROUTER }}
         run: |
-          forge script script/Deploy.s.sol:DeployScript \
+          forge script script/Deploy.s.sol:Deploy \
             --rpc-url "$RPC_URL" \
             --private-key "$PRIVATE_KEY" \
             --broadcast \
             -vvvv
 
-      - name: Extract Deployed Address
+      - name: Extract Proxy Address
         id: extract
         working-directory: contracts
         run: |
           FILE="broadcast/Deploy.s.sol/${{ vars.CHAIN_ID }}/run-latest.json"
           test -f "$FILE" || { echo "Broadcast file not found: $FILE"; exit 1; }
 
-          ADDR=$(jq -r '[.receipts[] | select(.contractAddress != null) | .contractAddress][0]' "$FILE")
-          if [ -z "$ADDR" ] || [ "$ADDR" = "null" ]; then
-            # Fallback: aus transactions mit CREATE
-            ADDR=$(jq -r '[.transactions[] | select(.transactionType=="CREATE" or .transactionType=="CREATE2") | .contractAddress][0]' "$FILE")
-          fi
+          # Extract Proxy (ERC1967Proxy) Address
+          PROXY=$(jq -r '.transactions[] | select(.contractName=="ERC1967Proxy") | .contractAddress' "$FILE" | head -n1)
 
-          if [ -z "$ADDR" ] || [ "$ADDR" = "null" ]; then
-            echo "Could not extract contract address from $FILE"
+          if [ -z "$PROXY" ] || [ "$PROXY" = "null" ]; then
+            echo "❌ Could not extract Proxy address"
             exit 1
           fi
 
-          echo "Contract address: $ADDR"
-          echo "contract_address=$ADDR" >> "$GITHUB_OUTPUT"
+          echo "Proxy address: $PROXY"
+          echo "proxy_address=$PROXY" >> "$GITHUB_OUTPUT"
 
-      # - name: Verify All Contracts
-      #   working-directory: contracts
-      #   env:
-      #     RPC_URL: ${{ vars.WORLDCHAIN_RPC_URL }}
-      #     ETHERSCAN_API_KEY: ${{ secrets.WORLDSCAN_API_KEY }}
-      #     CHAIN_ID: ${{ vars.CHAIN_ID }}
-      #   run: |
-      #     set -e
-      #     FILE="broadcast/Deploy.s.sol/${CHAIN_ID}/run-latest.json"
+          # Optional: log all implementation addresses
+          echo "Implementation contracts:"
+          jq -r '.transactions[] | select(.contractName!="ERC1967Proxy" and .contractAddress != null) | "\(.contractName): \(.contractAddress)"' "$FILE" || true
 
-      #     if [ ! -f "$FILE" ]; then
-      #       echo "❌ Broadcast file not found: $FILE"
-      #       exit 1
-      #     fi
-
-      #     echo "📄 Contracts to verify from $FILE"
-
-      #     # Extrahiere alle Contracts mit Adresse
-      #     jq -c '.transactions[] | select(.contractAddress != null) | {name: .contractName, addr: .contractAddress, source: .contractFile}' "$FILE" |
-      #     while read -r contract; do
-      #       NAME=$(echo "$contract" | jq -r .name)
-      #       ADDR=$(echo "$contract" | jq -r .addr)
-      #       SRC=$(echo "$contract" | jq -r .source)
-
-      #       if [ -z "$ADDR" ] || [ "$ADDR" = "null" ]; then
-      #         echo "⚠️  Keine Adresse gefunden für $NAME, überspringe..."
-      #         continue
-      #       fi
-
-      #       CONTRACT_ID="${SRC}:${NAME}"
-
-      #       echo "🔍 Verifiziere $CONTRACT_ID bei Adresse $ADDR auf Chain $CHAIN_ID"
-
-      #       forge verify-contract "$ADDR" "$CONTRACT_ID" \
-      #         --chain-id "$CHAIN_ID" \
-      #         --etherscan-api-key "$ETHERSCAN_API_KEY" \
-      #         -vvvv || echo "❌ Verifikation fehlgeschlagen für $CONTRACT_ID"
-      #     done
-
-      - name: Save address as GitHub Environment variable
+      - name: Save Proxy Address as GitHub Environment variable
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           ENVIRONMENT: testnet
-          APP_CONTRACT_ADDRESS: ${{ steps.extract.outputs.contract_address }}
+          PROXY_ADDR: ${{ steps.extract.outputs.proxy_address }}
         run: |
           set -e
           if ! gh api \
             --method PUT \
             -H "Accept: application/vnd.github+json" \
             -f name="APP_CONTRACT_ADDRESS" \
-            -f value="$APP_CONTRACT_ADDRESS" \
+            -f value="$PROXY_ADDR" \
             "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables/APP_CONTRACT_ADDRESS" \
             >/dev/null 2>&1; then
             gh api \
               --method POST \
               -H "Accept: application/vnd.github+json" \
               -f name="APP_CONTRACT_ADDRESS" \
-              -f value="$APP_CONTRACT_ADDRESS" \
+              -f value="$PROXY_ADDR" \
               "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables" \
               >/dev/null
           fi
-          echo "Saved APP_CONTRACT_ADDRESS=$APP_CONTRACT_ADDRESS to environment '$ENVIRONMENT'"
+          echo "✅ Saved APP_CONTRACT_ADDRESS=$PROXY_ADDR to environment '$ENVIRONMENT'"
 
-      - name: Expose address as job output
+      - name: Expose Proxy Address as job output
         id: expose
         run: |
-          echo "contract_address=${{ steps.extract.outputs.contract_address }}" >> "$GITHUB_OUTPUT"
+          echo "contract_address=${{ steps.extract.outputs.proxy_address }}" >> "$GITHUB_OUTPUT"
