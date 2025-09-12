@@ -31,10 +31,12 @@ contract DeployDiamond is Script {
         DiamondInit diamondInit = new DiamondInit();
 
         // 5. Prepare cut
-        IDiamondCut.FacetCut;
+        IDiamondCut.FacetCut[] memory cut = new IDiamondCut.FacetCut[](3);
+        bytes4[] memory loupeSelectors = new bytes4[](4);
+        bytes4[] memory ownershipSelectors = new bytes4[](2);
+        //noch ein platz für die cut
 
         // Loupe Facet
-        bytes4;
         loupeSelectors[0] = DiamondLoupeFacet.facets.selector;
         loupeSelectors[1] = DiamondLoupeFacet.facetFunctionSelectors.selector;
         loupeSelectors[2] = DiamondLoupeFacet.facetAddresses.selector;
@@ -46,7 +48,6 @@ contract DeployDiamond is Script {
         });
 
         // Ownership Facet
-        bytes4;
         ownershipSelectors[0] = OwnershipFacet.transferOwnership.selector;
         ownershipSelectors[1] = OwnershipFacet.owner.selector;
         cut[1] = IDiamondCut.FacetCut({

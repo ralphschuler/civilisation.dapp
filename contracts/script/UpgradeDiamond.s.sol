@@ -14,8 +14,8 @@ contract UpgradeDiamond is Script {
         // Neue Facet-Adresse aus env
         address newFacet = vm.envAddress("NEW_FACET");
 
-        // FacetCut vorbereiten
-        bytes4;
+        IDiamondCut.FacetCut[] memory cut = new IDiamondCut.FacetCut[](3);
+        bytes4[] memory selectors = new bytes4[](1);
         selectors[0] = bytes4(
             keccak256("verifyAndExecute(address,uint256,uint256,uint256[8])")
         );
