@@ -1,69 +1,69 @@
-# World ID On-Chain Template
+# React + TypeScript + Vite
 
-Template repository for a World ID On-Chain Integration.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Local Development
+Currently, two official plugins are available:
 
-### Prerequisites
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-Create a staging on-chain app in the [Worldcoin Developer Portal](https://developer.worldcoin.org).
+## Expanding the ESLint configuration
 
-Ensure you have installed [Foundry](https://book.getfoundry.sh/getting-started/installation), [NodeJS](https://nodejs.org/en/download), and [pnpm](https://pnpm.io/installation).
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-### Local Testnet Setup
+```js
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-Start a local node forked from Optimism Sepolia, replacing `$YOUR_API_KEY` with your Alchemy API key:
+      // Remove tseslint.configs.recommended and replace with this
+      ...tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      ...tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      ...tseslint.configs.stylisticTypeChecked,
 
-```bash
-# leave this running in the background
-anvil -f https://opt-sepolia.g.alchemy.com/v2/$YOUR_API_KEY
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-In another shell, deploy the contract, replacing `$WORLD_ID_ROUTER` with the [World ID Router address](https://docs.worldcoin.org/reference/address-book) for your selected chain, `$NEXT_PUBLIC_APP_ID` with the app ID as configured in the [Worldcoin Developer Portal](https://developer.worldcoin.org), and `$NEXT_PUBLIC_ACTION` with the action ID as configured in the Worldcoin Developer Portal:
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```bash
-cd contracts
-forge create --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 src/Contract.sol:Contract --constructor-args $WORLD_ID_ROUTER $NEXT_PUBLIC_APP_ID $NEXT_PUBLIC_ACTION
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-
-Note the `Deployed to:` address from the output.
-
-### Local Web Setup
-
-In a new shell, install project dependencies:
-
-```bash
-pnpm i
-```
-
-Set up your environment variables in the `.env` file. You will need to set the following variables:
-- `NEXT_PUBLIC_APP_ID`: The app ID as configured in the [Worldcoin Developer Portal](https://developer.worldcoin.org).
-- `NEXT_PUBLIC_ACTION`: The action ID as configured in the Worldcoin Developer Portal.
-- `NEXT_PUBLIC_WALLETCONNECT_ID`: Your WalletConnect ID.
-- `NEXT_PUBLIC_CONTRACT_ADDRESS`: The address of the contract deployed in the previous step.
-
-Start the development server:
-
-```bash
-pnpm dev
-```
-
-The Contract ABI will be automatically re-generated and saved to `src/abi/ContractAbi.json` on each run of `pnpm dev`.
-
-### Iterating
-
-After making changes to the contract, you should:
-- re-run the `forge create` command from above
-- replace the `NEXT_PUBLIC_CONTRACT_ADDRESS` environment variable with the new contract address
-- if your contract ABI has changed, restart the local web server
-
-### Testing
-
-You'll need to import the private keys on the local testnet into your wallet used for local development. The default development seed phrase is `test test test test test test test test test test test junk`.
-
-> [!CAUTION]
-> This is only for local development. Do not use this seed phrase on mainnet or any public testnet.
-
-When connecting your wallet to the local development environment, you will be prompted to add the network to your wallet.
-
-Use the [Worldcoin Simulator](https://simulator.worldcoin.org) in place of World App to scan the IDKit QR codes and generate the zero-knowledge proofs.
