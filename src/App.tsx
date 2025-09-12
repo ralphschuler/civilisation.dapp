@@ -1,13 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useMiniKit } from '@worldcoin/minikit-js/minikit-provider';
 import { MiniKit } from '@worldcoin/minikit-js';
 
 function App() {
-  const [isInstalled, setIsInstalled] = useState(false)
+  const { isInstalled, } = useMiniKit();
 
-  useEffect(() => {
-    setIsInstalled(MiniKit.isInstalled());
-  }, []);
-
+  const { user } = MiniKit;
 
 
   return (
@@ -15,11 +12,19 @@ function App() {
       {isInstalled ? (
         <div>
           <p>MiniKit is installed</p>
+          {user ? (
+            <div>
+              <p>User ID: {user.username}</p>
+              <p>Address: {user.walletAddress}</p>
+            </div>
+          ) : (
+            <p>User not found</p>
+          )}
         </div>
       ) : (
         <div>
           <p>MiniKit is not installed</p>
-          <button onClick={() => MiniKit.install()}>Install MiniKit</button>
+          <button onClick={() => MiniKit.install(import.meta.env.VITE_PUBLIC_APP_ID)}>Install MiniKit</button>
         </div>
       )}
     </>
