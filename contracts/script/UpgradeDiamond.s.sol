@@ -32,7 +32,7 @@ contract UpgradeDiamond is Script {
         IDiamondCut(diamondAddress).diamondCut(cut, address(0), "");
 
         console.log(
-            "✅ Upgraded Diamond at",
+            "Upgraded Diamond at",
             diamondAddress,
             "with new GoldFacet at",
             address(newGoldFacet)

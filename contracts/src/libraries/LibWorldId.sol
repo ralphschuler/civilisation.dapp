@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {IWorldId} from "../interfaces/IWorldId.sol";
+import {IWorldID} from "../interfaces/IWorldID.sol";
 
 /// @title WorldIdLib
 /// @notice Wiederverwendbare Library für WorldID-Verification in Diamonds oder Contracts
@@ -10,7 +10,7 @@ library LibWorldId {
         keccak256("diamond.storage.worldid");
 
     struct Layout {
-        IWorldId worldId; // WorldID Router Contract
+        IWorldID worldId; // WorldID Router Contract
         uint256 groupId; // e.g. 1 for Orb-verified humans
         string appId; // deine App ID aus dem Developer Portal
         string actionId; // deine Action ID
@@ -26,7 +26,7 @@ library LibWorldId {
 
     /// @notice setzt Konfiguration für WorldID
     function configure(
-        IWorldId worldId_,
+        IWorldID worldId_,
         uint256 groupId_,
         string memory appId_,
         string memory actionId_

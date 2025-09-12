@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-interface IWorldId {
+interface IWorldID {
     /// @notice Reverts if the zero-knowledge proof is invalid.
     /// @param root The root of the Merkle tree
     /// @param groupId The id of the Semaphore group

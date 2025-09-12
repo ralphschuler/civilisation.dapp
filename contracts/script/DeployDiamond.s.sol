@@ -75,7 +75,7 @@ contract DeployDiamond is Script {
             abi.encodeWithSelector(DiamondInit.init.selector)
         );
 
-        console.log("✅ Diamond deployed at:", address(diamond));
+        console.log("Diamond deployed at:", address(diamond));
         console.log("DiamondCutFacet at:", address(cutFacet));
         console.log("DiamondLoupeFacet at:", address(loupeFacet));
         console.log("OwnershipFacet at:", address(ownerFacet));
