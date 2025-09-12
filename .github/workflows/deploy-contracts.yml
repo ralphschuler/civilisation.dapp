@@ -115,7 +115,7 @@ jobs:
 
       - name: Ensure Environment exists
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           ENVIRONMENT: testnet
         run: |
           gh api \
@@ -127,7 +127,7 @@ jobs:
 
       - name: Save address as GitHub Environment variable
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           ENVIRONMENT: testnet
           APP_CONTRACT_ADDRESS: ${{ steps.extract.outputs.contract_address }}
         run: |
