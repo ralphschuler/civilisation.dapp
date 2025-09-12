@@ -79,20 +79,25 @@ jobs:
           DIAMOND_ADDR: ${{ steps.extract.outputs.diamond_address }}
         run: |
           set -e
-          if ! gh api \
-            --method PUT \
+          if gh api \
+            --method GET \
             -H "Accept: application/vnd.github+json" \
-            -f name="APP_CONTRACT_ADDRESS" \
-            -f value="$DIAMOND_ADDR" \
             "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables/APP_CONTRACT_ADDRESS" \
             >/dev/null 2>&1; then
+            # Variable exists → update it
+            gh api \
+              --method PATCH \
+              -H "Accept: application/vnd.github+json" \
+              -f value="$DIAMOND_ADDR" \
+              "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables/APP_CONTRACT_ADDRESS"
+          else
+            # Variable does not exist → create it
             gh api \
               --method POST \
               -H "Accept: application/vnd.github+json" \
               -f name="APP_CONTRACT_ADDRESS" \
               -f value="$DIAMOND_ADDR" \
-              "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables" \
-              >/dev/null
+              "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables"
           fi
           echo "✅ Saved APP_CONTRACT_ADDRESS=$DIAMOND_ADDR to environment '$ENVIRONMENT'"
 
