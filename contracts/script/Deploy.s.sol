@@ -41,7 +41,7 @@ contract DeployScript is Script, CutSelector {
         console2.log("Diamond deployed:", address(diamond));
 
         // --- 3. Discover protocol facet *folder names* ---
-        string;
+        string[] memory cmd = new string[](3);
         cmd[0] = "bash";
         cmd[1] = "-lc";
         // list only folder names under src/protocol

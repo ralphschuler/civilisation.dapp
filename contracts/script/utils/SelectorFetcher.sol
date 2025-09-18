@@ -13,7 +13,7 @@ abstract contract SelectorFetcher is Script {
     /// @param fqcn The fully-qualified contract name (e.g., "FeatureOneFacet").
     /// @return selectors An array of function selectors (bytes4) parsed from the forge output.
     function selectorsFor(string memory fqcn) internal returns (bytes4[] memory selectors) {
-        string;
+        string[] memory cmd = new string[](3);
         cmd[0] = "bash";
         cmd[1] = "-lc";
         // Add a "SELECTOR:" prefix to each line to force string output from ffi
