@@ -5,6 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { globalIgnores } from 'eslint/config'
 import prettier from 'eslint-plugin-prettier'
+import github from 'eslint-formatter-github'
 
 export default tseslint.config([
   globalIgnores(['dist']),
@@ -21,7 +22,7 @@ export default tseslint.config([
       reactRefresh.configs.vite,
       prettier.configs.recommended,
     ],
-    plugins: [prettier],
+    plugins: [prettier, github],
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: 'module',
