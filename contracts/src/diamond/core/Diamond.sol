@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
 /******************************************************************************\
@@ -36,9 +37,7 @@ contract Diamond {
         }
 
         // get facet from function selector
-        address facet = ds
-            .facetAddressAndSelectorPosition[msg.sig]
-            .facetAddress;
+        address facet = ds.facetAddressAndSelectorPosition[msg.sig].facetAddress;
         if (facet == address(0)) {
             revert FunctionNotFound(msg.sig);
         }

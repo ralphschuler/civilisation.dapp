@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
 struct FeatureTwoStorage {
@@ -5,16 +6,11 @@ struct FeatureTwoStorage {
 }
 
 library FeatureTwoLib {
-    bytes32 constant FEATURE_TWO_STORAGE_POSITION =
-        keccak256("feature-two.storage");
+    bytes32 constant FEATURE_TWO_STORAGE_POSITION = keccak256("feature-two.storage");
 
     /// @notice Return the storage struct for reading and writing.
     /// @return storageStruct The FeatureTwo storage struct.
-    function s()
-        internal
-        pure
-        returns (FeatureTwoStorage storage storageStruct)
-    {
+    function s() internal pure returns (FeatureTwoStorage storage storageStruct) {
         bytes32 position = FEATURE_TWO_STORAGE_POSITION;
         assembly {
             storageStruct.slot := position

@@ -1,9 +1,11 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
 import "forge-std/Script.sol";
 import "forge-std/console2.sol";
 
 import {Diamond} from "../src/diamond/core/Diamond.sol";
+import {FacetCut, FacetCutAction} from "../../src/diamond/core/DiamondCut/DiamondCutLib.sol";
 import {IDiamondCut} from "../src/diamond/core/DiamondCut/IDiamondCut.sol";
 import {DiamondInit} from "../src/diamond/initializers/DiamondInit.sol";
 import {IDiamondInit} from "../src/diamond/initializers/IDiamondInit.sol";
@@ -12,7 +14,6 @@ import {IDiamondInit} from "../src/diamond/initializers/IDiamondInit.sol";
 import {DiamondCutFacet} from "../src/diamond/core/DiamondCut/DiamondCutFacet.sol";
 import {DiamondLoupeFacet} from "../src/diamond/core/DiamondLoupe/DiamondLoupeFacet.sol";
 
-// Utils
 import {CutSelector} from "./utils/CutSelector.sol";
 
 contract DeployScript is Script, CutSelector {
@@ -32,7 +33,7 @@ contract DeployScript is Script, CutSelector {
         console2.log("Diamond deployed:", address(diamond));
 
         // --- 3. Discover protocol facet *folder names* ---
-        string;
+        string[] memory cmd = new string[](3);
         cmd[0] = "bash";
         cmd[1] = "-lc";
         // list only folder names under src/protocol
@@ -76,17 +77,11 @@ contract DeployScript is Script, CutSelector {
         }
 
         // --- 6. Generate cuts ---
-        IDiamondCut.FacetCut[] memory cuts = generateCutDataBatch(names, addrs);
+        FacetCut[] memory cuts = generateCutDataBatch(names, addrs);
 
         // --- 7. Diamond cut + Initializer ---
-        bytes memory initCalldata = abi.encodeWithSelector(
-            IDiamondInit.init.selector
-        );
-        IDiamondCut(address(diamond)).diamondCut(
-            cuts,
-            address(diamondInit),
-            initCalldata
-        );
+        bytes memory initCalldata = abi.encodeWithSelector(IDiamondInit.init.selector);
+        IDiamondCut(address(diamond)).diamondCut(cuts, address(diamondInit), initCalldata);
 
         vm.stopBroadcast();
 

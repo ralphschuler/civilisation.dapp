@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
 /******************************************************************************\
@@ -26,22 +27,14 @@ contract DiamondLoupeFacet is IDiamondLoupe {
         uint256 numFacets;
 
         // loop through function selectors
-        for (
-            uint256 selectorIndex;
-            selectorIndex < selectorCount;
-            selectorIndex++
-        ) {
+        for (uint256 selectorIndex; selectorIndex < selectorCount; selectorIndex++) {
             bytes4 selector = ds.selectors[selectorIndex];
-            address facetAddress_ = ds
-                .facetAddressAndSelectorPosition[selector]
-                .facetAddress;
+            address facetAddress_ = ds.facetAddressAndSelectorPosition[selector].facetAddress;
             bool continueLoop = false;
             // find the functionSelectors array for selector and add selector to it
             for (uint256 facetIndex; facetIndex < numFacets; facetIndex++) {
                 if (facets_[facetIndex].facetAddress == facetAddress_) {
-                    facets_[facetIndex].functionSelectors[
-                        numFacetSelectors[facetIndex]
-                    ] = selector;
+                    facets_[facetIndex].functionSelectors[numFacetSelectors[facetIndex]] = selector;
                     numFacetSelectors[facetIndex]++;
                     continueLoop = true;
                     break;
@@ -86,15 +79,9 @@ contract DiamondLoupeFacet is IDiamondLoupe {
         uint256 numSelectors;
         _facetFunctionSelectors = new bytes4[](selectorCount);
         // loop through function selectors
-        for (
-            uint256 selectorIndex;
-            selectorIndex < selectorCount;
-            selectorIndex++
-        ) {
+        for (uint256 selectorIndex; selectorIndex < selectorCount; selectorIndex++) {
             bytes4 selector = ds.selectors[selectorIndex];
-            address facetAddress_ = ds
-                .facetAddressAndSelectorPosition[selector]
-                .facetAddress;
+            address facetAddress_ = ds.facetAddressAndSelectorPosition[selector].facetAddress;
             if (_facet == facetAddress_) {
                 _facetFunctionSelectors[numSelectors] = selector;
                 numSelectors++;
@@ -108,27 +95,16 @@ contract DiamondLoupeFacet is IDiamondLoupe {
 
     /// @notice Get all the facet addresses used by a diamond.
     /// @return facetAddresses_
-    function facetAddresses()
-        external
-        view
-        override
-        returns (address[] memory facetAddresses_)
-    {
+    function facetAddresses() external view override returns (address[] memory facetAddresses_) {
         DiamondCutStorage storage ds = DiamondCutLib.s();
         uint256 selectorCount = ds.selectors.length;
         // create an array set to the maximum size possible
         facetAddresses_ = new address[](selectorCount);
         uint256 numFacets;
         // loop through function selectors
-        for (
-            uint256 selectorIndex;
-            selectorIndex < selectorCount;
-            selectorIndex++
-        ) {
+        for (uint256 selectorIndex; selectorIndex < selectorCount; selectorIndex++) {
             bytes4 selector = ds.selectors[selectorIndex];
-            address facetAddress_ = ds
-                .facetAddressAndSelectorPosition[selector]
-                .facetAddress;
+            address facetAddress_ = ds.facetAddressAndSelectorPosition[selector].facetAddress;
             bool continueLoop = false;
             // see if we have collected the address already and break out of loop if we have
             for (uint256 facetIndex; facetIndex < numFacets; facetIndex++) {
@@ -160,8 +136,6 @@ contract DiamondLoupeFacet is IDiamondLoupe {
         bytes4 _functionSelector
     ) external view override returns (address facetAddress_) {
         DiamondCutStorage storage ds = DiamondCutLib.s();
-        facetAddress_ = ds
-            .facetAddressAndSelectorPosition[_functionSelector]
-            .facetAddress;
+        facetAddress_ = ds.facetAddressAndSelectorPosition[_functionSelector].facetAddress;
     }
 }

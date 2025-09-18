@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
 import {ERC173Lib} from "./ERC173Lib.sol";
