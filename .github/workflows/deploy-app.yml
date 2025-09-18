@@ -2,9 +2,9 @@ name: Deploy App
 
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
     paths-ignore:
-      - "contracts/*"
+      - 'contracts/*'
   workflow_dispatch:
 
 permissions:
@@ -13,7 +13,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "deploy-app"
+  group: 'deploy-app'
   cancel-in-progress: false
 
 jobs:

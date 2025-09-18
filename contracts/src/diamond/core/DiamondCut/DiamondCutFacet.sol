@@ -1,26 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-/******************************************************************************\
-* Author: Nick Mudge <nick@perfectabstractions.com> (https://twitter.com/mudgen)
-* EIP-2535 Diamonds: https://eips.ethereum.org/EIPS/eip-2535
-/******************************************************************************/
-
 import {ERC173} from "../../implementations/ERC173/ERC173.sol";
-
 import {IDiamondCut} from "../DiamondCut/IDiamondCut.sol";
 import {DiamondCutLib, FacetCut} from "./DiamondCutLib.sol";
 
-// Remember to add the loupe functions from DiamondLoupeFacet to the diamond.
-// The loupe functions are required by the EIP2535 Diamonds standard
-
+/// @title DiamondCutFacet for EIP-2535 Diamonds
+/// @author Nick Mudge
+/// @notice Implements the `diamondCut` function required by the Diamond Standard (EIP-2535).
+/// @dev Inherits `ERC173` for ownership checks. Delegates cut logic to `DiamondCutLib`.
+///      Remember to include the loupe functions from `DiamondLoupeFacet` in your Diamond deployment.
 contract DiamondCutFacet is IDiamondCut, ERC173 {
-    /// @notice Add/replace/remove any number of functions and optionally execute
-    ///         a function with delegatecall
-    /// @param _diamondCut Contains the facet addresses and function selectors
-    /// @param init The address of the contract or facet to execute "data"
-    /// @param data A function call, including function selector and arguments
-    ///             calldata is executed with delegatecall on "init"
+    /// @notice Add, replace, or remove any number of functions and optionally execute
+    ///         an initialization function with `delegatecall`.
+    /// @dev Restricted to the Diamond owner via `onlyOwner`.
+    /// @param _diamondCut Array of FacetCut structs that define which functions to add, replace, or remove
+    /// @param init Address of the contract/facet containing the initialization function to execute
+    /// @param data Calldata of the initialization function to execute via `delegatecall` on `init`
     function diamondCut(
         FacetCut[] calldata _diamondCut,
         address init,

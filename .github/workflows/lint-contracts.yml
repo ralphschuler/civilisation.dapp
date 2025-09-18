@@ -14,6 +14,7 @@ on:
       - '.solhint.json'
       - '.prettierrc*'
       - '.github/workflows/lint-contracts.yml'
+  workflow_dispatch:
 
 jobs:
   lint-contracts:

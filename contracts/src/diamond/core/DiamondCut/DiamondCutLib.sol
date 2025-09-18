@@ -1,14 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-/******************************************************************************\
-* Author: Nick Mudge <nick@perfectabstractions.com> (https://twitter.com/mudgen)
-* EIP-2535 Diamonds: https://eips.ethereum.org/EIPS/eip-2535
-/******************************************************************************/
-
-// Remember to add the loupe functions from DiamondLoupeFacet to the diamond.
-// The loupe functions are required by the EIP2535 Diamonds standard
-
+// Errors make cut failures more descriptive and gas efficient
 error NoSelectorsGivenToAdd();
 error NotContractOwner(address _user, address _contractOwner);
 error NoSelectorsProvidedForFacetForCut(address _facetAddress);
@@ -25,32 +18,43 @@ error CannotRemoveFunctionThatDoesNotExist(bytes4 _selector);
 error CannotRemoveImmutableFunction(bytes4 _selector);
 error InitializationFunctionReverted(address initializationContractAddress, bytes data);
 
+/// @notice The type of diamond cut operation: add, replace or remove functions.
 enum FacetCutAction {
     Add,
     Replace,
     Remove
 }
 
+/// @notice Describes a single change to the Diamond function table.
+/// @param facetAddress The facet containing the implementation
+/// @param action The type of cut (Add, Replace, Remove)
+/// @param functionSelectors The selectors affected by the cut
 struct FacetCut {
     address facetAddress;
     FacetCutAction action;
     bytes4[] functionSelectors;
 }
 
+/// @notice Internal mapping from function selector → facet and selector position.
 struct FacetAddressAndSelectorPosition {
     address facetAddress;
     uint16 selectorPosition;
 }
 
+/// @notice Diamond storage for managing selectors and their facet addresses.
 struct DiamondCutStorage {
-    // function selector => facet address and selector position in selectors array
     mapping(bytes4 => FacetAddressAndSelectorPosition) facetAddressAndSelectorPosition;
     bytes4[] selectors;
 }
 
+/// @title DiamondCutLib (internal EIP-2535 implementation)
+/// @author Nick Mudge
+/// @notice Provides internal functions to add, replace, or remove functions in a Diamond.
+/// @dev Storage slot is fixed via keccak256("diamond-cut.storage").
 library DiamondCutLib {
     bytes32 constant DIAMOND_CUT_STORAGE_POSITION = keccak256("diamond-cut.storage");
 
+    /// @notice Accessor for diamond cut storage
     function s() internal pure returns (DiamondCutStorage storage ds) {
         bytes32 position = DIAMOND_CUT_STORAGE_POSITION;
         assembly {
@@ -58,9 +62,13 @@ library DiamondCutLib {
         }
     }
 
+    /// @notice Emitted after a successful diamondCut
     event DiamondCut(FacetCut[] _diamondCut, address init, bytes data);
 
-    // Internal function version of _diamondCut
+    /// @notice Internal diamondCut implementation
+    /// @param _diamondCut Array of FacetCut structs describing changes
+    /// @param init Address to call optional initialization function on
+    /// @param data Calldata for initialization function
     function diamondCut(FacetCut[] memory _diamondCut, address init, bytes memory data) internal {
         for (uint256 facetIndex; facetIndex < _diamondCut.length; facetIndex++) {
             bytes4[] memory functionSelectors = _diamondCut[facetIndex].functionSelectors;
@@ -85,6 +93,9 @@ library DiamondCutLib {
         initializeDiamondCut(init, data);
     }
 
+    /// @notice Adds new function selectors to the diamond
+    /// @param _facetAddress The facet implementing the functions
+    /// @param _functionSelectors The selectors to add
     function addFunctions(address _facetAddress, bytes4[] memory _functionSelectors) internal {
         if (_facetAddress == address(0)) {
             revert CannotAddSelectorsToZeroAddress(_functionSelectors);
@@ -109,6 +120,9 @@ library DiamondCutLib {
         }
     }
 
+    /// @notice Replaces existing function selectors with a new facet address
+    /// @param _facetAddress The facet providing the new implementation
+    /// @param _functionSelectors The selectors to replace
     function replaceFunctions(address _facetAddress, bytes4[] memory _functionSelectors) internal {
         DiamondCutStorage storage ds = s();
         if (_facetAddress == address(0)) {
@@ -118,7 +132,6 @@ library DiamondCutLib {
         for (uint256 selectorIndex; selectorIndex < _functionSelectors.length; selectorIndex++) {
             bytes4 selector = _functionSelectors[selectorIndex];
             address oldFacetAddress = ds.facetAddressAndSelectorPosition[selector].facetAddress;
-            // can't replace immutable functions -- functions defined directly in the diamond in this case
             if (oldFacetAddress == address(this)) {
                 revert CannotReplaceImmutableFunction(selector);
             }
@@ -128,11 +141,13 @@ library DiamondCutLib {
             if (oldFacetAddress == address(0)) {
                 revert CannotReplaceFunctionThatDoesNotExists(selector);
             }
-            // replace old facet address
             ds.facetAddressAndSelectorPosition[selector].facetAddress = _facetAddress;
         }
     }
 
+    /// @notice Removes function selectors from the diamond
+    /// @param _facetAddress Must be address(0) when removing
+    /// @param _functionSelectors The selectors to remove
     function removeFunctions(address _facetAddress, bytes4[] memory _functionSelectors) internal {
         DiamondCutStorage storage ds = s();
         uint256 selectorCount = ds.selectors.length;
@@ -146,12 +161,9 @@ library DiamondCutLib {
             if (oldFacetAddressAndSelectorPosition.facetAddress == address(0)) {
                 revert CannotRemoveFunctionThatDoesNotExist(selector);
             }
-
-            // can't remove immutable functions -- functions defined directly in the diamond
             if (oldFacetAddressAndSelectorPosition.facetAddress == address(this)) {
                 revert CannotRemoveImmutableFunction(selector);
             }
-            // replace selector with last selector
             selectorCount--;
             if (oldFacetAddressAndSelectorPosition.selectorPosition != selectorCount) {
                 bytes4 lastSelector = ds.selectors[selectorCount];
@@ -160,12 +172,14 @@ library DiamondCutLib {
                     .facetAddressAndSelectorPosition[lastSelector]
                     .selectorPosition = oldFacetAddressAndSelectorPosition.selectorPosition;
             }
-            // delete last selector
             ds.selectors.pop();
             delete ds.facetAddressAndSelectorPosition[selector];
         }
     }
 
+    /// @notice Executes optional initialization after a cut
+    /// @param init Address of the contract to delegatecall
+    /// @param data Initialization calldata
     function initializeDiamondCut(address init, bytes memory data) internal {
         if (init == address(0)) {
             return;
@@ -174,7 +188,6 @@ library DiamondCutLib {
         (bool success, bytes memory error) = init.delegatecall(data);
         if (!success) {
             if (error.length > 0) {
-                // bubble up error
                 /// @solidity memory-safe-assembly
                 assembly {
                     let returndata_size := mload(error)
@@ -186,6 +199,9 @@ library DiamondCutLib {
         }
     }
 
+    /// @notice Ensures a given address contains contract code
+    /// @param _contract The address to check
+    /// @param _errorMessage Custom revert message if no code is found
     function enforceHasContractCode(address _contract, string memory _errorMessage) internal view {
         uint256 contractSize;
         assembly {

@@ -5,7 +5,7 @@ import "forge-std/Script.sol";
 import "forge-std/console2.sol";
 
 import {Diamond} from "../src/diamond/core/Diamond.sol";
-import {FacetCut, FacetCutAction} from "../../src/diamond/core/DiamondCut/DiamondCutLib.sol";
+import {FacetCut} from "../../src/diamond/core/DiamondCut/DiamondCutLib.sol";
 import {IDiamondCut} from "../src/diamond/core/DiamondCut/IDiamondCut.sol";
 import {DiamondInit} from "../src/diamond/initializers/DiamondInit.sol";
 import {IDiamondInit} from "../src/diamond/initializers/IDiamondInit.sol";
@@ -16,7 +16,15 @@ import {DiamondLoupeFacet} from "../src/diamond/core/DiamondLoupe/DiamondLoupeFa
 
 import {CutSelector} from "./utils/CutSelector.sol";
 
+/// @title DeployScript for Diamond Standard
+/// @author Ralph Schuler
+/// @notice This deployment script automates deployment of the Diamond proxy,
+///         required facets (Cut & Loupe), and dynamically discovers and deploys
+///         all protocol-specific facets under `src/protocol`.
+/// @dev Uses Foundry's ffi to list protocol folders and deploy facets via `vm.getCode`.
 contract DeployScript is Script, CutSelector {
+    /// @notice Entry point for the deployment script.
+    /// @dev Reads `PRIVATE_KEY` from env, deploys the Diamond, initializer, and all facets.
     function run() external {
         uint256 pk = vm.envUint("PRIVATE_KEY");
         address deployer = vm.addr(pk);
@@ -33,7 +41,7 @@ contract DeployScript is Script, CutSelector {
         console2.log("Diamond deployed:", address(diamond));
 
         // --- 3. Discover protocol facet *folder names* ---
-        string[] memory cmd = new string[](3);
+        string;
         cmd[0] = "bash";
         cmd[1] = "-lc";
         // list only folder names under src/protocol
@@ -77,9 +85,11 @@ contract DeployScript is Script, CutSelector {
         }
 
         // --- 6. Generate cuts ---
+        /// @notice Generates the FacetCut array for all deployed facets.
         FacetCut[] memory cuts = generateCutDataBatch(names, addrs);
 
         // --- 7. Diamond cut + Initializer ---
+        /// @dev Calls the DiamondCut with initializer calldata.
         bytes memory initCalldata = abi.encodeWithSelector(IDiamondInit.init.selector);
         IDiamondCut(address(diamond)).diamondCut(cuts, address(diamondInit), initCalldata);
 

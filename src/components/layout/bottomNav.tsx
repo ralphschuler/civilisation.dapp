@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom"
-import { Home, LayoutDashboard, Group, Sword } from "lucide-react"
+import { Link } from 'react-router-dom'
+import { Home, LayoutDashboard, Group, Sword } from 'lucide-react'
 
 export default function BottomNav() {
   return (
-    <div className="bg-gray-100 border-t">
+    <div className="border-t bg-gray-100">
       <div className="grid grid-cols-4 text-center text-sm">
         <Link to="/dashboard" className="flex flex-col items-center py-10">
           <LayoutDashboard className="h-5 w-5" />

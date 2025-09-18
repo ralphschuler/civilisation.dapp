@@ -5,31 +5,46 @@ import {IDiamondCut} from "../../src/diamond/core/DiamondCut/IDiamondCut.sol";
 import {FacetCut, FacetCutAction} from "../../src/diamond/core/DiamondCut/DiamondCutLib.sol";
 import {SelectorFetcher} from "./SelectorFetcher.sol";
 
+/// @title CutSelector
+/// @author Ralph Schuler
+/// @notice Utility contract to generate diamond cut data from facet names and addresses,
+///         ensuring selectors are properly collected and duplicates are filtered.
+/// @dev Relies on SelectorFetcher to resolve function selectors via forge.
 abstract contract CutSelector is SelectorFetcher {
+    /// @notice Emitted when a duplicate function selector is encountered in facet processing.
+    /// @param facetName The name of the facet where the duplicate selector was found
+    /// @param selector The duplicate function selector
     event DuplicateSelector(string indexed facetName, bytes4 indexed selector);
 
+    /// @notice Generate a cut data array for a single facet
+    /// @param facetName The name of the facet contract (must match the contract name)
+    /// @param facetAddress The deployed address of the facet
+    /// @return cut An array with a single FacetCut describing the facet's selectors
     function generateCutData(
         string memory facetName,
         address facetAddress
-    ) public returns (FacetCut[] memory) {
-        FacetCut[] memory cut = new FacetCut[](1);
+    ) public returns (FacetCut[] memory cut) {
+        cut = new FacetCut;
         bytes4[] memory cutSelectors = getCutSelector(facetName);
         cut[0] = IDiamondCut.FacetCut({
             facetAddress: facetAddress,
             action: FacetCutAction.Add,
             functionSelectors: cutSelectors
         });
-        return cut;
     }
 
+    /// @notice Generate cut data for multiple facets, automatically filtering duplicate selectors
+    /// @param facetNames The list of facet contract names
+    /// @param facetAddresses The corresponding list of deployed facet addresses
+    /// @return cut An array of FacetCut structs, one per facet
     function generateCutDataBatch(
         string[] memory facetNames,
         address[] memory facetAddresses
-    ) public returns (FacetCut[] memory) {
+    ) public returns (FacetCut[] memory cut) {
         require(facetNames.length == facetAddresses.length, "CutSelector: array length mismatch");
 
         uint256 facetCount = facetNames.length;
-        FacetCut[] memory cut = new FacetCut[](facetCount);
+        cut = new FacetCut[](facetCount);
 
         // Determine the total number of selectors to size the seenSelectors array dynamically.
         uint256 totalSelectorCount = 0;
@@ -59,7 +74,6 @@ abstract contract CutSelector is SelectorFetcher {
                 if (!isDuplicate) {
                     uniqueSelectors[uniqueSelectorsCount] = cutSelectors[j];
                     uniqueSelectorsCount++;
-                    // No need to check size now, as it's dynamically sized
                     seenSelectors[seenSelectorsCount] = cutSelectors[j];
                     seenSelectorsCount++;
                 }
@@ -77,14 +91,18 @@ abstract contract CutSelector is SelectorFetcher {
                 functionSelectors: finalSelectors
             });
         }
-
-        return cut;
     }
 
+    /// @notice Get all function selectors for a given facet
+    /// @param facetName The name of the facet contract
+    /// @return cutSelectors The function selectors extracted from the facet
     function getCutSelector(string memory facetName) public returns (bytes4[] memory cutSelectors) {
         cutSelectors = SelectorFetcher.selectorsFor(facetName);
     }
 
+    /// @notice Count the number of function selectors in a facet
+    /// @param facetName The name of the facet contract
+    /// @return The number of selectors defined in the facet
     function getSelectorCount(string memory facetName) public returns (uint256) {
         return selectorsFor(facetName).length;
     }
