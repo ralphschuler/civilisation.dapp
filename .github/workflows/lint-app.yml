@@ -35,9 +35,4 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Run ESLint
-        run: bun run lint:ts -- --format sarif --output-file eslint-results.sarif
-
-      - name: Upload ESLint results
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: eslint-results.sarif
+        run: bun run lint:ts -- --format github -

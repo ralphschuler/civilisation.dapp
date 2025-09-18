@@ -1,6 +1,7 @@
 pragma solidity ^0.8.30;
 
 import {IDiamondCut} from "../../src/diamond/core/DiamondCut/IDiamondCut.sol";
+import {FacetCut, FacetCutAction} from "../../src/diamond/core/DiamondCut/DiamondCutLib.sol";
 import {SelectorFetcher} from "./SelectorFetcher.sol";
 
 abstract contract CutSelector is SelectorFetcher {
@@ -9,12 +10,12 @@ abstract contract CutSelector is SelectorFetcher {
     function generateCutData(
         string memory facetName,
         address facetAddress
-    ) public returns (IDiamondCut.FacetCut[] memory) {
-        IDiamondCut.FacetCut[] memory cut = new IDiamondCut.FacetCut[](1);
+    ) public returns (FacetCut[] memory) {
+        FacetCut[] memory cut = new FacetCut[](1);
         bytes4[] memory cutSelectors = getCutSelector(facetName);
         cut[0] = IDiamondCut.FacetCut({
             facetAddress: facetAddress,
-            action: IDiamondCut.FacetCutAction.Add,
+            action: FacetCutAction.Add,
             functionSelectors: cutSelectors
         });
         return cut;
@@ -23,16 +24,11 @@ abstract contract CutSelector is SelectorFetcher {
     function generateCutDataBatch(
         string[] memory facetNames,
         address[] memory facetAddresses
-    ) public returns (IDiamondCut.FacetCut[] memory) {
-        require(
-            facetNames.length == facetAddresses.length,
-            "CutSelector: array length mismatch"
-        );
+    ) public returns (FacetCut[] memory) {
+        require(facetNames.length == facetAddresses.length, "CutSelector: array length mismatch");
 
         uint256 facetCount = facetNames.length;
-        IDiamondCut.FacetCut[] memory cut = new IDiamondCut.FacetCut[](
-            facetCount
-        );
+        FacetCut[] memory cut = new FacetCut[](facetCount);
 
         // Determine the total number of selectors to size the seenSelectors array dynamically.
         uint256 totalSelectorCount = 0;
@@ -74,9 +70,9 @@ abstract contract CutSelector is SelectorFetcher {
                 finalSelectors[j] = uniqueSelectors[j];
             }
 
-            cut[i] = IDiamondCut.FacetCut({
+            cut[i] = FacetCut({
                 facetAddress: facetAddresses[i],
-                action: IDiamondCut.FacetCutAction.Add,
+                action: FacetCutAction.Add,
                 functionSelectors: finalSelectors
             });
         }
@@ -84,15 +80,11 @@ abstract contract CutSelector is SelectorFetcher {
         return cut;
     }
 
-    function getCutSelector(
-        string memory facetName
-    ) public returns (bytes4[] memory cutSelectors) {
+    function getCutSelector(string memory facetName) public returns (bytes4[] memory cutSelectors) {
         cutSelectors = SelectorFetcher.selectorsFor(facetName);
     }
 
-    function getSelectorCount(
-        string memory facetName
-    ) public returns (uint256) {
+    function getSelectorCount(string memory facetName) public returns (uint256) {
         return selectorsFor(facetName).length;
     }
 }
