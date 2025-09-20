@@ -5,7 +5,7 @@ import "forge-std/Script.sol";
 import "forge-std/console2.sol";
 
 import {Diamond, DiamondArgs} from "../src/diamond/core/Diamond.sol";
-import {FacetCut, FacetCutAction} from "../../src/diamond/core/DiamondCut/DiamondCutLib.sol";
+import {FacetCut, FacetCutAction} from "../src/diamond/core/DiamondCut/DiamondCutLib.sol";
 import {IDiamondCut} from "../src/diamond/core/DiamondCut/IDiamondCut.sol";
 import {DiamondInit} from "../src/diamond/initializers/DiamondInit.sol";
 import {IDiamondInit} from "../src/diamond/initializers/IDiamondInit.sol";
@@ -30,8 +30,6 @@ contract DeployScript is Script, CutSelector {
     /// @dev Reads `PRIVATE_KEY` from env, deploys the Diamond, initializer, and all facets.
     function run() external {
         uint256 pk = vm.envUint("PRIVATE_KEY");
-        address deployer = vm.addr(pk);
-
         vm.startBroadcast(pk);
 
         // --- 1. Init + Base Facets ---
