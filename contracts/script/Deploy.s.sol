@@ -4,8 +4,8 @@ pragma solidity ^0.8.30;
 import "forge-std/Script.sol";
 import "forge-std/console2.sol";
 
-import {Diamond} from "../src/diamond/core/Diamond.sol";
-import {FacetCut} from "../../src/diamond/core/DiamondCut/DiamondCutLib.sol";
+import {Diamond, DiamondArgs} from "../src/diamond/core/Diamond.sol";
+import {FacetCut, FacetCutAction} from "../../src/diamond/core/DiamondCut/DiamondCutLib.sol";
 import {IDiamondCut} from "../src/diamond/core/DiamondCut/IDiamondCut.sol";
 import {DiamondInit} from "../src/diamond/initializers/DiamondInit.sol";
 import {IDiamondInit} from "../src/diamond/initializers/IDiamondInit.sol";
@@ -39,11 +39,25 @@ contract DeployScript is Script, CutSelector {
         DiamondCutFacet cutFacet = new DiamondCutFacet();
         DiamondLoupeFacet loupeFacet = new DiamondLoupeFacet();
 
-        // --- 2. Deploy Diamond with CutFacet ---
-        Diamond diamond = new Diamond(deployer, address(cutFacet));
+        // --- 2. Prepare initial cut: only CutFacet required at constructor time
+        FacetCut[] memory initialCut = new FacetCut[](1);
+        {
+            bytes4[] memory selectors = getCutSelector("DiamondCutFacet");
+            initialCut[0] = FacetCut(
+                address(cutFacet),
+                FacetCutAction.Add,
+                selectors
+            );
+        }
+
+        // --- 3. Prepare Constructor Args
+        DiamondArgs memory args = DiamondArgs(address(diamondInit), "");
+
+        // --- 4. Deploy Diamond with CutFacet ---
+        Diamond diamond = new Diamond(initialCut, args);
         console2.log("Diamond deployed:", address(diamond));
 
-        // --- 3. Discover protocol facet *folder names* ---
+        // --- 5. Discover protocol facet *folder names* ---
         string[] memory cmd = new string[](3);
         cmd[0] = "bash";
         cmd[1] = "-lc";
@@ -52,7 +66,7 @@ contract DeployScript is Script, CutSelector {
         bytes memory out = vm.ffi(cmd);
         string[] memory facetBaseNames = StringUtils.splitLines(string(out));
 
-        // --- 4. Prepare arrays (LoupeFacet always included) ---
+        // --- 6. Prepare arrays (LoupeFacet always included) ---
         uint256 facetCount = facetBaseNames.length + 1;
         string[] memory names = new string[](facetCount);
         address[] memory addrs = new address[](facetCount);
@@ -60,7 +74,7 @@ contract DeployScript is Script, CutSelector {
         names[0] = "DiamondLoupeFacet";
         addrs[0] = address(loupeFacet);
 
-        // --- 5. Deploy each protocol facet dynamically ---
+        // --- 7. Deploy each protocol facet dynamically ---
         for (uint256 i = 0; i < facetBaseNames.length; i++) {
             string memory baseName = facetBaseNames[i];
             if (bytes(baseName).length == 0) continue;
@@ -87,11 +101,11 @@ contract DeployScript is Script, CutSelector {
             console2.log("Deployed facet", contractName, facetAddr);
         }
 
-        // --- 6. Generate cuts ---
+        // --- 8. Generate cuts ---
         /// @notice Generates the FacetCut array for all deployed facets.
         FacetCut[] memory cuts = generateCutDataBatch(names, addrs);
 
-        // --- 7. Diamond cut + Initializer ---
+        // --- 9. Diamond cut + Initializer ---
         /// @dev Calls the DiamondCut with initializer calldata.
         bytes memory initCalldata = abi.encodeWithSelector(
             IDiamondInit.init.selector
