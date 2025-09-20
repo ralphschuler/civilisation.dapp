@@ -4,12 +4,12 @@ pragma solidity ^0.8.30;
 import "forge-std/Script.sol";
 import "forge-std/console2.sol";
 
-import {ResourceIds} from "../src/protocol/Resources/ResourcesFacet.sol";
+import {ResourceIds} from "../src/protocol/Resources/ResourcesLib.sol";
 import {ResourceProductionConfig} from "../src/protocol/ResourceProduction/ResourceProductionConfig.sol";
 
 /// @title InitResources Script
 /// @notice Configures base game resource production/balancing values
-contract InitResources is Script {
+contract ConfigureResources is Script {
     function run() external {
         uint256 pk = vm.envUint("PRIVATE_KEY");
         address deployer = vm.addr(pk);

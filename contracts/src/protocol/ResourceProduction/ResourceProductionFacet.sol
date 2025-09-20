@@ -2,16 +2,17 @@
 pragma solidity ^0.8.30;
 
 import {ERC173} from "../../diamond/implementations/ERC173/ERC173.sol";
-import {ResourcesLib} from "../Resources/ResourcesLib.sol";
+import {ResourcesLib, ResourceIds} from "../Resources/ResourcesLib.sol";
 import {ResourceProductionLib} from "./ResourceProductionLib.sol";
 import {ResourceProductionConfig} from "./ResourceProductionConfig.sol";
+import {StarterPackLib} from "../StarterPack/StarterPackLib.sol";
 
 /// @title ResourceProductionFacet
 /// @notice Handles timed generation of resources per player
 contract ResourceProductionFacet is ERC173 {
     using ResourceProductionLib for address;
 
-    uint256 public constant GOLD = 1; // ID aus ERC1155Resources
+    uint256 public constant GOLD = ResourceIds.GOLD; // ID aus ERC1155Resources
 
     event Claimed(
         address indexed player,
@@ -35,6 +36,8 @@ contract ResourceProductionFacet is ERC173 {
 
     /// @notice Claim produced resources
     function claim(uint256 resourceId) external {
+        StarterPackLib.giveIfNew(msg.sender);
+
         uint256 amount = ResourceProductionLib._applyClaim(
             msg.sender,
             resourceId

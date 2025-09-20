@@ -1,6 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
+library ResourceIds {
+    uint256 constant GOLD = 1;
+    uint256 constant IRON = 2;
+    uint256 constant STONE = 3;
+    uint256 constant WOOD = 4;
+}
+
 /// @title ERC1155ResourcesLib
 /// @notice Storage + helpers for ERC1155Resources Facet
 library ResourcesLib {
