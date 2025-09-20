@@ -4,6 +4,7 @@ out = "out"
 ffi = true
 ast = true
 build_info = true
+var_ir = true
 extra_output = ["storageLayout"]
 libs = ["lib"]
 

@@ -107,14 +107,16 @@ contract DeployScript is Script, CutSelector {
 
         // --- 9. Diamond cut + Initializer ---
         /// @dev Calls the DiamondCut with initializer calldata.
-        bytes memory initCalldata = abi.encodeWithSelector(
-            IDiamondInit.init.selector
-        );
-        IDiamondCut(address(diamond)).diamondCut(
-            cuts,
-            address(diamondInit),
-            initCalldata
-        );
+        {
+            bytes memory initCalldata = abi.encodeWithSelector(
+                IDiamondInit.init.selector
+            );
+            IDiamondCut(address(diamond)).diamondCut(
+                cuts,
+                address(diamondInit),
+                initCalldata
+            );
+        }
 
         vm.stopBroadcast();
 
