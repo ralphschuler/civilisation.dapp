@@ -69,12 +69,12 @@ contract DeployScript is Script, CutSelector {
         cmd[0] = "bash";
         cmd[1] = "-lc";
         // list only folder names under src/protocol
-        cmd[2] = "ls -1 src/protocol";
+        cmd[2] = "find src/protocols -type f -name '*Facet.sol'";
         bytes memory out = vm.ffi(cmd);
-        string[] memory facetBaseNames = StringUtils.splitLines(string(out));
+        string[] memory facetPaths = StringUtils.splitLines(string(out));
 
         // --- 6. Prepare arrays (LoupeFacet always included) ---
-        uint256 facetCount = facetBaseNames.length + 1;
+        uint256 facetCount = facetPaths.length + 1;
         string[] memory names = new string[](facetCount);
         address[] memory addrs = new address[](facetCount);
 
@@ -82,16 +82,13 @@ contract DeployScript is Script, CutSelector {
         addrs[0] = address(loupeFacet);
 
         // --- 7. Deploy each protocol facet dynamically ---
-        for (uint256 i = 0; i < facetBaseNames.length; i++) {
-            string memory baseName = facetBaseNames[i];
-            if (bytes(baseName).length == 0) continue;
+        for (uint256 i = 0; i < facetPaths.length; i++) {
+            string memory path = facetPaths[i];
+            if (bytes(path).length == 0) continue;
 
-            string memory contractName = string.concat(baseName, "Facet");
-            string memory path = string.concat(
-                "src/protocol/",
-                baseName,
-                "/",
-                contractName,
+            string memory filename = StringUtils.basename(path);
+            string memory contractName = StringUtils.stripSuffix(
+                filename,
                 ".sol"
             );
 

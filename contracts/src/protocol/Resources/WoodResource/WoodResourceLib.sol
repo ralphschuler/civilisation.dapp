@@ -2,8 +2,8 @@
 pragma solidity ^0.8.30;
 
 /// @title WoodLib
-/// @notice Storage and helper functions for the Wood ERC20 Facet.
-library ERC20WoodResourceLib {
+/// @notice Storage and helper functions for the Wood  Facet.
+library WoodResourceLib {
     // --- Storage Slot ---
     bytes32 constant Wood_STORAGE_POSITION = keccak256("diamond.resource.Wood");
 
@@ -22,7 +22,7 @@ library ERC20WoodResourceLib {
         }
     }
 
-    // --- ERC20 Helper Functions ---
+    // ---  Helper Functions ---
 
     function balanceOf(address account) internal view returns (uint256) {
         return s().balances[account];

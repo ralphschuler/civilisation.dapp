@@ -1,35 +1,35 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-import {ERC173} from "../../diamond/implementations/ERC173/ERC173.sol";
-import {ERC20WoodResourceLib} from "./ERC20WoodResourceLib.sol";
+import {ERC173} from "../../../diamond/implementations/ERC173/ERC173.sol";
+import {WoodResourceLib} from "./WoodResourceLib.sol";
 
-/// @title ERC20WoodResource
-/// @notice ERC20-compatible facet for the "Wood" resource.
-contract ERC20WoodResource is ERC173 {
+/// @title WoodResource
+/// @notice -compatible facet for the "Wood" resource.
+contract WoodResource is ERC173 {
     // --- Metadata ---
     string public constant name = "Wood";
     string public constant symbol = "GLD";
     uint8 public constant decimals = 18;
 
-    // --- ERC20 Standard Functions ---
+    // ---  Standard Functions ---
 
     function totalSupply() external view returns (uint256) {
-        return ERC20WoodResourceLib.totalSupply();
+        return WoodResourceLib.totalSupply();
     }
 
     function balanceOf(address account) external view returns (uint256) {
-        return ERC20WoodResourceLib.balanceOf(account);
+        return WoodResourceLib.balanceOf(account);
     }
 
     function transfer(address to, uint256 amount) external returns (bool) {
-        ERC20WoodResourceLib._transfer(msg.sender, to, amount);
+        WoodResourceLib._transfer(msg.sender, to, amount);
         emit Transfer(msg.sender, to, amount);
         return true;
     }
 
     function approve(address spender, uint256 amount) external returns (bool) {
-        ERC20WoodResourceLib.s().allowances[msg.sender][spender] = amount;
+        WoodResourceLib.s().allowances[msg.sender][spender] = amount;
         emit Approval(msg.sender, spender, amount);
         return true;
     }
@@ -38,7 +38,7 @@ contract ERC20WoodResource is ERC173 {
         address owner,
         address spender
     ) external view returns (uint256) {
-        return ERC20WoodResourceLib.allowance(owner, spender);
+        return WoodResourceLib.allowance(owner, spender);
     }
 
     function transferFrom(
@@ -46,30 +46,30 @@ contract ERC20WoodResource is ERC173 {
         address to,
         uint256 amount
     ) external returns (bool) {
-        uint256 currentAllowance = ERC20WoodResourceLib.s().allowances[from][
+        uint256 currentAllowance = WoodResourceLib.s().allowances[from][
             msg.sender
         ];
         require(currentAllowance >= amount, "Wood: allowance exceeded");
 
         if (currentAllowance != type(uint256).max) {
-            ERC20WoodResourceLib.s().allowances[from][msg.sender] =
+            WoodResourceLib.s().allowances[from][msg.sender] =
                 currentAllowance -
                 amount;
         }
 
-        ERC20WoodResourceLib._transfer(from, to, amount);
+        WoodResourceLib._transfer(from, to, amount);
         emit Transfer(from, to, amount);
         return true;
     }
 
     // --- Mint / Burn ---
     function mint(address to, uint256 amount) external onlyOwner {
-        ERC20WoodResourceLib._mint(to, amount);
+        WoodResourceLib._mint(to, amount);
         emit Transfer(address(0), to, amount);
     }
 
     function burn(address from, uint256 amount) external onlyOwner {
-        ERC20WoodResourceLib._burn(from, amount);
+        WoodResourceLib._burn(from, amount);
         emit Transfer(from, address(0), amount);
     }
 

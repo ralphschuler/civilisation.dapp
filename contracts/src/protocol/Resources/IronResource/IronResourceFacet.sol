@@ -1,35 +1,35 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-import {ERC173} from "../../diamond/implementations/ERC173/ERC173.sol";
-import {ERC20GoldResourceLib} from "./ERC20GoldResourceLib.sol";
+import {ERC173} from "../../../diamond/implementations/ERC173/ERC173.sol";
+import {IronResourceLib} from "./IronResourceLib.sol";
 
-/// @title ERC20GoldResource
-/// @notice ERC20-compatible facet for the "Gold" resource.
-contract ERC20GoldResource is ERC173 {
+/// @title IronResource
+/// @notice -compatible facet for the "Iron" resource.
+contract IronResource is ERC173 {
     // --- Metadata ---
-    string public constant name = "Gold";
+    string public constant name = "Iron";
     string public constant symbol = "GLD";
     uint8 public constant decimals = 18;
 
-    // --- ERC20 Standard Functions ---
+    // ---  Standard Functions ---
 
     function totalSupply() external view returns (uint256) {
-        return ERC20GoldResourceLib.totalSupply();
+        return IronResourceLib.totalSupply();
     }
 
     function balanceOf(address account) external view returns (uint256) {
-        return ERC20GoldResourceLib.balanceOf(account);
+        return IronResourceLib.balanceOf(account);
     }
 
     function transfer(address to, uint256 amount) external returns (bool) {
-        ERC20GoldResourceLib._transfer(msg.sender, to, amount);
+        IronResourceLib._transfer(msg.sender, to, amount);
         emit Transfer(msg.sender, to, amount);
         return true;
     }
 
     function approve(address spender, uint256 amount) external returns (bool) {
-        ERC20GoldResourceLib.s().allowances[msg.sender][spender] = amount;
+        IronResourceLib.s().allowances[msg.sender][spender] = amount;
         emit Approval(msg.sender, spender, amount);
         return true;
     }
@@ -38,7 +38,7 @@ contract ERC20GoldResource is ERC173 {
         address owner,
         address spender
     ) external view returns (uint256) {
-        return ERC20GoldResourceLib.allowance(owner, spender);
+        return IronResourceLib.allowance(owner, spender);
     }
 
     function transferFrom(
@@ -46,30 +46,30 @@ contract ERC20GoldResource is ERC173 {
         address to,
         uint256 amount
     ) external returns (bool) {
-        uint256 currentAllowance = ERC20GoldResourceLib.s().allowances[from][
+        uint256 currentAllowance = IronResourceLib.s().allowances[from][
             msg.sender
         ];
-        require(currentAllowance >= amount, "Gold: allowance exceeded");
+        require(currentAllowance >= amount, "Iron: allowance exceeded");
 
         if (currentAllowance != type(uint256).max) {
-            ERC20GoldResourceLib.s().allowances[from][msg.sender] =
+            IronResourceLib.s().allowances[from][msg.sender] =
                 currentAllowance -
                 amount;
         }
 
-        ERC20GoldResourceLib._transfer(from, to, amount);
+        IronResourceLib._transfer(from, to, amount);
         emit Transfer(from, to, amount);
         return true;
     }
 
     // --- Mint / Burn ---
     function mint(address to, uint256 amount) external onlyOwner {
-        ERC20GoldResourceLib._mint(to, amount);
+        IronResourceLib._mint(to, amount);
         emit Transfer(address(0), to, amount);
     }
 
     function burn(address from, uint256 amount) external onlyOwner {
-        ERC20GoldResourceLib._burn(from, amount);
+        IronResourceLib._burn(from, amount);
         emit Transfer(from, address(0), amount);
     }
 
