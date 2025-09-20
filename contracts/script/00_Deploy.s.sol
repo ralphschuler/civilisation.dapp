@@ -23,7 +23,7 @@ import {CutSelector} from "./utils/CutSelector.sol";
 ///         required facets (Cut & Loupe), and dynamically discovers and deploys
 ///         all protocol-specific facets under `src/protocol`.
 /// @dev Uses Foundry's ffi to list protocol folders and deploy facets via `vm.getCode`.
-contract DeployScript is Script, CutSelector {
+contract Deploy is Script, CutSelector {
     using StringUtils for string;
 
     /// @notice Entry point for the deployment script.
