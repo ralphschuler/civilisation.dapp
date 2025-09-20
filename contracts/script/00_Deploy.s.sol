@@ -69,7 +69,7 @@ contract Deploy is Script, CutSelector {
         cmd[0] = "bash";
         cmd[1] = "-lc";
         // list only folder names under src/protocol
-        cmd[2] = "find src/protocols -type f -name '*Facet.sol'";
+        cmd[2] = "find src/protocol -type f -name '*Facet.sol'";
         bytes memory out = vm.ffi(cmd);
         string[] memory facetPaths = StringUtils.splitLines(string(out));
 
