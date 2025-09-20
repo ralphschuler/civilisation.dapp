@@ -1,4 +1,4 @@
-name: Deploy Diamond
+name: Deploy Contract
 
 on:
   push:

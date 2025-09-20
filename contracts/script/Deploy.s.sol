@@ -9,6 +9,7 @@ import {FacetCut} from "../../src/diamond/core/DiamondCut/DiamondCutLib.sol";
 import {IDiamondCut} from "../src/diamond/core/DiamondCut/IDiamondCut.sol";
 import {DiamondInit} from "../src/diamond/initializers/DiamondInit.sol";
 import {IDiamondInit} from "../src/diamond/initializers/IDiamondInit.sol";
+import {StringUtils} from "./utils/StringUtils.sol";
 
 // Always required
 import {DiamondCutFacet} from "../src/diamond/core/DiamondCut/DiamondCutFacet.sol";
@@ -23,6 +24,8 @@ import {CutSelector} from "./utils/CutSelector.sol";
 ///         all protocol-specific facets under `src/protocol`.
 /// @dev Uses Foundry's ffi to list protocol folders and deploy facets via `vm.getCode`.
 contract DeployScript is Script, CutSelector {
+    using StringUtils for string;
+
     /// @notice Entry point for the deployment script.
     /// @dev Reads `PRIVATE_KEY` from env, deploys the Diamond, initializer, and all facets.
     function run() external {
@@ -47,7 +50,7 @@ contract DeployScript is Script, CutSelector {
         // list only folder names under src/protocol
         cmd[2] = "ls -1 src/protocol";
         bytes memory out = vm.ffi(cmd);
-        string[] memory facetBaseNames = vm.split(string(out), "\n");
+        string[] memory facetBaseNames = StringUtils.splitLines(string(out));
 
         // --- 4. Prepare arrays (LoupeFacet always included) ---
         uint256 facetCount = facetBaseNames.length + 1;
@@ -90,8 +93,14 @@ contract DeployScript is Script, CutSelector {
 
         // --- 7. Diamond cut + Initializer ---
         /// @dev Calls the DiamondCut with initializer calldata.
-        bytes memory initCalldata = abi.encodeWithSelector(IDiamondInit.init.selector);
-        IDiamondCut(address(diamond)).diamondCut(cuts, address(diamondInit), initCalldata);
+        bytes memory initCalldata = abi.encodeWithSelector(
+            IDiamondInit.init.selector
+        );
+        IDiamondCut(address(diamond)).diamondCut(
+            cuts,
+            address(diamondInit),
+            initCalldata
+        );
 
         vm.stopBroadcast();
 

@@ -2,6 +2,7 @@
 pragma solidity ^0.8.30;
 
 import "forge-std/Script.sol";
+import {StringUtils} from "./StringUtils.sol";
 
 /// @title SelectorFetcher
 /// @author Ralph Schuler
@@ -9,10 +10,14 @@ import "forge-std/Script.sol";
 ///         from compiled facet contracts using Foundry's `forge selectors list`.
 /// @dev Relies on Foundry's ffi to execute shell commands and extract selectors.
 abstract contract SelectorFetcher is Script {
+    using StringUtils for string;
+
     /// @notice Resolve all function selectors for a given fully-qualified contract name (FQCN).
     /// @param fqcn The fully-qualified contract name (e.g., "FeatureOneFacet").
     /// @return selectors An array of function selectors (bytes4) parsed from the forge output.
-    function selectorsFor(string memory fqcn) internal returns (bytes4[] memory selectors) {
+    function selectorsFor(
+        string memory fqcn
+    ) internal returns (bytes4[] memory selectors) {
         string[] memory cmd = new string[](3);
         cmd[0] = "bash";
         cmd[1] = "-lc";
@@ -25,7 +30,7 @@ abstract contract SelectorFetcher is Script {
             )
         );
         bytes memory out = vm.ffi(cmd);
-        string[] memory lines = vm.split(string(out), "\n");
+        string[] memory lines = StringUtils.splitLines(string(out));
         uint256 n = 0;
         for (uint256 i = 0; i < lines.length; i++) {
             // Count valid selector lines
@@ -38,7 +43,9 @@ abstract contract SelectorFetcher is Script {
         for (uint256 i = 0; i < lines.length; i++) {
             string memory line = lines[i];
             if (bytes(line).length > 9 && bytes(line)[0] == "S") {
-                selectors[k++] = hexStringToBytes4(substring(line, 9, bytes(line).length));
+                selectors[k++] = hexStringToBytes4(
+                    substring(line, 9, bytes(line).length)
+                );
             }
         }
     }
@@ -46,7 +53,9 @@ abstract contract SelectorFetcher is Script {
     /// @notice Convert a hex string into a bytes4 selector.
     /// @param s The string in hex format (must be "0x" followed by 8 hex chars).
     /// @return r The parsed bytes4 value.
-    function hexStringToBytes4(string memory s) internal pure returns (bytes4 r) {
+    function hexStringToBytes4(
+        string memory s
+    ) internal pure returns (bytes4 r) {
         bytes memory b = bytes(s);
         require(b.length == 10 && b[0] == "0" && b[1] == "x", "hex4");
         uint32 val = 0;
