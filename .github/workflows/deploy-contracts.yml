@@ -44,11 +44,23 @@ jobs:
           PRIVATE_KEY: ${{ secrets.WORLDCHAIN_WALLET_PRIVATE_KEY }}
           RPC_URL: ${{ vars.WORLDCHAIN_RPC_URL }}
         run: |
-          forge script script/Deploy.s.sol:DeployScript \
-            --rpc-url "$RPC_URL" \
-            --private-key "$PRIVATE_KEY" \
-            --broadcast \
-            -vvvv
+          set -euo pipefail
+
+          # Alle *.s.sol Dateien im script/ Ordner sortieren
+          for file in $(ls script/*.s.sol | sort); do
+            # Beispiel: script/00_Deploy.s.sol -> 00_Deploy
+            raw=$(basename "$file" .s.sol)
+
+            # Entferne optionales ##_ Präfix (z.B. 00_, 01_)
+            base=$(echo "$raw" | sed -E 's/^[0-9]+_//')
+
+            echo ">>> Running forge script for $file (contract: $base)"
+            forge script "$file:$base" \
+              --rpc-url "$RPC_URL" \
+              --private-key "$PRIVATE_KEY" \
+              --broadcast \
+              -vvvv
+          done
 
       - name: Extract Diamond Address
         id: extract

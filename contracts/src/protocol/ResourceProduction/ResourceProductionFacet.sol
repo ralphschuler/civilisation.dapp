@@ -1,0 +1,71 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
+
+import {ERC173} from "../../diamond/implementations/ERC173/ERC173.sol";
+import {ERC1155ResourcesLib} from "../Resources/ResourcesLib.sol";
+import {ResourceProductionLib} from "./ResourceProductionLib.sol";
+import {ResourceConfigLib} from "./ResourceConfigLib.sol";
+
+/// @title ResourceProductionFacet
+/// @notice Handles timed generation of resources per player
+contract ResourceProductionFacet is ERC173 {
+    using ResourceProductionLib for address;
+
+    uint256 public constant GOLD = 1; // ID aus ERC1155Resources
+
+    event Claimed(
+        address indexed player,
+        uint256 indexed resourceId,
+        uint256 amount
+    );
+    event UpgradeStarted(
+        address indexed player,
+        uint256 indexed resourceId,
+        uint256 level,
+        uint256 endsAt
+    );
+
+    /// @notice View pending claimable resources
+    function pending(
+        address player,
+        uint256 resourceId
+    ) external view returns (uint256) {
+        return ResourceProductionLib.pending(player, resourceId);
+    }
+
+    /// @notice Claim produced resources
+    function claim(uint256 resourceId) external {
+        uint256 amount = ResourceProductionLib._applyClaim(
+            msg.sender,
+            resourceId
+        );
+        require(amount > 0, "Nothing to claim");
+
+        ERC1155ResourcesLib._mint(msg.sender, resourceId, amount);
+        emit Claimed(msg.sender, resourceId, amount);
+    }
+
+    /// @notice Start an upgrade for a resource
+    /// @dev Requires Gold as payment, production paused until done
+    function startUpgrade(uint256 resourceId, uint256 duration) external {
+        ResourceProductionLib.Production storage p = ResourceProductionLib
+            .s()
+            .productions[msg.sender][resourceId];
+        require(block.timestamp >= p.upgradeEndsAt, "Already upgrading");
+
+        // Hole Werte für nächstes Level
+        (uint256 newRate, uint256 newLimit, uint256 cost) = ResourceConfigLib
+            .valuesAt(resourceId, p.level + 1);
+
+        // Zahle Kosten in Gold
+        ERC1155ResourcesLib._burn(msg.sender, GOLD, cost);
+
+        // Starte Upgrade
+        p.upgradeEndsAt = block.timestamp + duration;
+        p.ratePerMinute = newRate;
+        p.claimLimit = newLimit;
+        p.level += 1;
+
+        emit UpgradeStarted(msg.sender, resourceId, p.level, p.upgradeEndsAt);
+    }
+}
