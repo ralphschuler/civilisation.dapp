@@ -51,7 +51,14 @@ contract DeployScript is Script, CutSelector {
         }
 
         // --- 3. Prepare Constructor Args
-        DiamondArgs memory args = DiamondArgs(address(diamondInit), "");
+        bytes memory initCalldata = abi.encodeWithSelector(
+            IDiamondInit.init.selector,
+            deployer
+        );
+        DiamondArgs memory args = DiamondArgs(
+            address(diamondInit),
+            initCalldata
+        );
 
         // --- 4. Deploy Diamond with CutFacet ---
         Diamond diamond = new Diamond(initialCut, args);
