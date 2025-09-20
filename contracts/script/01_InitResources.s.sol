@@ -4,7 +4,7 @@ pragma solidity ^0.8.30;
 import "forge-std/Script.sol";
 import "forge-std/console2.sol";
 
-import {ResourcesFacet} from "../src/protocol/Resources/ResourcesFacet.sol";
+import {ResourceIds} from "../src/protocol/Resources/ResourcesFacet.sol";
 import {ResourceProductionConfig} from "../src/protocol/ResourceProduction/ResourceProductionConfig.sol";
 
 /// @title InitResources Script
@@ -18,7 +18,7 @@ contract InitResources is Script {
         // --- Configs setzen ---
         // Gold: currency only
         ResourceProductionConfig.setConfig(
-            ResourcesFacet.GOLD,
+            ResourceIds.GOLD,
             0,
             0,
             0,
@@ -29,7 +29,7 @@ contract InitResources is Script {
 
         // Wood
         ResourceProductionConfig.setConfig(
-            ResourcesFacet.WOOD,
+            ResourceIds.WOOD,
             1, // 1/min
             50, // claim limit
             10, // base upgrade cost
@@ -40,7 +40,7 @@ contract InitResources is Script {
 
         // Stone
         ResourceProductionConfig.setConfig(
-            ResourcesFacet.STONE,
+            ResourceIds.STONE,
             1,
             30,
             15,
@@ -51,7 +51,7 @@ contract InitResources is Script {
 
         // Iron
         ResourceProductionConfig.setConfig(
-            ResourcesFacet.IRON,
+            ResourceIds.IRON,
             1,
             40,
             20,

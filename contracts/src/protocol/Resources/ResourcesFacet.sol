@@ -4,15 +4,16 @@ pragma solidity ^0.8.30;
 import {ERC173} from "../../diamond/implementations/ERC173/ERC173.sol";
 import {ResourcesLib} from "./ResourcesLib.sol";
 
+library ResourceIds {
+    uint256 constant GOLD = 1;
+    uint256 constant IRON = 2;
+    uint256 constant STONE = 3;
+    uint256 constant WOOD = 4;
+}
+
 /// @title ERC1155Resources
 /// @notice ERC1155 Facet for game resources: GOLD, IRON, STONE, WOOD
 contract ResourcesFacet is ERC173 {
-    // --- Resource IDs ---
-    uint256 public constant GOLD = 1;
-    uint256 public constant IRON = 2;
-    uint256 public constant STONE = 3;
-    uint256 public constant WOOD = 4;
-
     // --- Metadata ---
     function uri(uint256 id) external pure returns (string memory) {
         return "ipfs://someJSON.json";
