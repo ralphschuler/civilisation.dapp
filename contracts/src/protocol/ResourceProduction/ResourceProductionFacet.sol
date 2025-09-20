@@ -36,7 +36,7 @@ contract ResourceProductionFacet is ERC173 {
 
     /// @notice Claim produced resources
     function claim(uint256 resourceId) external {
-        StarterPackLib.giveIfNew(msg.sender);
+        StarterPackLib.giveStarterPack(msg.sender);
 
         uint256 amount = ResourceProductionLib._applyClaim(
             msg.sender,
