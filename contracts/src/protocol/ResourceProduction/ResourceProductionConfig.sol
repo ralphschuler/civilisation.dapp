@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-library ResourceConfigLib {
+library ResourceProductionConfig {
     bytes32 constant CONFIG_STORAGE_POSITION =
-        keccak256("diamond.resource.config");
+        keccak256("diamond.resource.production.config");
 
     struct ResourceConfig {
         uint256 baseRatePerMinute; // Basis-Produktion

@@ -2,11 +2,11 @@
 pragma solidity ^0.8.30;
 
 import {ERC173} from "../../diamond/implementations/ERC173/ERC173.sol";
-import {ERC1155ResourcesLib} from "./ResourcesLib.sol";
+import {ResourcesLib} from "./ResourcesLib.sol";
 
 /// @title ERC1155Resources
 /// @notice ERC1155 Facet for game resources: GOLD, IRON, STONE, WOOD
-contract ERC1155Resources is ERC173 {
+contract ResourcesFacet is ERC173 {
     // --- Resource IDs ---
     uint256 public constant GOLD = 1;
     uint256 public constant IRON = 2;
@@ -24,7 +24,7 @@ contract ERC1155Resources is ERC173 {
         address account,
         uint256 id
     ) external view returns (uint256) {
-        return ERC1155ResourcesLib.balanceOf(account, id);
+        return ResourcesLib.balanceOf(account, id);
     }
 
     function balanceOfBatch(
@@ -34,14 +34,12 @@ contract ERC1155Resources is ERC173 {
         require(accounts.length == ids.length, "ERC1155: length mismatch");
         balances = new uint256[](accounts.length);
         for (uint256 i = 0; i < accounts.length; i++) {
-            balances[i] = ERC1155ResourcesLib.balanceOf(accounts[i], ids[i]);
+            balances[i] = ResourcesLib.balanceOf(accounts[i], ids[i]);
         }
     }
 
     function setApprovalForAll(address operator, bool approved) external {
-        ERC1155ResourcesLib.s().operatorApprovals[msg.sender][
-            operator
-        ] = approved;
+        ResourcesLib.s().operatorApprovals[msg.sender][operator] = approved;
         emit ApprovalForAll(msg.sender, operator, approved);
     }
 
@@ -49,7 +47,7 @@ contract ERC1155Resources is ERC173 {
         address account,
         address operator
     ) external view returns (bool) {
-        return ERC1155ResourcesLib.s().operatorApprovals[account][operator];
+        return ResourcesLib.s().operatorApprovals[account][operator];
     }
 
     function safeTransferFrom(
@@ -61,22 +59,15 @@ contract ERC1155Resources is ERC173 {
     ) external {
         require(
             from == msg.sender ||
-                ERC1155ResourcesLib.s().operatorApprovals[from][msg.sender],
+                ResourcesLib.s().operatorApprovals[from][msg.sender],
             "ERC1155: not approved"
         );
 
-        ERC1155ResourcesLib._transfer(from, to, id, amount);
+        ResourcesLib._transfer(from, to, id, amount);
 
         emit TransferSingle(msg.sender, from, to, id, amount);
 
-        ERC1155ResourcesLib._callOnReceived(
-            msg.sender,
-            from,
-            to,
-            id,
-            amount,
-            data
-        );
+        ResourcesLib._callOnReceived(msg.sender, from, to, id, amount, data);
     }
 
     function safeBatchTransferFrom(
@@ -89,17 +80,17 @@ contract ERC1155Resources is ERC173 {
         require(ids.length == amounts.length, "ERC1155: length mismatch");
         require(
             from == msg.sender ||
-                ERC1155ResourcesLib.s().operatorApprovals[from][msg.sender],
+                ResourcesLib.s().operatorApprovals[from][msg.sender],
             "ERC1155: not approved"
         );
 
         for (uint256 i = 0; i < ids.length; i++) {
-            ERC1155ResourcesLib._transfer(from, to, ids[i], amounts[i]);
+            ResourcesLib._transfer(from, to, ids[i], amounts[i]);
         }
 
         emit TransferBatch(msg.sender, from, to, ids, amounts);
 
-        ERC1155ResourcesLib._callOnBatchReceived(
+        ResourcesLib._callOnBatchReceived(
             msg.sender,
             from,
             to,
@@ -111,12 +102,12 @@ contract ERC1155Resources is ERC173 {
 
     // --- Mint / Burn ---
     function mint(address to, uint256 id, uint256 amount) external onlyOwner {
-        ERC1155ResourcesLib._mint(to, id, amount);
+        ResourcesLib._mint(to, id, amount);
         emit TransferSingle(msg.sender, address(0), to, id, amount);
     }
 
     function burn(address from, uint256 id, uint256 amount) external onlyOwner {
-        ERC1155ResourcesLib._burn(from, id, amount);
+        ResourcesLib._burn(from, id, amount);
         emit TransferSingle(msg.sender, from, address(0), id, amount);
     }
 

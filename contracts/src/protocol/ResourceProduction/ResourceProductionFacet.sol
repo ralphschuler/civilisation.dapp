@@ -2,9 +2,9 @@
 pragma solidity ^0.8.30;
 
 import {ERC173} from "../../diamond/implementations/ERC173/ERC173.sol";
-import {ERC1155ResourcesLib} from "../Resources/ResourcesLib.sol";
+import {ResourcesLib} from "../Resources/ResourcesLib.sol";
 import {ResourceProductionLib} from "./ResourceProductionLib.sol";
-import {ResourceConfigLib} from "./ResourceConfigLib.sol";
+import {ResourceProductionConfig} from "./ResourceProductionConfig.sol";
 
 /// @title ResourceProductionFacet
 /// @notice Handles timed generation of resources per player
@@ -41,7 +41,7 @@ contract ResourceProductionFacet is ERC173 {
         );
         require(amount > 0, "Nothing to claim");
 
-        ERC1155ResourcesLib._mint(msg.sender, resourceId, amount);
+        ResourcesLib._mint(msg.sender, resourceId, amount);
         emit Claimed(msg.sender, resourceId, amount);
     }
 
@@ -54,11 +54,14 @@ contract ResourceProductionFacet is ERC173 {
         require(block.timestamp >= p.upgradeEndsAt, "Already upgrading");
 
         // Hole Werte für nächstes Level
-        (uint256 newRate, uint256 newLimit, uint256 cost) = ResourceConfigLib
-            .valuesAt(resourceId, p.level + 1);
+        (
+            uint256 newRate,
+            uint256 newLimit,
+            uint256 cost
+        ) = ResourceProductionConfig.valuesAt(resourceId, p.level + 1);
 
         // Zahle Kosten in Gold
-        ERC1155ResourcesLib._burn(msg.sender, GOLD, cost);
+        ResourcesLib._burn(msg.sender, GOLD, cost);
 
         // Starte Upgrade
         p.upgradeEndsAt = block.timestamp + duration;

@@ -3,7 +3,7 @@ pragma solidity ^0.8.30;
 
 /// @title ERC1155ResourcesLib
 /// @notice Storage + helpers for ERC1155Resources Facet
-library ERC1155ResourcesLib {
+library ResourcesLib {
     // --- Storage Slot ---
     bytes32 constant RES_STORAGE_POSITION = keccak256("diamond.resources");
 

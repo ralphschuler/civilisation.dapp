@@ -5,7 +5,7 @@ import "forge-std/Script.sol";
 import "forge-std/console2.sol";
 
 import {ResourcesFacet} from "../src/protocol/Resources/ResourcesFacet.sol";
-import {ResourceConfigLib} from "../src/protocol/ResourceProduction/ResourceConfigLib.sol";
+import {ResourceProductionConfig} from "../src/protocol/ResourceProduction/ResourceProductionConfig.sol";
 
 /// @title InitResources Script
 /// @notice Configures base game resource production/balancing values
@@ -17,7 +17,7 @@ contract InitResources is Script {
 
         // --- Configs setzen ---
         // Gold: currency only
-        ResourceConfigLib.setConfig(
+        ResourceProductionConfig.setConfig(
             ResourcesFacet.GOLD,
             0,
             0,
@@ -28,7 +28,7 @@ contract InitResources is Script {
         );
 
         // Wood
-        ResourceConfigLib.setConfig(
+        ResourceProductionConfig.setConfig(
             ResourcesFacet.WOOD,
             1, // 1/min
             50, // claim limit
@@ -39,7 +39,7 @@ contract InitResources is Script {
         );
 
         // Stone
-        ResourceConfigLib.setConfig(
+        ResourceProductionConfig.setConfig(
             ResourcesFacet.STONE,
             1,
             30,
@@ -50,7 +50,7 @@ contract InitResources is Script {
         );
 
         // Iron
-        ResourceConfigLib.setConfig(
+        ResourceProductionConfig.setConfig(
             ResourcesFacet.IRON,
             1,
             40,
