@@ -24,9 +24,9 @@ abstract contract CutSelector is SelectorFetcher {
         string memory facetName,
         address facetAddress
     ) public returns (FacetCut[] memory cut) {
-        cut = new FacetCut;
+        cut = new FacetCut[](1);
         bytes4[] memory cutSelectors = getCutSelector(facetName);
-        cut[0] = IDiamondCut.FacetCut({
+        cut[0] = FacetCut({
             facetAddress: facetAddress,
             action: FacetCutAction.Add,
             functionSelectors: cutSelectors
@@ -41,7 +41,10 @@ abstract contract CutSelector is SelectorFetcher {
         string[] memory facetNames,
         address[] memory facetAddresses
     ) public returns (FacetCut[] memory cut) {
-        require(facetNames.length == facetAddresses.length, "CutSelector: array length mismatch");
+        require(
+            facetNames.length == facetAddresses.length,
+            "CutSelector: array length mismatch"
+        );
 
         uint256 facetCount = facetNames.length;
         cut = new FacetCut[](facetCount);
@@ -96,14 +99,18 @@ abstract contract CutSelector is SelectorFetcher {
     /// @notice Get all function selectors for a given facet
     /// @param facetName The name of the facet contract
     /// @return cutSelectors The function selectors extracted from the facet
-    function getCutSelector(string memory facetName) public returns (bytes4[] memory cutSelectors) {
+    function getCutSelector(
+        string memory facetName
+    ) public returns (bytes4[] memory cutSelectors) {
         cutSelectors = SelectorFetcher.selectorsFor(facetName);
     }
 
     /// @notice Count the number of function selectors in a facet
     /// @param facetName The name of the facet contract
     /// @return The number of selectors defined in the facet
-    function getSelectorCount(string memory facetName) public returns (uint256) {
+    function getSelectorCount(
+        string memory facetName
+    ) public returns (uint256) {
         return selectorsFor(facetName).length;
     }
 }
