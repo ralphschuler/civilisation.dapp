@@ -92,7 +92,9 @@ contract Deploy is Script, CutSelector {
                 ".sol"
             );
 
-            bytes memory bytecode = vm.getCode(path);
+            bytes memory bytecode = vm.getCode(
+                string.concat(path, ":", contractName)
+            );
             address facetAddr;
             assembly {
                 facetAddr := create(0, add(bytecode, 0x20), mload(bytecode))
