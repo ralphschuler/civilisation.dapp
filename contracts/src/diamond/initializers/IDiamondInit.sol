@@ -8,5 +8,5 @@ pragma solidity ^0.8.30;
 interface IDiamondInit {
     /// @notice Initializes the diamond during deployment or upgrade.
     /// @dev Must be delegatecalled by the Diamond to correctly initialize its storage.
-    function init() external;
+    function init(address _owner) external;
 }

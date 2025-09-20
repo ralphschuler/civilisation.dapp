@@ -30,6 +30,8 @@ contract DeployScript is Script, CutSelector {
     /// @dev Reads `PRIVATE_KEY` from env, deploys the Diamond, initializer, and all facets.
     function run() external {
         uint256 pk = vm.envUint("PRIVATE_KEY");
+        address deployer = vm.addr(pk);
+
         vm.startBroadcast(pk);
 
         // --- 1. Init + Base Facets ---
@@ -107,7 +109,8 @@ contract DeployScript is Script, CutSelector {
         /// @dev Calls the DiamondCut with initializer calldata.
         {
             bytes memory initCalldata = abi.encodeWithSelector(
-                IDiamondInit.init.selector
+                IDiamondInit.init.selector,
+                deployer
             );
             IDiamondCut(address(diamond)).diamondCut(
                 cuts,

@@ -21,7 +21,7 @@ contract DiamondInit is IDiamondInit {
     /// @inheritdoc IDiamondInit
     /// @notice Initializes the diamond by enabling required interfaces and setting ownership.
     /// @dev Called via delegatecall from the Diamond constructor or deployment script.
-    function init() external override {
+    function init(address _owner) external override {
         // Add IERC165 support.
         ERC165Lib.setSupportedInterface(type(IERC165).interfaceId, true);
 
@@ -35,6 +35,6 @@ contract DiamondInit is IDiamondInit {
         ERC165Lib.setSupportedInterface(type(IDiamondLoupe).interfaceId, true);
 
         // Register the deployer as the initial owner.
-        ERC173Lib.s().owner = msg.sender;
+        ERC173Lib.s().owner = _owner;
     }
 }
