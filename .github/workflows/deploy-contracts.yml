@@ -118,19 +118,14 @@ jobs:
         run: |
           mkdir -p /tmp/abi
 
-          # Finde alle JSON-Dateien mit ABI (Broadcast, Out, Artifacts)
-          ABI_FILES=$(find out broadcast -name "*.json" -type f)
+          # Alle relevanten JSON-Dateien ins /tmp/abi kopieren, Ordnerstruktur bleibt erhalten
+          rsync -avR \
+            --include '*/' \
+            --include '*.json' \
+            --exclude '*' \
+            ./out/ ./broadcast/ /tmp/abi/
 
-          echo "Gefundene ABI-Dateien:"
-          echo "$ABI_FILES"
-
-          # Jede ABI-Datei einzeln nach src/abi kopieren
-          for file in $ABI_FILES; do
-            NAME=$(basename "$file")
-            cp "$file" "/tmp/abi/$NAME"
-          done
-
-          echo "✅ Alle ABIs wurden nach src/abi kopiert."
+          echo "✅ Alle ABIs wurden nach /tmp/abi kopiert (mit relativen Pfaden)."
 
       - name: Upload ABIs as Artifact
         uses: actions/upload-artifact@v4
