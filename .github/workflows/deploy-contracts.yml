@@ -113,6 +113,31 @@ jobs:
           fi
           echo "✅ Saved APP_CONTRACT_ADDRESS=$DIAMOND_ADDR to environment '$ENVIRONMENT'"
 
+      - name: Collect all ABIs
+        working-directory: contracts
+        run: |
+          mkdir -p /tmp/abi
+
+          # Finde alle JSON-Dateien mit ABI (Broadcast, Out, Artifacts)
+          ABI_FILES=$(find out broadcast -name "*.json" -type f)
+
+          echo "Gefundene ABI-Dateien:"
+          echo "$ABI_FILES"
+
+          # Jede ABI-Datei einzeln nach src/abi kopieren
+          for file in $ABI_FILES; do
+            NAME=$(basename "$file")
+            cp "$file" "/tmp/abi/$NAME"
+          done
+
+          echo "✅ Alle ABIs wurden nach src/abi kopiert."
+
+      - name: Upload ABIs as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Diamond-ABIs
+          path: /tmp/abi/
+
       - name: Expose Diamond Address as job output
         id: expose
         run: |
