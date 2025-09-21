@@ -18,6 +18,7 @@ library ResourcesLib {
     struct ResourcesStorage {
         mapping(uint256 => mapping(address => uint256)) balances; // tokenId => account => balance
         mapping(address => mapping(address => bool)) operatorApprovals; // owner => operator => approved
+        mapping(uint256 => uint256) totalSupply;
     }
 
     // --- Accessor ---
@@ -60,6 +61,7 @@ library ResourcesLib {
 
         ResourcesStorage storage rs = s();
         rs.balances[id][to] += amount;
+        rs.totalSupply[id] += amount;
     }
 
     function _burn(address from, uint256 id, uint256 amount) internal {
@@ -69,7 +71,13 @@ library ResourcesLib {
 
         unchecked {
             rs.balances[id][from] = bal - amount;
+            rs.totalSupply[id] -= amount;
         }
+    }
+
+    function totalSupply(uint256 id) internal view returns (uint256) {
+        ResourcesStorage storage rs = s();
+        return rs.totalSupply[id];
     }
 
     // --- Receiver checks ---
