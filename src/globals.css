@@ -1,0 +1,310 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Typography Scale: 12, 14, 16, 18, 22, 28 (Base = 16) */
+  --font-size: 16px;
+  --text-micro: 0.75rem;    /* 12px */
+  --text-caption: 0.875rem; /* 14px */
+  --text-body: 1rem;        /* 16px */
+  --text-section: 1.125rem; /* 18px */
+  --text-title-sm: 1.375rem; /* 22px */
+  --text-title: 1.75rem;    /* 28px */
+
+  /* Design Tokens - Spacing (8pt grid) */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-7: 1.75rem;   /* 28px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+
+  /* Radius Tokens */
+  --radius-xs: 0.25rem;  /* 4px */
+  --radius-sm: 0.5rem;   /* 8px */
+  --radius-md: 0.75rem;  /* 12px */
+  --radius-lg: 1rem;     /* 16px */
+  --radius-xl: 1.5rem;   /* 24px */
+
+  /* Colors - Light Theme (Cream background, dark text, gold/ochre accent) */
+  --background: #faf9f6;  /* Cream background */
+  --foreground: #2d2d2d;  /* Dark anthracite text */
+  --card: #ffffff;
+  --card-foreground: #2d2d2d;
+  --popover: #ffffff;
+  --popover-foreground: #2d2d2d;
+  --primary: #c9951a;     /* Gold/Ochre accent */
+  --primary-foreground: #ffffff;
+  --secondary: #f5f4f1;
+  --secondary-foreground: #2d2d2d;
+  --muted: #f0eeeb;
+  --muted-foreground: #6b6b6b;
+  --accent: #e6d3a3;      /* Light gold/ochre */
+  --accent-foreground: #2d2d2d;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --success: #16a34a;
+  --success-foreground: #ffffff;
+  --warning: #ea580c;
+  --warning-foreground: #ffffff;
+  --info: #2563eb;
+  --info-foreground: #ffffff;
+  --border: rgba(45, 45, 45, 0.12);
+  --input: transparent;
+  --input-background: #f8f7f4;
+  --switch-background: #d1ccc1;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: var(--radius-md);  /* Default to 12px */
+  --sidebar: #faf9f6;
+  --sidebar-foreground: #2d2d2d;
+  --sidebar-primary: #c9951a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f5f4f1;
+  --sidebar-accent-foreground: #2d2d2d;
+  --sidebar-border: rgba(45, 45, 45, 0.12);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Touch Target Minimum */
+  --min-touch-target: 2.75rem; /* 44px */
+}
+
+.dark {
+  /* Dark Theme - Near black canvas (#0c0c0c), light gray text, same accent */
+  --background: #0c0c0c;    /* Near black canvas */
+  --foreground: #e5e5e5;    /* Light gray text */
+  --card: #171717;
+  --card-foreground: #e5e5e5;
+  --popover: #171717;
+  --popover-foreground: #e5e5e5;
+  --primary: #c9951a;       /* Same gold/ochre accent */
+  --primary-foreground: #0c0c0c;
+  --secondary: #262626;
+  --secondary-foreground: #e5e5e5;
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  --accent: #3d3524;        /* Dark gold/ochre */
+  --accent-foreground: #e5e5e5;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --success: #16a34a;
+  --success-foreground: #ffffff;
+  --warning: #ea580c;
+  --warning-foreground: #ffffff;
+  --info: #2563eb;
+  --info-foreground: #ffffff;
+  --border: rgba(229, 229, 229, 0.12);
+  --input: #262626;
+  --input-background: #1a1a1a;
+  --switch-background: #404040;
+  --ring: rgba(229, 229, 229, 0.2);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: #171717;
+  --sidebar-foreground: #e5e5e5;
+  --sidebar-primary: #c9951a;
+  --sidebar-primary-foreground: #0c0c0c;
+  --sidebar-accent: #262626;
+  --sidebar-accent-foreground: #e5e5e5;
+  --sidebar-border: rgba(229, 229, 229, 0.12);
+  --sidebar-ring: rgba(229, 229, 229, 0.2);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  
+  /* Updated radius tokens to match guidelines */
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  
+  /* Spacing tokens */
+  --spacing-0: var(--space-0);
+  --spacing-1: var(--space-1);
+  --spacing-2: var(--space-2);
+  --spacing-3: var(--space-3);
+  --spacing-4: var(--space-4);
+  --spacing-5: var(--space-5);
+  --spacing-6: var(--space-6);
+  --spacing-7: var(--space-7);
+  --spacing-8: var(--space-8);
+  --spacing-10: var(--space-10);
+  --spacing-12: var(--space-12);
+  
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/**
+ * Base typography following guidelines: 12, 14, 16, 18, 22, 28 (Base = 16)
+ * Roles: Title (28/22), Section (18), Body (16), Caption (14), Micro (12)
+ * Line height: 1.3-1.5
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-size: var(--text-title);      /* 28px */
+      font-weight: var(--font-weight-medium);
+      line-height: 1.3;
+    }
+
+    h2 {
+      font-size: var(--text-title-sm);   /* 22px */
+      font-weight: var(--font-weight-medium);
+      line-height: 1.3;
+    }
+
+    h3 {
+      font-size: var(--text-section);    /* 18px */
+      font-weight: var(--font-weight-medium);
+      line-height: 1.4;
+    }
+
+    h4 {
+      font-size: var(--text-body);       /* 16px */
+      font-weight: var(--font-weight-medium);
+      line-height: 1.4;
+    }
+
+    p {
+      font-size: var(--text-body);       /* 16px */
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+
+    label {
+      font-size: var(--text-body);       /* 16px */
+      font-weight: var(--font-weight-medium);
+      line-height: 1.4;
+    }
+
+    button {
+      font-size: var(--text-body);       /* 16px */
+      font-weight: var(--font-weight-medium);
+      line-height: 1.4;
+    }
+
+    input {
+      font-size: var(--text-body);       /* 16px */
+      font-weight: var(--font-weight-normal);
+      line-height: 1.4;
+    }
+
+    /* Additional typography roles */
+    .text-title {
+      font-size: var(--text-title);      /* 28px */
+      font-weight: var(--font-weight-medium);
+      line-height: 1.3;
+    }
+
+    .text-title-sm {
+      font-size: var(--text-title-sm);   /* 22px */
+      font-weight: var(--font-weight-medium);
+      line-height: 1.3;
+    }
+
+    .text-section {
+      font-size: var(--text-section);    /* 18px */
+      font-weight: var(--font-weight-medium);
+      line-height: 1.4;
+    }
+
+    .text-body {
+      font-size: var(--text-body);       /* 16px */
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+
+    .text-caption {
+      font-size: var(--text-caption);    /* 14px */
+      font-weight: var(--font-weight-normal);
+      line-height: 1.4;
+    }
+
+    .text-micro {
+      font-size: var(--text-micro);      /* 12px */
+      font-weight: var(--font-weight-normal);
+      line-height: 1.3;
+    }
+  }
+
+  /* Touch targets minimum 44px */
+  .min-touch {
+    min-height: var(--min-touch-target);
+    min-width: var(--min-touch-target);
+  }
+
+  /* 8pt grid spacing utilities */
+  .space-grid-1 { @apply p-1; }  /* 4px */
+  .space-grid-2 { @apply p-2; }  /* 8px */
+  .space-grid-3 { @apply p-3; }  /* 12px */
+  .space-grid-4 { @apply p-4; }  /* 16px */
+  .space-grid-5 { @apply p-5; }  /* 20px */
+  .space-grid-6 { @apply p-6; }  /* 24px */
+}
+
+html {
+  font-size: var(--font-size);
+}

@@ -1,24 +1,95 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
+import { useGameState } from "@/hooks/useGameState";
+import { ResourceHeader } from "@/components/game/ResourceHeader";
+import { MobileNavigation } from "@/components/MobileNavigation";
+import { ErrorBoundary } from "@/components/game/ErrorBoundary";
+import { VillageInfoModal } from "@/components/game/VillageInfoModal";
 import Layout from "@/components/layout/layout";
 import ProtectedRoute from "@/components/protectedRoute";
 import { useAuthStore } from "@/stores/authStore";
 
+// Screen imports
+import { VillageScreen } from "@/components/screens/VillageScreen";
+import { WorldMapScreen } from "@/components/screens/WorldMapScreen";
+import { UnitsScreen } from "@/components/screens/UnitsScreen";
+import { ResourcesScreen } from "@/components/screens/ResourcesScreen";
+import { ReportsScreen } from "@/components/screens/ReportsScreen";
+import { MoreScreen } from "@/components/screens/MoreScreen";
+import { StatsScreen } from "@/components/screens/StatsScreen";
+import { AchievementsScreen } from "@/components/screens/AchievementsScreen";
+import { SettingsScreen } from "@/components/screens/SettingsScreen";
+import { HelpSupportScreen } from "@/components/screens/HelpSupportScreen";
+import { TradeScreen } from "@/components/screens/TradeScreen";
+import { MarchPlannerScreen } from "@/components/screens/MarchPlannerScreen";
+import { MarchReportsScreen } from "@/components/screens/MarchReportsScreen";
+import { calculateStorageCapacity } from "@/data/gameData";
+
 import WalletConnectPage from "@/pages/walletConnect";
 import NotFoundPage from "@/pages/notFound";
-import VillagePage from "@/pages/Village";
-import WorldPage from "@/pages/World";
-import ResourcesPage from "@/pages/Resources";
-import UnitsPage from "@/pages/Units";
 
-export function App() {
+function AppContent() {
+  const navigate = useNavigate();
   const { authenticated } = useAuthStore();
-  return (
-    <>
-      <Routes>
-        <Route path="/" element={<Navigate to="/village" />} />
-        <Route path="/wallet-connect" element={<WalletConnectPage />} />
+  
+  const {
+    gameState,
+    upgradeBuilding,
+    trainUnit,
+    setSelectedBuilding,
+    collectResources,
+    getTotalUncollectedResources,
+    setSelectedVillageInfo,
+    createMarch,
+    cancelMarch,
+    createMarchPreset,
+    deleteMarchPreset,
+  } = useGameState();
 
-        <Route element={<Layout />}>
+  const {
+    village,
+    selectedBuilding,
+    selectedVillageInfo,
+    playerStats,
+  } = gameState;
+  
+  const storageCapacity = calculateStorageCapacity(
+    village.buildings.storage?.level || 1,
+  );
+
+  const handleVillageSelect = (villageId: string) => {
+    if (villageId === village.id) {
+      // Navigate to village when selecting own village
+      navigate("/village");
+    }
+    // Handle other village selection for attacks/spying
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto">
+      {/* Fixed Header */}
+      <div className="sticky top-0 z-40">
+        <ResourceHeader
+          village={village}
+          onMoreClick={() => navigate("/more")}
+          onNotificationsClick={() => navigate("/reports")}
+          onSettingsClick={() => navigate("/settings")}
+          onProfileClick={() => navigate("/more")}
+        />
+      </div>
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto px-4 py-3 pb-20">
+        <Routes>
+          <Route path="/" element={<Navigate to="/village" replace />} />
+          <Route path="/wallet-connect" element={<WalletConnectPage />} />
+
+          {/* Protected Routes */}
           <Route
             element={
               <ProtectedRoute
@@ -27,15 +98,111 @@ export function App() {
               />
             }
           >
-            <Route path="/world" element={<WorldPage />} />
-            <Route path="/village" element={<VillagePage />} />
-            <Route path="/resources" element={<ResourcesPage />} />
-            <Route path="/units" element={<UnitsPage />} />
+            <Route
+              path="/village"
+              element={
+                <VillageScreen
+                  village={village}
+                  selectedBuilding={selectedBuilding}
+                  onBuildingSelect={setSelectedBuilding}
+                  onUpgradeBuilding={upgradeBuilding}
+                />
+              }
+            />
+            <Route
+              path="/world"
+              element={
+                <WorldMapScreen
+                  village={village}
+                  marches={gameState.marches}
+                  marchPresets={gameState.marchPresets}
+                  onVillageSelect={handleVillageSelect}
+                  onVillageInfo={setSelectedVillageInfo}
+                  onCreateMarch={createMarch}
+                  onCancelMarch={cancelMarch}
+                  onCreatePreset={createMarchPreset}
+                  onDeletePreset={deleteMarchPreset}
+                />
+              }
+            />
+            <Route
+              path="/units"
+              element={
+                <UnitsScreen
+                  village={village}
+                  resources={village.resources}
+                  onTrainUnit={trainUnit}
+                />
+              }
+            />
+            <Route
+              path="/resources"
+              element={
+                <ResourcesScreen
+                  resources={village.resources}
+                  uncollectedResources={village.uncollectedResources}
+                  buildingLevels={village.buildings}
+                  storageCapacity={storageCapacity}
+                  onCollectResource={collectResources}
+                />
+              }
+            />
+            <Route path="/reports" element={<ReportsScreen />} />
+            <Route path="/more" element={<MoreScreen />} />
+            <Route
+              path="/stats"
+              element={
+                <StatsScreen
+                  village={village}
+                  resources={village.resources}
+                  playerStats={playerStats}
+                />
+              }
+            />
+            <Route path="/achievements" element={<AchievementsScreen />} />
+            <Route path="/settings" element={<SettingsScreen />} />
+            <Route path="/help" element={<HelpSupportScreen />} />
+            <Route path="/trade" element={<TradeScreen />} />
+            <Route path="/march-planner" element={<MarchPlannerScreen />} />
+            <Route path="/march-reports" element={<MarchReportsScreen />} />
           </Route>
-        </Route>
 
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </>
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
+
+      {/* Mobile Navigation */}
+      <MobileNavigation />
+
+      {/* Village Info Modal */}
+      <VillageInfoModal
+        isOpen={!!selectedVillageInfo}
+        onClose={() => setSelectedVillageInfo(null)}
+        villageInfo={selectedVillageInfo}
+        myVillageCoords={{ x: 200, y: 200 }}
+        onAttack={(villageId) => {
+          console.log("Attack village:", villageId);
+          setSelectedVillageInfo(null);
+        }}
+        onSpy={(villageId) => {
+          console.log("Spy on village:", villageId);
+          setSelectedVillageInfo(null);
+        }}
+        onTrade={(villageId) => {
+          console.log("Trade with village:", villageId);
+          setSelectedVillageInfo(null);
+        }}
+      />
+    </div>
+  );
+}
+
+export function App() {
+  return (
+    <ErrorBoundary>
+      <Router>
+        <AppContent />
+      </Router>
+    </ErrorBoundary>
   );
 }

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { MiniKit } from '@worldcoin/minikit-js'
-import { uuidv4 } from '@/utils/uuidv4'
+import { uuidv4 } from '@/lib/uuidv4'
 
 interface AuthState {
   authenticated: boolean
