@@ -2,10 +2,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from './ui/button';
 
 const NAVIGATION_ITEMS = [
-  { id: '/city', icon: '🏛️', label: 'Stadt' },
-  { id: '/world', icon: '🗺️', label: 'Welt' },
-  { id: '/army', icon: '⚔️', label: 'Armee' },
-  { id: '/resources', icon: '💰', label: 'Ressourcen' }
+  { id: '/village', icon: '🏛️', label: 'Village' },
+  { id: '/world', icon: '🗺️', label: 'World' },
+  { id: '/units', icon: '⚔️', label: 'Units' },
+  { id: '/resources', icon: '💰', label: 'Resources' }
 ];
 
 export function MobileNavigation() {

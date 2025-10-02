@@ -9,7 +9,7 @@ import { ResourceHeader } from "@/components/game/ResourceHeader";
 import { MobileNavigation } from "@/components/MobileNavigation";
 import { ErrorBoundary } from "@/components/game/ErrorBoundary";
 import { VillageInfoModal } from "@/components/game/VillageInfoModal";
-import Layout from "@/components/layout/layout";
+import { GameLayout } from "@/components/layout/GameLayout";
 import ProtectedRoute from "@/components/protectedRoute";
 import { useAuthStore } from "@/stores/authStore";
 
@@ -71,24 +71,13 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto">
-      {/* Fixed Header */}
-      <div className="sticky top-0 z-40">
-        <ResourceHeader
-          village={village}
-          onMoreClick={() => navigate("/more")}
-          onNotificationsClick={() => navigate("/reports")}
-          onSettingsClick={() => navigate("/settings")}
-          onProfileClick={() => navigate("/more")}
-        />
-      </div>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto px-4 py-3 pb-20">
-        <Routes>
-          <Route path="/" element={<Navigate to="/village" replace />} />
-          <Route path="/wallet-connect" element={<WalletConnectPage />} />
+      <Routes>
+        <Route path="/" element={<Navigate to="/village" replace />} />
+        <Route path="/wallet-connect" element={<WalletConnectPage />} />
 
-          {/* Protected Routes */}
+        {/* Layout-based Routes */}
+        <Route element={<GameLayout />}>
           <Route
             element={
               <ProtectedRoute
@@ -165,13 +154,10 @@ function AppContent() {
             <Route path="/march-planner" element={<MarchPlannerScreen />} />
             <Route path="/march-reports" element={<MarchReportsScreen />} />
           </Route>
+        </Route>
 
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </main>
-
-      {/* Mobile Navigation */}
-      <MobileNavigation />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
 
       {/* Village Info Modal */}
       <VillageInfoModal

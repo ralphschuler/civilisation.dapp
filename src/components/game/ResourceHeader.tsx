@@ -31,6 +31,26 @@ export function ResourceHeader({
           </div>
         </div>
         
+        {/* Resource Display */}
+        <div className="flex items-center space-x-2 text-sm">
+          <div className="flex items-center space-x-1">
+            <img src="/assets/resources/wood.png" alt="Wood" className="w-4 h-4" />
+            <span>{Math.floor(village.resources.wood)}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <img src="/assets/resources/clay.png" alt="Clay" className="w-4 h-4" />
+            <span>{Math.floor(village.resources.clay)}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <img src="/assets/resources/iron.png" alt="Iron" className="w-4 h-4" />
+            <span>{Math.floor(village.resources.iron)}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <img src="/assets/resources/villager.png" alt="Population" className="w-4 h-4" />
+            <span>{village.resources.population}</span>
+          </div>
+        </div>
+        
         <div className="flex items-center space-x-2">
           <Button 
             variant="ghost" 
