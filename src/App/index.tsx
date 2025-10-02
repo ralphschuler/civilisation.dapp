@@ -1,5 +1,4 @@
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
@@ -200,9 +199,7 @@ function AppContent() {
 export function App() {
   return (
     <ErrorBoundary>
-      <Router>
-        <AppContent />
-      </Router>
+      <AppContent />
     </ErrorBoundary>
   );
 }
