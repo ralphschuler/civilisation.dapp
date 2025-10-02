@@ -16,10 +16,6 @@
     "lint:fix": "bun run lint:sol:fix && bun run lint:ts:fix"
   },
   "dependencies": {
-    "@biomejs/biome": "^2.2.4",
-    "@radix-ui/react-avatar": "^1.1.10",
-    "@radix-ui/react-dialog": "^1.1.15",
-    "@radix-ui/react-slot": "^1.2.3",
     "@worldcoin/minikit-js": "^1.9.6",
     "@worldcoin/minikit-react": "^1.9.7",
     "class-variance-authority": "^0.7.1",
@@ -35,6 +31,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.4",
     "@tailwindcss/vite": "^4.1.13",
     "@types/node": "^24.3.1",
     "@types/react": "^19.1.10",
