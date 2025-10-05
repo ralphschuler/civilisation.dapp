@@ -22,8 +22,8 @@ import { MarchPlannerScreen } from "@/components/screens/MarchPlannerScreen";
 import { MarchReportsScreen } from "@/components/screens/MarchReportsScreen";
 import { calculateStorageCapacity } from "@/data/gameData";
 
-import WalletConnectPage from "@/components/screens/WalletConnect";
-import NotFoundPage from "@/components/screens/NotFound";
+import { WalletConnectScreen } from "@/components/screens/WalletConnectScreen";
+import { NotFoundScreen } from "@/components/screens/NotFoundScreen";
 
 function AppContent() {
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ function AppContent() {
     <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto">
       <Routes>
         <Route path="/" element={<Navigate to="/village" replace />} />
-        <Route path="/wallet-connect" element={<WalletConnectPage />} />
+        <Route path="/wallet-connect" element={<WalletConnectScreen />} />
 
         {/* Layout-based Routes */}
         <Route element={<GameLayout />}>
@@ -144,7 +144,7 @@ function AppContent() {
           </Route>
         </Route>
 
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundScreen />} />
       </Routes>
 
       {/* Village Info Modal */}

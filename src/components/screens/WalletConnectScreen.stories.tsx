@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import WalletConnect from "@/components/screens/WalletConnect";
+import { WalletConnectScreen } from "@/components/screens/WalletConnectScreen";
 
-const meta: Meta<typeof WalletConnect> = {
+const meta: Meta<typeof WalletConnectScreen> = {
   title: "Screens/WalletConnect",
-  component: WalletConnect,
+  component: WalletConnectScreen,
   parameters: {
     docs: {
       description: {

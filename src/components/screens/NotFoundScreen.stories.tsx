@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
-import NotFound from "@/components/screens/NotFound";
+import { NotFoundScreen } from "@/components/screens/NotFoundScreen";
 
-const meta: Meta<typeof NotFound> = {
-  title: "Screens/NotFound",
-  component: NotFound,
+const meta: Meta<typeof NotFoundScreen> = {
+  title: "Screens/NotFoundScreen",
+  component: NotFoundScreen,
   render: () => (
     <MemoryRouter initialEntries={["/missing"]}>
       <Routes>
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<NotFoundScreen />} />
       </Routes>
     </MemoryRouter>
   ),
