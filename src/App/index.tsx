@@ -22,8 +22,8 @@ import { MarchPlannerScreen } from "@/components/screens/MarchPlannerScreen";
 import { MarchReportsScreen } from "@/components/screens/MarchReportsScreen";
 import { calculateStorageCapacity } from "@/data/gameData";
 
-import WalletConnectPage from "@/components/screens/walletConnect";
-import NotFoundPage from "@/components/screens/notFound";
+import WalletConnectPage from "@/components/screens/WalletConnect";
+import NotFoundPage from "@/components/screens/NotFound";
 
 function AppContent() {
   const navigate = useNavigate();
