@@ -1,396 +1,157 @@
-import { useState, useEffect, useCallback } from 'react';
-import { GameState, Village, Resources, UncollectedResources, PlayerStats, VillageInfo, BuildingId, March, MarchPreset } from '../types/game';
-import { BUILDING_TYPES, calculateResourceProduction, calculateStorageCapacity, calculatePopulationCapacity, calculateBuildingCost } from '../data/gameData';
+/**
+ * useGameState Hook - Refactored Version
+ * 
+ * This is a compatibility layer that wraps the new Zustand stores
+ * to provide the same interface as the old useGameState hook.
+ * 
+ * This allows for gradual migration of components.
+ * 
+ * Usage:
+ * 1. Rename /hooks/useGameState.ts to /hooks/useGameState.old.ts
+ * 2. Rename this file from UseGameState.new.ts to useGameState.ts
+ * 3. Components will work without changes
+ * 4. Gradually migrate components to use stores directly
+ */
 
-const INITIAL_VILLAGE: Village = {
-  id: 'village1',
-  name: 'Mein Dorf',
-  x: 200,
-  y: 200,
-  resources: {
-    bread: 100,
-    clay: 1000,
-    coal: 500,
-    gold: 100,
-    iron: 800,
-    meat: 200,
-    villager: 30,
-    wheat: 500,
-    wood: 1200,
-    maxPopulation: 240
-  },
-  uncollectedResources: {
-    bread: 0,
-    clay: 0,
-    coal: 0,
-    gold: 0,
-    iron: 0,
-    meat: 0,
-    villager: 0,
-    wheat: 0,
-    wood: 0
-  },
-  buildings: {
-    townhall: { type: 'townhall', level: 1 },
-    bakery: { type: 'bakery', level: 1 },
-    barracks: { type: 'barracks', level: 0 },
-    claypit: { type: 'claypit', level: 1 },
-    coalpit: { type: 'coalpit', level: 0 },
-    fisher: { type: 'fisher', level: 1 },
-    ironmine: { type: 'ironmine', level: 1 },
-    farm: { type: 'farm', level: 1 },
-    house: { type: 'house', level: 1 },
-    huntershut: { type: 'huntershut', level: 1 },
-    market: { type: 'market', level: 1 },
-    storage: { type: 'storage', level: 1 },
-    wall: { type: 'wall', level: 0 },
-    woodcutter: { type: 'woodcutter', level: 1 }
-  },
-  army: {
-    spearman: 0,
-    swordsman: 0,
-    archer: 0,
-    knight: 0,
-    trebuchet: 0
-  },
-  trainingQueue: [],
-  lastUpdate: Date.now()
-};
+import { useCallback } from 'react';
+import {
+  useGameStore,
+  useVillageStore,
+  useMarchStore,
+  useReportStore,
+  usePlayerStatsStore,
+  useTechTreeStore
+} from '../lib/stores';
+import { GameState, Village, BuildingId, UnitId, VillageInfo, March, MarchPreset } from '../types/game';
 
-const INITIAL_STATS: PlayerStats = {
-  totalResourcesGathered: {
-    bread: 0,
-    clay: 0,
-    coal: 0,
-    gold: 0,
-    iron: 0,
-    meat: 0,
-    villager: 0,
-    wheat: 0,
-    wood: 0
-  },
-  totalUnitsTrained: 0,
-  totalBuildingsUpgraded: 0,
-  battlesWon: 0,
-  battlesLost: 0,
-  playtime: 0
-};
-
-const INITIAL_STATE: GameState = {
-  village: INITIAL_VILLAGE,
-  selectedBuilding: null,
-  selectedVillageInfo: null,
-  currentScreen: 'city',
-  playerStats: INITIAL_STATS,
-  techTree: {
-    era: 'village',
-    unlockedBuildings: ['townhall', 'house', 'farm', 'woodcutter', 'claypit'],
-    unlockedUnits: ['spearman', 'archer'],
-    smithyUpgrades: {
-      inf: { attack: 0, defense: 0 },
-      cav: { attack: 0, defense: 0 },
-      ranged: { attack: 0, defense: 0 },
-      siege: { attack: 0, defense: 0 }
-    }
-  },
-  marches: [],
-  marchPresets: [
-    {
-      id: 'default-raid',
-      name: 'Schneller Raid',
-      description: 'Optimiert für schnelle Plünderungen',
-      army: {
-        spearman: 50,
-        swordsman: 30,
-        axeman: 20,
-        archer: 40,
-        crossbow: 0,
-        lightcav: 20,
-        knight: 0,
-        pikeman: 0,
-        ram: 0,
-        trebuchet: 0
-      },
-      attackType: 'raid',
-      isDefault: true
-    }
-  ]
-};
-
+/**
+ * Legacy hook interface - provides same API as old useGameState
+ * @deprecated Use individual stores directly for better performance
+ */
 export function useGameState() {
-  const [gameState, setGameState] = useState<GameState>(INITIAL_STATE);
+  // Get state from all stores
+  const village = useVillageStore(state => state.village);
+  const currentScreen = useGameStore(state => state.currentScreen);
+  const selectedBuilding = useGameStore(state => state.selectedBuilding);
+  const selectedVillageInfo = useGameStore(state => state.selectedVillageInfo);
+  const playerStats = usePlayerStatsStore(state => state.stats);
+  const techTree = useTechTreeStore(state => state.techTree);
+  const marches = useMarchStore(state => state.marches);
+  const marchPresets = useMarchStore(state => state.marchPresets);
 
-  // Update resources based on production
-  useEffect(() => {
-    const updateResources = () => {
-      setGameState(prev => {
-        const now = Date.now();
-        const timeDiff = (now - prev.village.lastUpdate) / 1000; // seconds
-        
-        if (timeDiff < 1) return prev; // Update at most once per second
+  // Get actions from stores
+  const setSelectedBuilding = useGameStore(state => state.setSelectedBuilding);
+  const setCurrentScreen = useGameStore(state => state.setCurrentScreen);
+  const setSelectedVillageInfo = useGameStore(state => state.setSelectedVillageInfo);
 
-        const village = prev.village;
-        const newResources = { ...village.resources };
-        const newUncollectedResources = { ...village.uncollectedResources };
+  const upgradeBuilding = useVillageStore(state => state.upgradeBuilding);
+  const collectResources = useVillageStore(state => state.collectResources);
 
-        // Calculate production per second
-        const totalProduction = calculateResourceProduction(village.buildings);
-        const woodProduction = (totalProduction.wood || 0) / 3600;
-        const clayProduction = (totalProduction.clay || 0) / 3600;
-        const ironProduction = (totalProduction.iron || 0) / 3600;
-        const coalProduction = (totalProduction.coal || 0) / 3600;
-        const wheatProduction = (totalProduction.wheat || 0) / 3600;
-        const breadProduction = (totalProduction.bread || 0) / 3600;
-        const meatProduction = (totalProduction.meat || 0) / 3600;
-        const goldProduction = (totalProduction.gold || 0) / 3600;
+  const createMarch = useMarchStore(state => state.createMarch);
+  const cancelMarch = useMarchStore(state => state.cancelMarch);
+  const createMarchPreset = useMarchStore(state => state.createMarchPreset);
+  const deleteMarchPreset = useMarchStore(state => state.deleteMarchPreset);
 
-        // Calculate storage capacity
-        const storageCapacity = calculateStorageCapacity(village.buildings.storage?.level || 1);
-
-        // Add production to uncollected resources (not directly to resources)
-        newUncollectedResources.wood += woodProduction * timeDiff;
-        newUncollectedResources.clay += clayProduction * timeDiff;
-        newUncollectedResources.iron += ironProduction * timeDiff;
-        newUncollectedResources.coal += coalProduction * timeDiff;
-        newUncollectedResources.wheat += wheatProduction * timeDiff;
-        newUncollectedResources.bread += breadProduction * timeDiff;
-        newUncollectedResources.meat += meatProduction * timeDiff;
-        newUncollectedResources.gold += goldProduction * timeDiff;
-        
-        // Update population capacity
-        newResources.maxPopulation = calculatePopulationCapacity(village.buildings);
-
-        // Check for completed buildings
-        const updatedBuildings = { ...village.buildings };
-        let buildingsUpdated = false;
-
-        Object.keys(updatedBuildings).forEach(buildingId => {
-          const building = updatedBuildings[buildingId];
-          if (building.upgrading && now >= building.upgrading.completionTime) {
-            building.level = building.upgrading.targetLevel;
-            delete building.upgrading;
-            buildingsUpdated = true;
-          }
-        });
-
-        // Check for completed training
-        const updatedTrainingQueue = village.trainingQueue.filter(training => {
-          if (now >= training.completionTime) {
-            const newArmy = { ...village.army };
-            newArmy[training.unitId] = (newArmy[training.unitId] || 0) + training.quantity;
-            return false; // Remove from queue
-          }
-          return true;
-        });
-
-        return {
-          ...prev,
-          village: {
-            ...village,
-            resources: newResources,
-            uncollectedResources: newUncollectedResources,
-            buildings: updatedBuildings,
-            trainingQueue: updatedTrainingQueue,
-            lastUpdate: now
-          }
-        };
-      });
-    };
-
-    const interval = setInterval(updateResources, 1000);
-    return () => clearInterval(interval);
+  // Wrapper for trainUnit (needs to be implemented in a store)
+  const trainUnit = useCallback(async (unitId: UnitId, quantity: number) => {
+    // TODO: Implement in VillageStore or create UnitStore
+    console.warn('trainUnit not yet implemented in new store system');
   }, []);
 
-  const upgradeBuilding = useCallback((buildingId: string) => {
-    setGameState(prev => {
-      const building = prev.village.buildings[buildingId];
-      const buildingType = BUILDING_TYPES[building.type as keyof typeof BUILDING_TYPES];
-      
-      if (!building || !buildingType || building.upgrading || building.level >= buildingType.maxLevel) {
-        return prev;
-      }
-
-      // Calculate costs and check if affordable
-      const upgradeCost = calculateBuildingCost(building.type as keyof typeof BUILDING_TYPES, building.level + 1);
-
-      // Check if player has enough resources
-      for (const [resource, cost] of Object.entries(upgradeCost)) {
-        if ((prev.village.resources as any)[resource] < cost) {
-          return prev;
-        }
-      }
-
-      // Calculate build time
-      const townhallLevel = prev.village.buildings.townhall?.level || 1;
-      const buildTimeFactor = Math.pow(1.2, building.level);
-      const townhallBonus = 1 - (townhallLevel * 0.02);
-      // Base build time of 5 minutes (300 seconds), scaled by level
-      const baseBuildTime = 300;
-      const buildTime = Math.floor(baseBuildTime * buildTimeFactor * townhallBonus);
-
-      const completionTime = Date.now() + (buildTime * 1000);
-
-      // Deduct resources
-      const newResources = { ...prev.village.resources };
-      Object.entries(upgradeCost).forEach(([resource, cost]) => {
-        (newResources as any)[resource] -= cost;
-      });
-
-      return {
-        ...prev,
-        village: {
-          ...prev.village,
-          resources: newResources,
-          buildings: {
-            ...prev.village.buildings,
-            [buildingId]: {
-              ...building,
-              upgrading: {
-                targetLevel: building.level + 1,
-                completionTime
-              }
-            }
-          }
-        }
-      };
-    });
-  }, []);
-
-  const trainUnit = useCallback((unitId: string, quantity: number) => {
-    setGameState(prev => {
-      // Implementation for training units
-      // This would check costs and add to training queue
-      return prev;
-    });
-  }, []);
-
-  const setSelectedBuilding = useCallback((buildingId: string | null) => {
-    setGameState(prev => ({
-      ...prev,
-      selectedBuilding: buildingId
-    }));
-  }, []);
-
-  const setCurrentScreen = useCallback((screen: GameState['currentScreen']) => {
-    setGameState(prev => ({
-      ...prev,
-      currentScreen: screen
-    }));
-  }, []);
-
-  const collectResources = useCallback((resourceType?: keyof UncollectedResources) => {
-    setGameState(prev => {
-      const village = prev.village;
-      const storageCapacity = calculateStorageCapacity(village.buildings.storage?.level || 1);
-      const newResources = { ...village.resources };
-      const newUncollectedResources = { ...village.uncollectedResources };
-      
-      if (resourceType) {
-        // Collect specific resource
-        const collectableAmount = Math.min(
-          newUncollectedResources[resourceType],
-          storageCapacity - newResources[resourceType]
-        );
-        
-        if (collectableAmount > 0) {
-          newResources[resourceType] += collectableAmount;
-          newUncollectedResources[resourceType] -= collectableAmount;
-        }
-      } else {
-        // Collect all resources
-        const resourceTypes: (keyof UncollectedResources)[] = [
-          'wood', 'clay', 'iron', 'coal', 'wheat', 'bread', 'meat', 'gold', 'villager'
-        ];
-        
-        resourceTypes.forEach(type => {
-          const availableSpace = storageCapacity - newResources[type];
-          const collectableAmount = Math.min(
-            newUncollectedResources[type],
-            availableSpace
-          );
-          
-          if (collectableAmount > 0) {
-            newResources[type] += collectableAmount;
-            newUncollectedResources[type] -= collectableAmount;
-          }
-        });
-      }
-
-      return {
-        ...prev,
-        village: {
-          ...village,
-          resources: newResources,
-          uncollectedResources: newUncollectedResources
-        }
-      };
-    });
-  }, []);
-
+  // Helper function
   const getTotalUncollectedResources = useCallback(() => {
-    const uncollected = gameState.village.uncollectedResources;
+    if (!village) return 0;
+    const uncollected = village.uncollectedResources;
     return Object.values(uncollected).reduce((sum, amount) => sum + amount, 0);
-  }, [gameState.village.uncollectedResources]);
+  }, [village]);
 
-  const setSelectedVillageInfo = useCallback((villageInfo: VillageInfo | null) => {
-    setGameState(prev => ({
-      ...prev,
-      selectedVillageInfo: villageInfo
-    }));
-  }, []);
+  // Construct gameState object for backward compatibility
+  const gameState: GameState | null = village && playerStats && techTree ? {
+    village,
+    selectedBuilding,
+    selectedVillageInfo,
+    currentScreen,
+    playerStats,
+    techTree,
+    marches,
+    marchPresets
+  } : null;
 
-  const createMarch = useCallback((march: Omit<March, 'id'>) => {
-    setGameState(prev => ({
-      ...prev,
-      marches: [
-        ...prev.marches,
-        {
-          ...march,
-          id: `march_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-        }
-      ]
-    }));
-  }, []);
+  // Wrapper for upgradeBuilding to match old signature
+  const upgradeBuildingWrapper = useCallback((buildingId: string) => {
+    if (!village) return;
+    const building = village.buildings[buildingId];
+    if (!building) return;
 
-  const cancelMarch = useCallback((marchId: string) => {
-    setGameState(prev => ({
-      ...prev,
-      marches: prev.marches.filter(march => march.id !== marchId)
-    }));
-  }, []);
+    upgradeBuilding(buildingId, {
+      ...building,
+      upgrading: {
+        targetLevel: building.level + 1,
+        completionTime: Date.now() + 300000 // 5 minutes
+      }
+    });
+  }, [village, upgradeBuilding]);
 
-  const createMarchPreset = useCallback((preset: Omit<MarchPreset, 'id'>) => {
-    setGameState(prev => ({
-      ...prev,
-      marchPresets: [
-        ...prev.marchPresets,
-        {
-          ...preset,
-          id: `preset_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-        }
-      ]
-    }));
-  }, []);
+  // Wrapper functions to match old API
+  const createMarchWrapper = useCallback(async (march: Omit<March, 'id'>) => {
+    await createMarch(march);
+  }, [createMarch]);
 
-  const deleteMarchPreset = useCallback((presetId: string) => {
-    setGameState(prev => ({
-      ...prev,
-      marchPresets: prev.marchPresets.filter(preset => preset.id !== presetId && !preset.isDefault)
-    }));
-  }, []);
+  const cancelMarchWrapper = useCallback(async (marchId: string) => {
+    await cancelMarch(marchId);
+  }, [cancelMarch]);
+
+  const createMarchPresetWrapper = useCallback(async (preset: Omit<MarchPreset, 'id'>) => {
+    await createMarchPreset(preset);
+  }, [createMarchPreset]);
+
+  const deleteMarchPresetWrapper = useCallback(async (presetId: string) => {
+    await deleteMarchPreset(presetId);
+  }, [deleteMarchPreset]);
 
   return {
-    gameState,
-    upgradeBuilding,
+    // State
+    gameState: (gameState as GameState),
+
+    // Actions
+    upgradeBuilding: upgradeBuildingWrapper,
     trainUnit,
     setSelectedBuilding,
     setCurrentScreen,
     collectResources,
     getTotalUncollectedResources,
     setSelectedVillageInfo,
-    createMarch,
-    cancelMarch,
-    createMarchPreset,
-    deleteMarchPreset
+    createMarch: createMarchWrapper,
+    cancelMarch: cancelMarchWrapper,
+    createMarchPreset: createMarchPresetWrapper,
+    deleteMarchPreset: deleteMarchPresetWrapper,
+  };
+}
+
+/**
+ * Modern hook - use stores directly for better performance
+ * @example
+ * ```typescript
+ * // Instead of:
+ * const { gameState, upgradeBuilding } = useGameState();
+ * 
+ * // Use:
+ * const village = useVillageStore(state => state.village);
+ * const upgradeBuilding = useVillageStore(state => state.upgradeBuilding);
+ * ```
+ */
+export function useModernGameState() {
+  console.warn(
+    'useModernGameState is deprecated. ' +
+    'Import stores directly: import { useVillageStore } from "@/lib/stores"'
+  );
+
+  return {
+    useVillageStore,
+    useMarchStore,
+    useReportStore,
+    usePlayerStatsStore,
+    useTechTreeStore,
+    useGameStore
   };
 }

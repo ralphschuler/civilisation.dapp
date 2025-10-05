@@ -41,6 +41,62 @@ const STORAGE_KEYS = {
   NEUTRAL_CAMPS: 'civ_mobile_neutral_camps',
 } as const;
 
+// Minimal initial data to seed a fresh install
+const INITIAL_VILLAGE: Village = {
+  id: 'village1',
+  name: 'Mein Dorf',
+  x: 200,
+  y: 200,
+  resources: {
+    bread: 100,
+    clay: 1000,
+    coal: 500,
+    gold: 100,
+    iron: 800,
+    meat: 200,
+    villager: 30,
+    wheat: 500,
+    wood: 1200,
+    maxPopulation: 240
+  },
+  uncollectedResources: {
+    bread: 0,
+    clay: 0,
+    coal: 0,
+    gold: 0,
+    iron: 0,
+    meat: 0,
+    villager: 0,
+    wheat: 0,
+    wood: 0
+  },
+  buildings: {
+    townhall: { type: 'townhall', level: 1 },
+    bakery: { type: 'bakery', level: 1 },
+    barracks: { type: 'barracks', level: 0 },
+    claypit: { type: 'claypit', level: 1 },
+    coalpit: { type: 'coalpit', level: 0 },
+    fisher: { type: 'fisher', level: 1 },
+    ironmine: { type: 'ironmine', level: 1 },
+    farm: { type: 'farm', level: 1 },
+    house: { type: 'house', level: 1 },
+    huntershut: { type: 'huntershut', level: 1 },
+    market: { type: 'market', level: 1 },
+    storage: { type: 'storage', level: 1 },
+    wall: { type: 'wall', level: 0 },
+    woodcutter: { type: 'woodcutter', level: 1 }
+  },
+  army: {
+    spearman: 0,
+    swordsman: 0,
+    archer: 0,
+    knight: 0,
+    trebuchet: 0
+  },
+  trainingQueue: [],
+  lastUpdate: Date.now()
+};
+
 /**
  * Helper to safely get from localStorage
  */
@@ -82,8 +138,14 @@ class LocalStorageVillageRepository implements IVillageRepository {
   async getVillage(villageId: string): Promise<Village> {
     const villages = this.getVillages();
     const village = villages.get(villageId);
-    if (!village) throw new Error(`Village ${villageId} not found`);
-    return village;
+    if (village) return village;
+    // Seed default village on first access
+    if (villageId === 'village1') {
+      villages.set('village1', INITIAL_VILLAGE);
+      this.saveVillages(villages);
+      return INITIAL_VILLAGE;
+    }
+    throw new Error(`Village ${villageId} not found`);
   }
 
   async updateVillage(village: Village): Promise<void> {

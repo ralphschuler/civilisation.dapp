@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Badge } from '../ui/Badge';
@@ -29,18 +29,35 @@ import { useI18n } from '@/providers/i18n-provider';
 import { BattleReportDetail } from '../game/BattleReportDetail';
 import { Report, ReportType } from '../../types/reports';
 import { mockReports } from '../../data/mockReports';
+import { useReportStore } from '@/lib/stores';
 
 interface ReportsScreenProps {
-  reports?: Report[];
+  reports?: Report[]; // optional legacy prop; store data is preferred
 }
 
-export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
+export function ReportsScreen({ reports: propReports = mockReports }: ReportsScreenProps) {
   const { t } = useI18n();
   const navigate = useNavigate();
   const [selectedReports, setSelectedReports] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState('all');
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
+
+  // Repository-backed store
+  const {
+    reports: storeReports,
+    unreadCount: storeUnread,
+    loadReports,
+    markAsRead,
+    deleteReport,
+  } = useReportStore();
+
+  useEffect(() => {
+    loadReports();
+  }, [loadReports]);
+
+  // Prefer store data; fall back to prop/mock
+  const reports = useMemo(() => (storeReports.length ? storeReports : propReports), [storeReports, propReports]);
 
   const formatTime = (timestamp: number) => {
     const diff = Date.now() - timestamp;
@@ -107,7 +124,7 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
     return report.type === activeTab;
   });
 
-  const unreadCount = reports.filter(r => !r.read).length;
+  const unreadCount = storeReports.length ? storeUnread : reports.filter(r => !r.read).length;
   const importantCount = reports.filter(r => r.important).length;
   const battleCount = reports.filter(r => r.type === 'battle').length;
 
@@ -131,8 +148,8 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
     toggleReportSelection(report.id);
   };
 
-  const handleMarkAsRead = () => {
-    // Mark selected reports as read
+  const handleMarkAsRead = async () => {
+    await Promise.all(selectedReports.map(id => markAsRead(id)));
     setSelectedReports([]);
   };
 
@@ -141,8 +158,8 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
     setSelectedReports([]);
   };
 
-  const handleDelete = () => {
-    // Delete selected reports
+  const handleDelete = async () => {
+    await Promise.all(selectedReports.map(id => deleteReport(id)));
     setSelectedReports([]);
   };
 

@@ -4,6 +4,7 @@ import { MiniKitProvider } from '@/providers/minikit-provider'
 import { RouterProvider } from '@/providers/router-provider'
 import { QueryProvider } from '@/providers/query-provider'
 import { I18nProvider } from '@/providers/i18n-provider'
+import { StoresProvider } from '@/providers/stores-provider'
 
 export const ClientProvider = ({ children }: { children: ReactNode }) => {
   return (
@@ -11,7 +12,9 @@ export const ClientProvider = ({ children }: { children: ReactNode }) => {
       <MiniKitProvider>
         <RouterProvider>
           <QueryProvider>
-            <I18nProvider>{children}</I18nProvider>
+            <I18nProvider>
+              <StoresProvider>{children}</StoresProvider>
+            </I18nProvider>
           </QueryProvider>
         </RouterProvider>
       </MiniKitProvider>
