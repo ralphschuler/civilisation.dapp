@@ -10,6 +10,7 @@ import { ScrollArea } from '../ui/ScrollArea';
 import { getResourceIcon } from '../../data/gameData';
 import { Resources } from '../../types/game';
 import { ArrowRightLeft, TrendingUp, Clock, Users, Send } from 'lucide-react';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface TradeOffer {
   id: string;
@@ -62,6 +63,7 @@ export function TradeScreen({
   onExecuteTrade, 
   onCreateTrade 
 }: TradeScreenProps) {
+  const { t } = useI18n();
   const [selectedResource, setSelectedResource] = useState<string>('wood');
   const [offerAmount, setOfferAmount] = useState<number>(100);
   const [requestResource, setRequestResource] = useState<string>('iron');
@@ -102,24 +104,24 @@ export function TradeScreen({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ArrowRightLeft className="h-5 w-5" />
-            Handel
+            {t('screens.trade.title', 'Trade')}
           </CardTitle>
         </CardHeader>
       </Card>
 
       <Tabs defaultValue="market">
         <TabsList className="grid grid-cols-3 w-full">
-          <TabsTrigger value="market">Marktplatz</TabsTrigger>
-          <TabsTrigger value="create">Angebot erstellen</TabsTrigger>
-          <TabsTrigger value="history">Verlauf</TabsTrigger>
+          <TabsTrigger value="market">{t('screens.trade.market', 'Marketplace')}</TabsTrigger>
+          <TabsTrigger value="create">{t('screens.trade.create', 'Create Offer')}</TabsTrigger>
+          <TabsTrigger value="history">{t('screens.trade.history', 'History')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="market">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                <span>Verfügbare Angebote</span>
-                <Badge variant="outline">{mockTrades.length} Angebote</Badge>
+                <span>{t('screens.trade.available', 'Available offers')}</span>
+                <Badge variant="outline">{mockTrades.length}</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>

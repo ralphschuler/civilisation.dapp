@@ -3,6 +3,7 @@ import { Village, Building } from '../../types/game';
 import { VillageGrid } from '../VillageGrid';
 import { BuildingModal } from '../BuildingModal';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface VillageScreenProps {
   village: Village;
@@ -17,6 +18,7 @@ export function VillageScreen({
   onBuildingSelect, 
   onUpgradeBuilding 
 }: VillageScreenProps) {
+  const { t } = useI18n();
   const [selectedBuildingForModal, setSelectedBuildingForModal] = useState<Building | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -69,7 +71,7 @@ export function VillageScreen({
           <CardTitle className="flex items-center gap-2">
             🏘️ {village.name}
             <span className="text-sm text-muted-foreground ml-auto">
-              Stufe {Math.max(...Object.values(village.buildings).map(b => b.level))}
+              {t('villageInfo.level', 'Level')} {Math.max(...Object.values(village.buildings).map(b => b.level))}
             </span>
           </CardTitle>
         </CardHeader>
@@ -101,7 +103,7 @@ export function VillageScreen({
                        buildingId}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      Stufe {building.level} → {building.upgrading!.targetLevel}
+                      {t('villageInfo.level', 'Level')} {building.level} → {building.upgrading!.targetLevel}
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1">
                       <div 
@@ -123,7 +125,7 @@ export function VillageScreen({
       {/* Village Grid */}
       <Card className="flex-1">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">Gebäude</CardTitle>
+          <CardTitle className="text-base">{t('villageInfo.tabs.buildings', 'Buildings')}</CardTitle>
         </CardHeader>
         <CardContent>
           <VillageGrid
@@ -134,7 +136,7 @@ export function VillageScreen({
           />
           
           <div className="mt-4 text-center text-sm text-muted-foreground">
-            Tippe auf ein Gebäude für Details und Upgrades
+            {t('village.tapBuilding', 'Tap a building for details and upgrades')}
           </div>
         </CardContent>
       </Card>

@@ -3,6 +3,7 @@ import { calculateResourceProduction } from '../data/gameData';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
 import { Package } from 'lucide-react';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface MobileResourceBarProps {
   resources: Resources;
@@ -21,6 +22,7 @@ export function MobileResourceBar({
   storageCapacity,
   onCollectResources
 }: MobileResourceBarProps) {
+  const { t } = useI18n();
   const formatNumber = (num: number) => {
     if (num >= 1000000) {
       return `${(num / 1000000).toFixed(1)}M`;
@@ -166,7 +168,7 @@ export function MobileResourceBar({
             className="min-touch px-4 text-caption animate-pulse"
           >
             <Package className="h-4 w-4 mr-2" />
-            Ressourcen sammeln
+            {t('resources.collect', 'Collect resources')}
             <Badge variant="destructive" className="ml-2 text-micro">
               {Math.floor(getTotalUncollected())}
             </Badge>

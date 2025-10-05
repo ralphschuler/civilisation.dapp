@@ -21,6 +21,7 @@ import {
   ArrowLeft 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface GameSettings {
   notifications: {
@@ -86,6 +87,7 @@ export function SettingsScreen({
   onSettingsChange 
 }: SettingsScreenProps) {
   const navigate = useNavigate();
+  const { t, setLang } = useI18n();
   const [localSettings, setLocalSettings] = useState(settings);
 
   const updateSetting = (category: keyof GameSettings, key: string, value: any) => {
@@ -98,6 +100,10 @@ export function SettingsScreen({
     };
     setLocalSettings(newSettings);
     onSettingsChange?.(newSettings);
+
+    if (category === 'display' && key === 'language') {
+      setLang(value as 'en' | 'de');
+    }
   };
 
   const resetSettings = () => {
@@ -130,7 +136,7 @@ export function SettingsScreen({
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <Settings className="h-5 w-5" />
-            Einstellungen
+            {t('screens.settings.title', 'Settings')}
           </CardTitle>
         </CardHeader>
       </Card>

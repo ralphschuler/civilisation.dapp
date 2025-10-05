@@ -2,9 +2,11 @@ import { Outlet } from "react-router-dom";
 import { useGameState } from "@/hooks/useGameState";
 import { GameHeader } from "@/components/game/GameHeader";
 import { MobileNavigation } from "@/components/MobileNavigation";
+import { useNavigate } from "react-router-dom";
 import { calculateStorageCapacity } from "@/data/gameData";
 
 export function GameLayout() {
+  const navigate = useNavigate();
   const { gameState } = useGameState();
   const { village } = gameState;
 
@@ -18,9 +20,9 @@ export function GameLayout() {
       <div className="sticky top-0 z-40">
         <GameHeader
           village={village}
-          onNotificationsClick={() => {}}
-          onProfileClick={() => {}}
-          onSettingsClick={() => {}}
+          onNotificationsClick={() => navigate("/notifications")}
+          onProfileClick={() => navigate("/profile")}
+          onSettingsClick={() => navigate("/settings")}
         />
       </div>
 

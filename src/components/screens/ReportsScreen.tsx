@@ -25,6 +25,7 @@ import {
   ChevronRight,
   MoreHorizontal
 } from 'lucide-react';
+import { useI18n } from '@/providers/i18n-provider';
 import { BattleReportDetail } from '../game/BattleReportDetail';
 import { Report, ReportType } from '../../types/reports';
 import { mockReports } from '../../data/mockReports';
@@ -34,6 +35,7 @@ interface ReportsScreenProps {
 }
 
 export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [selectedReports, setSelectedReports] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState('all');
@@ -228,7 +230,7 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
         </Button>
         <div className="flex items-center gap-2 flex-1">
           <span className="text-title-sm">📜</span>
-          <h1 className="text-title-sm font-medium">Berichte</h1>
+          <h1 className="text-title-sm font-medium">{t('screens.reports.title', 'Reports')}</h1>
           {unreadCount > 0 && (
             <Badge variant="destructive" className="text-micro">
               {unreadCount}
@@ -268,16 +270,16 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
             <div className="p-4 pb-0">
               <TabsList className="grid grid-cols-4 w-full mb-4">
                 <TabsTrigger value="all" className="text-caption">
-                  Alle ({reports.length})
+                  {t('screens.reports.all', 'All')} ({reports.length})
                 </TabsTrigger>
                 <TabsTrigger value="unread" className="text-caption">
-                  Neu ({unreadCount})
+                  {t('screens.reports.unread', 'New')} ({unreadCount})
                 </TabsTrigger>
                 <TabsTrigger value="battle" className="text-caption">
-                  Kämpfe ({battleCount})
+                  {t('screens.reports.battle', 'Battles')} ({battleCount})
                 </TabsTrigger>
                 <TabsTrigger value="important" className="text-caption">
-                  Wichtig ({importantCount})
+                  {t('screens.reports.important', 'Important')} ({importantCount})
                 </TabsTrigger>
               </TabsList>
             </div>

@@ -14,6 +14,7 @@ import {
   Minus,
 } from "lucide-react";
 import { BattleResult } from "@/types/reports";
+import { T } from "@/providers/i18n-provider";
 
 interface BattleReportDetailProps {
   battleData: BattleResult;
@@ -68,17 +69,27 @@ export function BattleReportDetail({
         >
           <span className="text-caption">{unit}</span>
           <div className="text-caption text-right">
-            {data.sent && <div>Gesendet: {data.sent}</div>}
-            {data.defending && <div>Verteidigt: {data.defending}</div>}
-            <div className="text-destructive">Verloren: {data.lost || 0}</div>
+            {data.sent && (
+              <div>
+                <T k="battle.labels.sent" f="Sent" />: {data.sent}
+              </div>
+            )}
+            {data.defending && (
+              <div>
+                <T k="battle.labels.defending" f="Defending" />: {data.defending}
+              </div>
+            )}
+            <div className="text-destructive">
+              <T k="battle.labels.lost" f="Lost" />: {data.lost || 0}
+            </div>
           </div>
         </div>
       ))}
     </div>
   );
 
-  const renderPhaseStep = (phase: string, data: any, index: number) => (
-    <div key={phase} className="flex items-start gap-3">
+  const renderPhaseStep = (phase: React.ReactNode, data: any, index: number) => (
+    <div key={index} className="flex items-start gap-3">
       <div
         className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-caption
         ${index === 0 ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
@@ -89,7 +100,7 @@ export function BattleReportDetail({
         <h4 className="text-section font-medium">{phase}</h4>
         {data.attackerLosses && Object.keys(data.attackerLosses).length > 0 && (
           <div className="text-caption text-muted-foreground">
-            Angreifer Verluste:{" "}
+            <T k="battle.losses.attacker" f="Attacker Losses" />:{" "}
             {Object.entries(data.attackerLosses)
               .map(([unit, count]) => `${unit}: ${count}`)
               .join(", ")}
@@ -97,7 +108,7 @@ export function BattleReportDetail({
         )}
         {data.defenderLosses && Object.keys(data.defenderLosses).length > 0 && (
           <div className="text-caption text-muted-foreground">
-            Verteidiger Verluste:{" "}
+            <T k="battle.losses.defender" f="Defender Losses" />:{" "}
             {Object.entries(data.defenderLosses)
               .map(([unit, count]) => `${unit}: ${count}`)
               .join(", ")}
@@ -105,7 +116,7 @@ export function BattleReportDetail({
         )}
         {data.wallDamage && (
           <div className="text-caption text-muted-foreground">
-            Mauerschaden: {data.wallDamage}%
+            <T k="battle.wallDamage" f="Wall damage" />: {data.wallDamage}%
           </div>
         )}
       </div>
@@ -120,12 +131,14 @@ export function BattleReportDetail({
           <CardTitle className="flex items-center gap-2">
             {getResultIcon()}
             <span>
-              Kampfergebnis:{" "}
-              {result === "victory"
-                ? "Sieg"
-                : result === "defeat"
-                  ? "Niederlage"
-                  : "Unentschieden"}
+              <T k="battle.resultTitle" f="Battle Result" />:{" "}
+              {result === "victory" ? (
+                <T k="battle.victory" f="Victory" />
+              ) : result === "defeat" ? (
+                <T k="battle.defeat" f="Defeat" />
+              ) : (
+                <T k="battle.draw" f="Draw" />
+              )}
             </span>
           </CardTitle>
         </CardHeader>
@@ -134,7 +147,7 @@ export function BattleReportDetail({
             <div className="space-y-2">
               <h4 className="font-medium flex items-center gap-2">
                 <Swords className="h-4 w-4" />
-                Angreifer
+                <T k="battle.attacker" f="Attacker" />
               </h4>
               <div className="text-caption">
                 <div>{attacker.player}</div>
@@ -144,7 +157,7 @@ export function BattleReportDetail({
             <div className="space-y-2">
               <h4 className="font-medium flex items-center gap-2">
                 <Shield className="h-4 w-4" />
-                Verteidiger
+                <T k="battle.defender" f="Defender" />
               </h4>
               <div className="text-caption">
                 <div>{defender.player}</div>
@@ -155,7 +168,7 @@ export function BattleReportDetail({
 
           {loot && Object.keys(loot).length > 0 && (
             <div className="mt-4 p-3 bg-success/10 rounded-md">
-              <h4 className="font-medium mb-2">Beute</h4>
+              <h4 className="font-medium mb-2"><T k="battle.loot" f="Loot" /></h4>
               <div className="grid grid-cols-3 gap-2 text-caption">
                 {Object.entries(loot).map(([resource, amount]) => (
                   <div key={resource} className="flex justify-between">
@@ -171,7 +184,7 @@ export function BattleReportDetail({
             <Alert>
               <TrendingDown className="h-4 w-4" />
               <AlertDescription>
-                Mauerschaden: {wallDamage}% der Mauer wurde zerstört
+                <T k="battle.wallDamage" f="Wall damage" />: {wallDamage}%
               </AlertDescription>
             </Alert>
           )}
@@ -181,10 +194,10 @@ export function BattleReportDetail({
       {/* Detailed Analysis */}
       <Tabs defaultValue="units" className="space-y-4">
         <TabsList className="grid grid-cols-4 w-full">
-          <TabsTrigger value="units">Einheiten</TabsTrigger>
-          <TabsTrigger value="phases">Phasen</TabsTrigger>
-          <TabsTrigger value="analysis">Analyse</TabsTrigger>
-          <TabsTrigger value="tips">Tipps</TabsTrigger>
+          <TabsTrigger value="units"><T k="battle.tabs.units" f="Units" /></TabsTrigger>
+          <TabsTrigger value="phases"><T k="battle.tabs.phases" f="Phases" /></TabsTrigger>
+          <TabsTrigger value="analysis"><T k="battle.tabs.analysis" f="Analysis" /></TabsTrigger>
+          <TabsTrigger value="tips"><T k="battle.tabs.tips" f="Tips" /></TabsTrigger>
         </TabsList>
 
         <TabsContent value="units" className="space-y-4">
@@ -192,7 +205,7 @@ export function BattleReportDetail({
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Swords className="h-5 w-5" />
-                Angreifer Verluste
+                <T k="battle.losses.attacker" f="Attacker Losses" />
               </CardTitle>
             </CardHeader>
             <CardContent>{renderUnitLosses(attacker.units)}</CardContent>
@@ -202,7 +215,7 @@ export function BattleReportDetail({
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
-                Verteidiger Verluste
+                <T k="battle.losses.defender" f="Defender Losses" />
               </CardTitle>
             </CardHeader>
             <CardContent>{renderUnitLosses(defender.units)}</CardContent>
@@ -212,16 +225,16 @@ export function BattleReportDetail({
         <TabsContent value="phases" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Kampfverlauf</CardTitle>
+              <CardTitle><T k="battle.progress" f="Battle Flow" /></CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {renderPhaseStep("Fernkampf", phases.ranged, 0)}
+              {renderPhaseStep(<T k="battle.phases.ranged" f="Ranged" />, phases.ranged, 0)}
               <Separator />
-              {renderPhaseStep("Sturmangriff", phases.charge, 1)}
+              {renderPhaseStep(<T k="battle.phases.charge" f="Charge" />, phases.charge, 1)}
               <Separator />
-              {renderPhaseStep("Nahkampf", phases.melee, 2)}
+              {renderPhaseStep(<T k="battle.phases.melee" f="Melee" />, phases.melee, 2)}
               <Separator />
-              {renderPhaseStep("Belagerung", phases.siege, 3)}
+              {renderPhaseStep(<T k="battle.phases.siege" f="Siege" />, phases.siege, 3)}
             </CardContent>
           </Card>
         </TabsContent>
@@ -232,13 +245,17 @@ export function BattleReportDetail({
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Target className="h-5 w-5" />
-                  Warum {result === "victory" ? "gewonnen" : "verloren"}?
+                  {result === "victory" ? (
+                    <T k="battle.why.titleWon" f="Why won?" />
+                  ) : (
+                    <T k="battle.why.titleLost" f="Why lost?" />
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {reasons.counter.length > 0 && (
                   <div>
-                    <h4 className="font-medium mb-2">Konter-Effekte</h4>
+                    <h4 className="font-medium mb-2"><T k="battle.why.counter" f="Counter Effects" /></h4>
                     <ul className="space-y-1 text-caption">
                       {reasons.counter.map((reason, index) => (
                         <li key={index} className="flex items-start gap-2">
@@ -252,7 +269,7 @@ export function BattleReportDetail({
 
                 {reasons.wall.length > 0 && (
                   <div>
-                    <h4 className="font-medium mb-2">Mauer-Effekte</h4>
+                    <h4 className="font-medium mb-2"><T k="battle.why.wall" f="Wall Effects" /></h4>
                     <ul className="space-y-1 text-caption">
                       {reasons.wall.map((reason, index) => (
                         <li key={index} className="flex items-start gap-2">
@@ -266,7 +283,7 @@ export function BattleReportDetail({
 
                 {reasons.tech.length > 0 && (
                   <div>
-                    <h4 className="font-medium mb-2">Technologie</h4>
+                    <h4 className="font-medium mb-2"><T k="battle.why.tech" f="Technology" /></h4>
                     <ul className="space-y-1 text-caption">
                       {reasons.tech.map((reason, index) => (
                         <li key={index} className="flex items-start gap-2">
@@ -288,7 +305,7 @@ export function BattleReportDetail({
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Lightbulb className="h-5 w-5" />
-                  Nächstes Mal besser
+                  <T k="battle.nextTime" f="Improve Next Time" />
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -311,7 +328,7 @@ export function BattleReportDetail({
 
       <div className="flex gap-3 pt-4">
         <Button onClick={onClose} className="flex-1">
-          Schließen
+          <T k="common.close" f="Close" />
         </Button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { Card, CardContent } from '../ui/Card';
 import { Progress } from '../ui/Progress';
 import { Skeleton } from '../ui/Skeleton';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface LoadingScreenProps {
   message?: string;
@@ -9,10 +10,12 @@ interface LoadingScreenProps {
 }
 
 export function LoadingScreen({ 
-  message = "Lade Spiel...", 
+  message, 
   progress, 
   showSkeleton = false 
 }: LoadingScreenProps) {
+  const { t } = useI18n();
+  const msg = message ?? t('loading.message', 'Loading game...');
   if (showSkeleton) {
     return (
       <div className="space-y-4">
@@ -50,8 +53,8 @@ export function LoadingScreen({
       <div className="text-center space-y-4">
         <div className="text-6xl animate-pulse">🏰</div>
         <div className="space-y-2">
-          <h2 className="text-xl font-medium">Tribal Wars</h2>
-          <p className="text-muted-foreground">{message}</p>
+          <h2 className="text-xl font-medium">{t('loading.title', 'Tribal Wars')}</h2>
+          <p className="text-muted-foreground">{msg}</p>
         </div>
       </div>
       
@@ -59,7 +62,7 @@ export function LoadingScreen({
         <div className="w-full max-w-xs space-y-2">
           <Progress value={progress} className="h-2" />
           <p className="text-xs text-center text-muted-foreground">
-            {Math.round(progress)}% abgeschlossen
+            {Math.round(progress)}% {t('loading.completed', 'completed')}
           </p>
         </div>
       )}

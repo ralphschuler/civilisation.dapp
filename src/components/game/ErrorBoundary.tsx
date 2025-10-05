@@ -2,6 +2,7 @@ import { Component, ReactNode, ErrorInfo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
+import { T } from "@/providers/i18n-provider";
 
 interface Props {
   children: ReactNode;
@@ -45,19 +46,18 @@ export class ErrorBoundary extends Component<Props, State> {
                 <AlertTriangle className="h-6 w-6 text-destructive" />
               </div>
               <CardTitle className="text-destructive">
-                Spielfehler aufgetreten
+                <T k="error.title" f="Game error occurred" />
               </CardTitle>
             </CardHeader>
             <CardContent className="text-center space-y-4">
               <p className="text-muted-foreground">
-                Es ist ein unerwarteter Fehler aufgetreten. Versuche das Spiel
-                neu zu laden.
+                <T k="error.title" f="Game error occurred" />
               </p>
 
               {this.state.error && (
                 <details className="text-left">
                   <summary className="text-sm text-muted-foreground cursor-pointer">
-                    Technische Details
+                    <T k="error.technicalDetails" f="Technical Details" />
                   </summary>
                   <pre className="text-xs bg-muted p-2 rounded mt-2 overflow-auto">
                     {this.state.error.message}
@@ -68,14 +68,14 @@ export class ErrorBoundary extends Component<Props, State> {
               <div className="space-y-2">
                 <Button onClick={this.handleReset} className="w-full">
                   <RefreshCw className="h-4 w-4 mr-2" />
-                  Spiel neu laden
+                  <T k="error.reloadGame" f="Reload Game" />
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => window.location.reload()}
                   className="w-full"
                 >
-                  Seite neu laden
+                  <T k="error.reloadPage" f="Reload Page" />
                 </Button>
               </div>
             </CardContent>

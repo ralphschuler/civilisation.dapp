@@ -6,12 +6,14 @@ import { Separator } from '../ui/Separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/Tabs';
 import { Trophy, Target, Zap, Crown, Swords, Shield, TrendingUp, Package, Users, MapPin, Clock, Star, Gift, CheckCircle, Lock, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface AchievementsScreenProps {
   onBack: () => void;
 }
 
 export function AchievementsScreen({ onBack }: AchievementsScreenProps) {
+  const { t } = useI18n();
   // Mock data - würde normalerweise aus gameState kommen
   const achievements = [
     {
@@ -145,13 +147,13 @@ export function AchievementsScreen({ onBack }: AchievementsScreenProps) {
 
   const formatReward = (reward: any) => {
     switch (reward.type) {
-      case 'gold': return `${reward.amount} Gold`;
+      case 'gold': return `${reward.amount} ${t('screens.achievements.rewards.goldUnit', 'Gold')}`;
       case 'resource': return reward.value;
-      case 'title': return `Titel: ${reward.value}`;
+      case 'title': return `${t('screens.achievements.rewards.titleLabel', 'Titel')}: ${reward.value}`;
       case 'bonus': return reward.value;
       case 'unit': return reward.value;
       case 'cosmetic': return reward.value;
-      default: return 'Unbekannte Belohnung';
+      default: return t('screens.achievements.rewards.unknown', 'Unbekannte Belohnung');
     }
   };
 
@@ -161,9 +163,9 @@ export function AchievementsScreen({ onBack }: AchievementsScreenProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-title-sm">Erfolge & Quests</h1>
+        <h1 className="text-title-sm">{t('screens.achievements.title', 'Erfolge & Quests')}</h1>
         <Button variant="outline" onClick={onBack} size="sm">
-          Zurück
+          {t('common.back', 'Zurück')}
         </Button>
       </div>
 
@@ -176,9 +178,9 @@ export function AchievementsScreen({ onBack }: AchievementsScreenProps) {
                 <Trophy className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h3 className="text-section font-medium">Fortschritt</h3>
+                <h3 className="text-section font-medium">{t('screens.achievements.progress', 'Fortschritt')}</h3>
                 <p className="text-caption text-muted-foreground">
-                  {completedAchievements} von {totalAchievements} Erfolgen
+                  {completedAchievements} {t('screens.achievements.of', 'von')} {totalAchievements} {t('screens.achievements.achievements', 'Erfolgen')}
                 </p>
               </div>
             </div>
@@ -197,8 +199,8 @@ export function AchievementsScreen({ onBack }: AchievementsScreenProps) {
 
       <Tabs defaultValue="achievements" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="achievements" className="text-caption">Erfolge</TabsTrigger>
-          <TabsTrigger value="quests" className="text-caption">Quests</TabsTrigger>
+          <TabsTrigger value="achievements" className="text-caption">{t('screens.achievements.tabs.achievements', 'Erfolge')}</TabsTrigger>
+          <TabsTrigger value="quests" className="text-caption">{t('screens.achievements.tabs.quests', 'Quests')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="achievements" className="space-y-3">
@@ -219,17 +221,19 @@ export function AchievementsScreen({ onBack }: AchievementsScreenProps) {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <h4 className="text-body font-medium">{achievement.name}</h4>
+                      <h4 className="text-body font-medium">{t(`screens.achievements.items.${achievement.id}.name`, achievement.name)}</h4>
                       <Badge 
                         variant="outline" 
                         className={`text-micro ${getRarityColor(achievement.rarity)}`}
                       >
-                        {achievement.rarity}
+                        {t(`screens.achievements.rarity.${achievement.rarity}`, achievement.rarity)}
                       </Badge>
                     </div>
                     
                     <p className="text-caption text-muted-foreground mb-2">
-                      {achievement.locked ? achievement.requirement : achievement.description}
+                      {achievement.locked 
+                        ? t(`screens.achievements.items.${achievement.id}.requirement`, achievement.requirement)
+                        : t(`screens.achievements.items.${achievement.id}.description`, achievement.description)}
                     </p>
 
                     {!achievement.locked && (
@@ -269,7 +273,7 @@ export function AchievementsScreen({ onBack }: AchievementsScreenProps) {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <h4 className="text-body font-medium">{quest.name}</h4>
+                      <h4 className="text-body font-medium">{t(`screens.achievements.quests.${quest.id}.name`, quest.name)}</h4>
                       <div className="flex items-center gap-1">
                         <Clock className="w-3 h-3 text-muted-foreground" />
                         <span className="text-micro text-muted-foreground">{quest.timeLeft}</span>
@@ -277,7 +281,7 @@ export function AchievementsScreen({ onBack }: AchievementsScreenProps) {
                     </div>
                     
                     <p className="text-caption text-muted-foreground mb-2">
-                      {quest.description}
+                      {t(`screens.achievements.quests.${quest.id}.description`, quest.description)}
                     </p>
 
                     <div className="space-y-2">
@@ -301,7 +305,7 @@ export function AchievementsScreen({ onBack }: AchievementsScreenProps) {
                         variant={quest.type === 'daily' ? 'default' : quest.type === 'weekly' ? 'secondary' : 'outline'}
                         className="text-micro"
                       >
-                        {quest.type === 'daily' ? 'Täglich' : quest.type === 'weekly' ? 'Wöchentlich' : 'Saison'}
+                        {quest.type === 'daily' ? t('screens.achievements.badges.daily', 'Täglich') : quest.type === 'weekly' ? t('screens.achievements.badges.weekly', 'Wöchentlich') : t('screens.achievements.badges.seasonal', 'Saison')}
                       </Badge>
                     </div>
                   </div>
@@ -314,12 +318,12 @@ export function AchievementsScreen({ onBack }: AchievementsScreenProps) {
           <Card className="bg-gradient-to-r from-accent/5 to-primary/5 border-dashed">
             <CardContent className="p-4 text-center">
               <Gift className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-              <h4 className="text-body font-medium mb-1">Quest-Belohnungen</h4>
+              <h4 className="text-body font-medium mb-1">{t('screens.achievements.store.title', 'Quest-Belohnungen')}</h4>
               <p className="text-caption text-muted-foreground mb-3">
-                Sammle Quest-Punkte und tausche sie gegen wertvolle Belohnungen ein
+                {t('screens.achievements.store.description', 'Sammle Quest-Punkte und tausche sie gegen wertvolle Belohnungen ein')}
               </p>
               <Button variant="outline" size="sm" disabled>
-                Bald verfügbar
+                {t('screens.achievements.store.comingSoon', 'Bald verfügbar')}
               </Button>
             </CardContent>
           </Card>
