@@ -4,6 +4,7 @@ import { BUILDING_TYPES, calculateBuildingCost, getBuildingIcon, getResourceIcon
 import { Button } from './ui/Button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from './ui/Sheet';
 import { Badge } from './ui/Badge';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface BuildingModalProps {
   building: Building | null;
@@ -15,6 +16,7 @@ interface BuildingModalProps {
 
 export function BuildingModal({ building, resources, isOpen, onClose, onUpgrade }: BuildingModalProps) {
   if (!building) return null;
+  const { t } = useI18n();
 
   const buildingData = BUILDING_TYPES[building.type as keyof typeof BUILDING_TYPES];
   if (!buildingData) return null;
@@ -42,14 +44,14 @@ export function BuildingModal({ building, resources, isOpen, onClose, onUpgrade 
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <span>{buildingData.name}</span>
-                <Badge variant="outline">Level {currentLevel}</Badge>
+                <Badge variant="outline">{t('screens.units.common.level', 'Level')} {currentLevel}</Badge>
               </div>
               <Badge variant="secondary" className="mt-1">
-                {buildingData.category === 'resource' && 'Ressourcengebäude'}
-                {buildingData.category === 'military' && 'Militärgebäude'}
-                {buildingData.category === 'housing' && 'Wohngebäude'}
-                {buildingData.category === 'defense' && 'Verteidigung'}
-                {buildingData.category === 'special' && 'Spezialgebäude'}
+                {buildingData.category === 'resource' && t('screens.building.category.resource', 'Ressourcengebäude')}
+                {buildingData.category === 'military' && t('screens.building.category.military', 'Militärgebäude')}
+                {buildingData.category === 'housing' && t('screens.building.category.housing', 'Wohngebäude')}
+                {buildingData.category === 'defense' && t('screens.building.category.defense', 'Verteidigung')}
+                {buildingData.category === 'special' && t('screens.building.category.special', 'Spezialgebäude')}
               </Badge>
             </div>
           </SheetTitle>
@@ -58,27 +60,27 @@ export function BuildingModal({ building, resources, isOpen, onClose, onUpgrade 
         <div className="space-y-4">
           {/* Aktuelle Stufe Info */}
           <div className="bg-muted/50 rounded-lg p-3">
-            <h4 className="font-medium mb-2">Aktuelle Stufe</h4>
+            <h4 className="font-medium mb-2">{t('screens.building.currentLevel', 'Aktuelle Stufe')}</h4>
             <p className="text-sm text-muted-foreground mb-2">{buildingData.description}</p>
             
             {buildingData.category === 'resource' && (
               <div className="flex items-center gap-1 text-sm">
                 <span>⚡</span>
-                <span>Produktion aktiv</span>
+                <span>{t('screens.building.productionActive', 'Produktion aktiv')}</span>
               </div>
             )}
 
             {buildingData.category === 'military' && (
               <div className="flex items-center gap-1 text-sm">
                 <span>⚔️</span>
-                <span>Militärgebäude</span>
+                <span>{t('screens.building.category.military', 'Militärgebäude')}</span>
               </div>
             )}
 
             {buildingData.category === 'defense' && (
               <div className="flex items-center gap-1 text-sm">
                 <span>🛡️</span>
-                <span>Verteidigungsgebäude</span>
+                <span>{t('screens.building.defenseBuilding', 'Verteidigungsgebäude')}</span>
               </div>
             )}
           </div>
@@ -86,11 +88,11 @@ export function BuildingModal({ building, resources, isOpen, onClose, onUpgrade 
           {/* Upgrade Info */}
           {nextLevel <= maxLevel && (
             <div className="space-y-3">
-              <h4 className="font-medium">Upgrade auf Level {nextLevel}</h4>
+              <h4 className="font-medium">{t('screens.building.upgradeTitle', 'Upgrade auf Level')} {nextLevel}</h4>
               
               {/* Upgrade Kosten */}
               <div className="space-y-2">
-                <div className="text-sm font-medium">Kosten:</div>
+                <div className="text-sm font-medium">{t('screens.building.costs', 'Kosten')}:</div>
                 <div className="grid grid-cols-2 gap-2">
                   {Object.entries(upgradeCost).map(([resource, cost]) => {
                     const hasEnough = (resources as any)[resource] >= cost;
@@ -111,12 +113,12 @@ export function BuildingModal({ building, resources, isOpen, onClose, onUpgrade 
 
               {/* Upgrade Vorteile */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <div className="text-sm font-medium mb-1">Verbesserungen:</div>
+                <div className="text-sm font-medium mb-1">{t('screens.building.benefits', 'Verbesserungen')}:</div>
                 <p className="text-sm text-blue-700">
-                  {buildingData.category === 'resource' && 'Erhöht die Ressourcenproduktion'}
-                  {buildingData.category === 'military' && 'Ermöglicht bessere Einheiten und schnelleres Training'}
-                  {buildingData.category === 'defense' && 'Verbessert die Dorfverteidigung'}
-                  {buildingData.category === 'special' && 'Verbessert Spezialfunktionen des Gebäudes'}
+                  {buildingData.category === 'resource' && t('screens.building.benefit.resource', 'Erhöht die Ressourcenproduktion')}
+                  {buildingData.category === 'military' && t('screens.building.benefit.military', 'Ermöglicht bessere Einheiten und schnelleres Training')}
+                  {buildingData.category === 'defense' && t('screens.building.benefit.defense', 'Verbessert die Dorfverteidigung')}
+                  {buildingData.category === 'special' && t('screens.building.benefit.special', 'Verbessert Spezialfunktionen des Gebäudes')}
                 </p>
               </div>
 
@@ -128,8 +130,8 @@ export function BuildingModal({ building, resources, isOpen, onClose, onUpgrade 
                 size="lg"
               >
                 {!canUpgrade ? 
-                  'Nicht genügend Ressourcen'
-                  : `Auf Level ${nextLevel} upgraden`
+                  t('screens.building.notEnough', 'Nicht genügend Ressourcen')
+                  : `${t('screens.building.upgradeTo', 'Auf Level')} ${nextLevel} ${t('screens.building.upgrade', 'upgraden')}`
                 }
               </Button>
             </div>
@@ -138,7 +140,7 @@ export function BuildingModal({ building, resources, isOpen, onClose, onUpgrade 
           {nextLevel > maxLevel && (
             <div className="text-center text-muted-foreground py-4">
               <span>🏆</span>
-              <p className="text-sm mt-1">Maximale Stufe erreicht!</p>
+              <p className="text-sm mt-1">{t('screens.building.maxLevel', 'Maximale Stufe erreicht!')}</p>
             </div>
           )}
         </div>

@@ -4,6 +4,7 @@ import { Button } from './ui/Button';
 import { Card } from './ui/Card';
 import { Badge } from './ui/Badge';
 import { Progress } from './ui/Progress';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface VillageGridProps {
   buildings: { [key: string]: Building };
@@ -26,6 +27,7 @@ export function VillageGrid({
   onBuildingSelect, 
   onUpgradeBuilding 
 }: VillageGridProps) {
+  const { t } = useI18n();
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -65,7 +67,7 @@ export function VillageGrid({
                 key={`${rowIndex}-${colIndex}-unknown`}
                 className="aspect-square bg-muted/30 border-2 border-dashed border-muted rounded-xl flex items-center justify-center"
               >
-                <span className="text-micro text-muted-foreground">Unknown</span>
+                <span className="text-micro text-muted-foreground">{t('screens.village.unknown', 'Unknown')}</span>
               </div>
             );
           }
@@ -94,14 +96,14 @@ export function VillageGrid({
                     variant={buildingLevel === 0 ? "outline" : "secondary"} 
                     className="text-micro mt-1"
                   >
-                    Level {buildingLevel}
+                    {t('screens.units.common.level', 'Level')} {buildingLevel}
                   </Badge>
                 </div>
 
                 {isUpgrading && (
                   <div className="w-full mt-2">
                     <div className="text-micro text-center text-info mb-1">
-                      → Level {building.upgrading!.targetLevel}
+                      → {t('screens.units.common.level', 'Level')} {building.upgrading!.targetLevel}
                     </div>
                     <div className="text-micro text-center text-muted-foreground mb-2">
                       {formatTime(getTimeRemaining(building.upgrading!.completionTime))}
@@ -125,7 +127,7 @@ export function VillageGrid({
                       onUpgradeBuilding(buildingId);
                     }}
                   >
-                    Bauen
+                    {t('screens.village.build', 'Bauen')}
                   </Button>
                 )}
               </div>

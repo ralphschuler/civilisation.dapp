@@ -1,16 +1,18 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from './ui/Button';
+import { useI18n } from '@/providers/i18n-provider';
 
 const NAVIGATION_ITEMS = [
-  { id: '/village', icon: '🏛️', label: 'Village' },
-  { id: '/world', icon: '🗺️', label: 'World' },
-  { id: '/units', icon: '⚔️', label: 'Units' },
-  { id: '/resources', icon: '💰', label: 'Resources' }
+  { id: '/village', icon: '🏛️', key: 'screens.village.title', fallback: 'Village' },
+  { id: '/world', icon: '🗺️', key: 'screens.world.tabs.map', fallback: 'World' },
+  { id: '/units', icon: '⚔️', key: 'screens.units.training.title', fallback: 'Units' },
+  { id: '/resources', icon: '💰', key: 'screens.stats.currentResources.title', fallback: 'Resources' }
 ];
 
 export function MobileNavigation() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useI18n();
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-card border-t z-50 safe-area-pb">
@@ -24,7 +26,7 @@ export function MobileNavigation() {
             onClick={() => navigate(item.id)}
           >
             <span className="text-lg">{item.icon}</span>
-            <span className="text-micro leading-tight">{item.label}</span>
+            <span className="text-micro leading-tight">{t(item.key as string, item.fallback as string)}</span>
           </Button>
         ))}
       </div>

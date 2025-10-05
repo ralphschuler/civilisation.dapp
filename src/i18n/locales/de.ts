@@ -306,7 +306,16 @@ export const de = {
       active: 'Aktive Bauarbeiten',
       buildings: {
         headquarters: 'Hauptgebäude', barracks: 'Kaserne', timberCamp: 'Holzfäller', clayPit: 'Lehmgrube', ironMine: 'Eisenmine'
-      }
+      },
+      unknown: 'Unbekannt',
+      build: 'Bauen'
+    },
+    building: {
+      category: { resource: 'Ressourcengebäude', military: 'Militärgebäude', housing: 'Wohngebäude', defense: 'Verteidigung', special: 'Spezialgebäude' },
+      currentLevel: 'Aktuelle Stufe', productionActive: 'Produktion aktiv', defenseBuilding: 'Verteidigungsgebäude',
+      upgradeTitle: 'Upgrade auf Level', costs: 'Kosten', benefits: 'Verbesserungen',
+      benefit: { resource: 'Erhöht die Ressourcenproduktion', military: 'Ermöglicht bessere Einheiten und schnelleres Training', defense: 'Verbessert die Dorfverteidigung', special: 'Verbessert Spezialfunktionen des Gebäudes' },
+      notEnough: 'Nicht genügend Ressourcen', upgradeTo: 'Auf Level', upgrade: 'upgraden', maxLevel: 'Maximale Stufe erreicht!'
     },
     wallet: { minikitMissing: 'MiniKit ist nicht installiert', runInApp: 'Diese App muss in der Worldcoin-App ausgeführt werden.', authenticate: 'Authentifizieren' },
     notfound: { title: 'Seite nicht gefunden', backHome: 'Zur Startseite' },
