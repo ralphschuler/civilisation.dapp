@@ -1,0 +1,40 @@
+name: PR Review
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
+
+permissions:
+  contents: read
+  pull-requests: write
+  models: read
+
+env:
+  USE_GITHUB_MODELS: "true"
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Load PR Review Prompt
+        id: load_prompt
+        run: echo "$(cat .github/prompts/pr_review.md)" > prompt.txt
+
+      - name: Analyze PR
+        id: analyze
+        run: |
+          echo "Analyzing PR using LLM..."
+          # Placeholder for LLM call
+
+      - name: Post Review Comment
+        run: |
+          echo "Posting review comment..."
+          # Placeholder for posting comments

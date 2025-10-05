@@ -1,29 +1,55 @@
-name: Deploy Contract
+name: Deploy App and Contracts
 
 on:
   push:
-    branches: [main]
-    paths:
-      - "contracts/**"
-      - ".github/workflows/deploy-contracts.yml"
+    branches: ['main']
   workflow_dispatch:
 
 permissions:
   contents: read
-  actions: write
+  pages: write
+  id-token: write
   deployments: write
 
 concurrency:
-  group: "deploy-contracts"
+  group: 'deploy-app-and-contracts'
   cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  build-app:
     runs-on: ubuntu-latest
     environment: testnet
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Bun.js
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Build App
+        env:
+          VITE_PUBLIC_APP_ID: ${{ vars.WORLD_APP_ID }}
+          VITE_PUBLIC_CONTRACT_ADDRESS: ${{ vars.WORLD_CONTRACT_ADDRESS }}
+        run: bun run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy-contracts:
+    runs-on: ubuntu-latest
+    environment: testnet
+    needs: build-app
+
+    steps:
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
@@ -38,7 +64,7 @@ jobs:
           forge install foundry-rs/forge-std
           forge build
 
-      - name: Deploy Diamond (Proxy + Facets)
+      - name: Deploy Contracts
         working-directory: contracts
         env:
           PRIVATE_KEY: ${{ secrets.WORLDCHAIN_WALLET_PRIVATE_KEY }}
@@ -46,12 +72,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Alle *.s.sol Dateien im script/ Ordner sortieren
           for file in $(ls script/*.s.sol | sort); do
-            # Beispiel: script/00_Deploy.s.sol -> 00_Deploy
             raw=$(basename "$file" .s.sol)
-
-            # Entferne optionales ##_ Präfix (z.B. 00_, 01_)
             base=$(echo "$raw" | sed -E 's/^[0-9]+_//')
 
             echo ">>> Running forge script for $file (contract: $base)"
@@ -69,7 +91,6 @@ jobs:
           FILE="broadcast/00_Deploy.s.sol/${{ vars.CHAIN_ID }}/run-latest.json"
           test -f "$FILE" || { echo "Broadcast file not found: $FILE"; exit 1; }
 
-          # Diamond = erste CREATE Transaction für den Diamond Contract
           DIAMOND=$(jq -r '.transactions[] | select(.transactionType=="CREATE" and .contractName=="Diamond") | .contractAddress' "$FILE" | head -n1)
 
           if [ -z "$DIAMOND" ] || [ "$DIAMOND" = "null" ]; then
@@ -79,10 +100,6 @@ jobs:
 
           echo "Diamond address: $DIAMOND"
           echo "diamond_address=$DIAMOND" >> "$GITHUB_OUTPUT"
-
-          # Log all other facet deployments (mit oder ohne contractName)
-          echo "Deployed Facets:"
-          jq -r '.transactions[] | select(.transactionType=="CREATE" and .contractName!="Diamond" and .contractAddress != null) | "\(.contractName // "UnknownFacet"): \(.contractAddress)"' "$FILE" || true
 
       - name: Save Diamond Address as GitHub Environment variable
         env:
@@ -96,14 +113,12 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables/APP_CONTRACT_ADDRESS" \
             >/dev/null 2>&1; then
-            # Variable exists → update it
             gh api \
               --method PATCH \
               -H "Accept: application/vnd.github+json" \
               -f value="$DIAMOND_ADDR" \
               "/repos/${GITHUB_REPOSITORY}/environments/${ENVIRONMENT}/variables/APP_CONTRACT_ADDRESS"
           else
-            # Variable does not exist → create it
             gh api \
               --method POST \
               -H "Accept: application/vnd.github+json" \
@@ -117,23 +132,14 @@ jobs:
         working-directory: contracts
         run: |
           mkdir -p /tmp/abi
-
-          # Alle relevanten JSON-Dateien ins /tmp/abi kopieren, Ordnerstruktur bleibt erhalten
           rsync -avR \
             --include '*/' \
             --include '*.json' \
             --exclude '*' \
             ./out/ ./broadcast/ /tmp/abi/
 
-          echo "✅ Alle ABIs wurden nach /tmp/abi kopiert (mit relativen Pfaden)."
-
       - name: Upload ABIs as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Diamond-ABIs
           path: /tmp/abi/
-
-      - name: Expose Diamond Address as job output
-        id: expose
-        run: |
-          echo "contract_address=${{ steps.extract.outputs.diamond_address }}" >> "$GITHUB_OUTPUT"

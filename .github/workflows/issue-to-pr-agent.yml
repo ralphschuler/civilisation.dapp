@@ -1,0 +1,39 @@
+name: Issue to PR Agent
+
+on:
+  issues:
+    types:
+      - labeled
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  models: read
+
+env:
+  USE_GITHUB_MODELS: "true"
+
+jobs:
+  implement:
+    if: contains(github.event.label.name, 'agent:implement')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Load Issue to Patch Prompt
+        id: load_prompt
+        run: echo "$(cat .github/prompts/issue_to_patch.md)" > prompt.txt
+
+      - name: Generate Patch
+        id: generate_patch
+        run: |
+          echo "Generating patch using LLM..."
+          # Placeholder for LLM call
+
+      - name: Apply Patch and Create PR
+        run: |
+          echo "Applying patch and creating PR..."
+          # Placeholder for applying patch and creating PR

@@ -1,0 +1,40 @@
+name: Issue Triage
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+      - reopened
+
+permissions:
+  contents: read
+  issues: write
+  projects: write
+  models: read
+
+env:
+  USE_GITHUB_MODELS: "true"
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Load Issue Triage Prompt
+        id: load_prompt
+        run: echo "$(cat .github/prompts/issue_triage.md)" > prompt.txt
+
+      - name: Classify Issue
+        id: classify
+        run: |
+          echo "Classifying issue using LLM..."
+          # Placeholder for LLM call
+
+      - name: Apply Labels and Comment
+        run: |
+          echo "Applying labels and posting summary..."
+          # Placeholder for applying labels and posting comments
