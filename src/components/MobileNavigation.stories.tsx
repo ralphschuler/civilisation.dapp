@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
-import { MobileNavigation } from "./MobileNavigation";
+import { MobileNavigation } from "@/components/MobileNavigation";
 
 const meta: Meta<typeof MobileNavigation> = {
   title: "App/MobileNavigation",

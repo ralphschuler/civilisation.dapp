@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ResourceCard } from "./ResourceCard";
+import { ResourceCard } from "@/components/shared/ResourceCard";
 
 const meta: Meta<typeof ResourceCard> = {
   title: "Shared/ResourceCard",
@@ -66,4 +66,3 @@ export const AllResourcesGrid: Story = {
     </div>
   ),
 };
-

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import WalletConnect from "./WalletConnect";
+import WalletConnect from "@/components/screens/WalletConnect";
 
 const meta: Meta<typeof WalletConnect> = {
   title: "Screens/WalletConnect",
@@ -18,4 +18,3 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
-

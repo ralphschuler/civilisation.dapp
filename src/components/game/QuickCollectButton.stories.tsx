@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { QuickCollectButton } from "./QuickCollectButton";
-import type { UncollectedResources } from "../../types/game";
+import { QuickCollectButton } from "@/components/game/QuickCollectButton";
+import type { UncollectedResources } from "@/types/game";
 
 type ResourceKey = keyof UncollectedResources;
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { AchievementsScreen } from "./AchievementsScreen";
+import { AchievementsScreen } from "@/components/screens/AchievementsScreen";
 
 const meta: Meta<typeof AchievementsScreen> = {
   title: "Screens/AchievementsScreen",

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Input } from "./Input";
-import { Label } from "./Label";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
 
 const meta: Meta<typeof Input> = {
   title: "UI/Input",

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
-import NotFound from "./NotFound";
+import NotFound from "@/components/screens/NotFound";
 
 const meta: Meta<typeof NotFound> = {
   title: "Screens/NotFound",
@@ -18,4 +18,3 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
-

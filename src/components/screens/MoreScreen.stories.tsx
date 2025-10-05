@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
-import { MoreScreen } from "./MoreScreen";
+import { MoreScreen } from "@/components/screens/MoreScreen";
 
 const meta: Meta<typeof MoreScreen> = {
   title: "Screens/MoreScreen",

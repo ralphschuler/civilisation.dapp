@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { LoadingScreen } from "./LoadingScreen";
+import { LoadingScreen } from "@/components/game/LoadingScreen";
 
 const meta: Meta<typeof LoadingScreen> = {
   title: "Game/LoadingScreen",

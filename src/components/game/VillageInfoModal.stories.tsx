@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { VillageInfoModal } from "./VillageInfoModal";
+import { VillageInfoModal } from "@/components/game/VillageInfoModal";
 
 const playerVillage = {
   id: "v-100",

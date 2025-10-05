@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { BuildingModal } from "./BuildingModal";
+import { BuildingModal } from "@/components/BuildingModal";
 
 const resources = {
   bread: 200,

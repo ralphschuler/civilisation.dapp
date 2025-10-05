@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { SettingsScreen } from "./SettingsScreen";
+import { SettingsScreen } from "@/components/screens/SettingsScreen";
 
 const meta: Meta<typeof SettingsScreen> = {
   title: "Screens/SettingsScreen",

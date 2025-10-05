@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { BattleReportDetail } from "./BattleReportDetail";
-import type { BattleResult } from "../../types/reports";
+import { BattleReportDetail } from "@/components/game/BattleReportDetail";
+import type { BattleResult } from "@/types/reports";
 
 const baseBattleData: BattleResult = {
   attacker: {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { MobileResourceBar } from "./MobileResourceBar";
+import { MobileResourceBar } from "@/components/MobileResourceBar";
 
 const baseResources = {
   bread: 220,

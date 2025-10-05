@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ArmyPanel } from "./ArmyPanel";
+import { ArmyPanel } from "@/components/ArmyPanel";
 
 const emptyArmy = { spearman: 0, swordsman: 0, archer: 0, knight: 0, trebuchet: 0 };
 const lowBuildings = {

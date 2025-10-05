@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
-import { GameLayout } from "./GameLayout";
+import { GameLayout } from "@/components/layout/GameLayout";
 
 const meta: Meta<typeof GameLayout> = {
   title: "Layout/GameLayout",

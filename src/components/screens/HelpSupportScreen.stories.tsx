@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { HelpSupportScreen } from "./HelpSupportScreen";
+import { HelpSupportScreen } from "@/components/screens/HelpSupportScreen";
 
 const meta: Meta<typeof HelpSupportScreen> = {
   title: "Screens/HelpSupportScreen",

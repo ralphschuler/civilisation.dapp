@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo } from "react";
-import { CountdownTimer } from "./CountdownTimer";
+import { CountdownTimer } from "@/components/shared/CountdownTimer";
 
 type Args = {
   seconds: number;
@@ -71,4 +71,3 @@ export const DestructiveVariant: Story = {
     );
   },
 };
-

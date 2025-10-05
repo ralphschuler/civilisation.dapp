@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/Card";
-import { Button } from "../ui/Button";
-import { Separator } from "../ui/Separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/Tabs";
-import { Alert, AlertDescription } from "../ui/Alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Separator } from "@/components/ui/Separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import { Alert, AlertDescription } from "@/components/ui/Alert";
 import {
   Swords,
   Shield,
@@ -13,7 +13,7 @@ import {
   Skull,
   Minus,
 } from "lucide-react";
-import { BattleResult } from "../../types/reports";
+import { BattleResult } from "@/types/reports";
 
 interface BattleReportDetailProps {
   battleData: BattleResult;

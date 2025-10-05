@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { ErrorBoundary } from "./ErrorBoundary";
-import { Button } from "../ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/Card";
+import { ErrorBoundary } from "@/components/game/ErrorBoundary";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 
 function Bomb({ shouldThrow }: { shouldThrow: boolean }) {
   if (shouldThrow) {

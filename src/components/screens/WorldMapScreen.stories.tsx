@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { WorldMapScreen } from "./WorldMapScreen";
-import type { Village } from "../../types/game";
+import { WorldMapScreen } from "@/components/screens/WorldMapScreen";
+import type { Village } from "@/types/game";
 
 const village: Village = {
   id: "v1",

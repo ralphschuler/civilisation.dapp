@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { VillageGrid } from "./VillageGrid";
+import { VillageGrid } from "@/components/VillageGrid";
 
 const buildings = {
   townhall: { type: "townhall", level: 3 },

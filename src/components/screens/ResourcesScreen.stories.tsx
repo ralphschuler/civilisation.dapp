@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ResourcesScreen } from "./ResourcesScreen";
+import { ResourcesScreen } from "@/components/screens/ResourcesScreen";
 
 const resources = {
   bread: 220,
