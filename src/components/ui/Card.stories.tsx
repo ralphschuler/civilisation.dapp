@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Card, CardContent, CardHeader, CardTitle } from "./card";
+import { Card, CardContent, CardHeader, CardTitle } from "./Card";
 
 const meta: Meta<typeof Card> = {
   title: "UI/Card",
@@ -21,4 +21,3 @@ export const Basic: Story = {
     </Card>
   ),
 };
-

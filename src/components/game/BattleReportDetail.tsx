@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Alert, AlertDescription } from "../ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/Card";
+import { Button } from "../ui/Button";
+import { Separator } from "../ui/Separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/Tabs";
+import { Alert, AlertDescription } from "../ui/Alert";
 import {
   Swords,
   Shield,

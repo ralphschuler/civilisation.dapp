@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Alert, AlertDescription, AlertTitle } from "./alert";
+import { Alert, AlertDescription, AlertTitle } from "./Alert";
 import { AlertTriangle } from "lucide-react";
 
 const meta: Meta<typeof Alert> = {
@@ -28,4 +28,3 @@ export const Destructive: Story = {
     </Alert>
   ),
 };
-

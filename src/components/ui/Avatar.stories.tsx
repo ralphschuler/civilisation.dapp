@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./Avatar";
 
 const meta: Meta<typeof Avatar> = {
   title: "UI/Avatar",
@@ -25,4 +25,3 @@ export const Fallback: Story = {
     </Avatar>
   ),
 };
-

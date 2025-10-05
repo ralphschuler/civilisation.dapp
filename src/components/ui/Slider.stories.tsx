@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Slider } from "./slider";
+import { Slider } from "./Slider";
 
 const meta: Meta<typeof Slider> = {
   title: "UI/Slider",
@@ -15,4 +15,3 @@ export const SingleThumb: Story = {};
 export const Range: Story = {
   args: { defaultValue: [20, 80], max: 100, step: 1 },
 };
-

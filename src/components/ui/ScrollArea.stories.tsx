@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ScrollArea } from "./scroll-area";
+import { ScrollArea } from "./ScrollArea";
 
 const meta: Meta<typeof ScrollArea> = {
   title: "UI/ScrollArea",
@@ -20,4 +20,3 @@ export const Basic: Story = {
     </ScrollArea>
   ),
 };
-

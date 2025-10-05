@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "./button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./sheet";
+import { Button } from "./Button";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./Sheet";
 
 const meta: Meta<typeof Sheet> = {
   title: "UI/Sheet",
@@ -42,4 +42,3 @@ export const Bottom: Story = {
     </Sheet>
   ),
 };
-

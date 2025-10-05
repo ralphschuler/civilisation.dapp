@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Input } from "./input";
-import { Label } from "./label";
+import { Input } from "./Input";
+import { Label } from "./Label";
 
 const meta: Meta<typeof Input> = {
   title: "UI/Input",
@@ -22,4 +22,3 @@ export const Basic: Story = {
 export const Invalid: Story = {
   render: () => <Input aria-invalid defaultValue="invalid value" />,
 };
-

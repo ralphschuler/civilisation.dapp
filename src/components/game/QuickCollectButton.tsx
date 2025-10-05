@@ -1,5 +1,5 @@
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
+import { Button } from '../ui/Button';
+import { Badge } from '../ui/Badge';
 import { getResourceIcon } from '../../data/gameData';
 import { UncollectedResources } from '../../types/game';
 import { Package } from 'lucide-react';

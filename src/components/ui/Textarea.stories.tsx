@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Textarea } from "./textarea";
-import { Label } from "./label";
+import { Textarea } from "./Textarea";
+import { Label } from "./Label";
 
 const meta: Meta<typeof Textarea> = {
   title: "UI/Textarea",
@@ -18,4 +18,3 @@ export const Basic: Story = {
     </div>
   ),
 };
-

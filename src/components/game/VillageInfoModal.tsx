@@ -1,10 +1,10 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Progress } from '../ui/progress';
-import { Separator } from '../ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/Dialog';
+import { Button } from '../ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
+import { Badge } from '../ui/Badge';
+import { Progress } from '../ui/Progress';
+import { Separator } from '../ui/Separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/Tabs';
 import { Shield, Swords, Users, TrendingUp, MapPin, Clock, Star, Crown } from 'lucide-react';
 
 interface VillageInfo {

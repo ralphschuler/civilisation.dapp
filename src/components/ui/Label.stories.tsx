@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Label } from "./label";
-import { Input } from "./input";
+import { Label } from "./Label";
+import { Input } from "./Input";
 
 const meta: Meta<typeof Label> = {
   title: "UI/Label",
@@ -18,4 +18,3 @@ export const Basic: Story = {
     </div>
   ),
 };
-

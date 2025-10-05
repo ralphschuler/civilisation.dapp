@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Progress } from "./progress";
+import { Progress } from "./Progress";
 
 const meta: Meta<typeof Progress> = {
   title: "UI/Progress",
@@ -12,4 +12,3 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 export const NearlyDone: Story = { args: { value: 95 } };
-
