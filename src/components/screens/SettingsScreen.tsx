@@ -146,7 +146,7 @@ export function SettingsScreen({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Bell className="h-5 w-5" />
-            Benachrichtigungen
+            {t('screens.settings.sections.notifications', 'Benachrichtigungen')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -154,11 +154,11 @@ export function SettingsScreen({
             {Object.entries(localSettings.notifications).map(([key, value]) => (
               <div key={key} className="flex items-center justify-between">
                 <Label htmlFor={`notif-${key}`} className="text-sm">
-                  {key === 'attacks' && 'Angriffe'}
-                  {key === 'trades' && 'Handel'}
-                  {key === 'buildings' && 'Gebäude fertig'}
-                  {key === 'alliance' && 'Allianz-Nachrichten'}
-                  {key === 'sound' && 'Sound-Benachrichtigungen'}
+                  {key === 'attacks' && t('screens.settings.notifications.attacks', 'Angriffe')}
+                  {key === 'trades' && t('screens.settings.notifications.trades', 'Handel')}
+                  {key === 'buildings' && t('screens.settings.notifications.buildings', 'Gebäude fertig')}
+                  {key === 'alliance' && t('screens.settings.notifications.alliance', 'Allianz-Nachrichten')}
+                  {key === 'sound' && t('screens.settings.notifications.sound', 'Sound-Benachrichtigungen')}
                 </Label>
                 <Switch
                   id={`notif-${key}`}
@@ -176,13 +176,13 @@ export function SettingsScreen({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Moon className="h-5 w-5" />
-            Darstellung
+            {t('screens.settings.sections.display', 'Darstellung')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <Label>Dark Mode</Label>
+              <Label>{t('screens.settings.display.darkMode', 'Dark Mode')}</Label>
               <Switch
                 checked={localSettings.display.darkMode}
                 onCheckedChange={(checked) => updateSetting('display', 'darkMode', checked)}
@@ -190,7 +190,7 @@ export function SettingsScreen({
             </div>
             
             <div className="flex items-center justify-between">
-              <Label>Animationen</Label>
+              <Label>{t('screens.settings.display.animations', 'Animationen')}</Label>
               <Switch
                 checked={localSettings.display.animations}
                 onCheckedChange={(checked) => updateSetting('display', 'animations', checked)}
@@ -198,7 +198,7 @@ export function SettingsScreen({
             </div>
             
             <div className="flex items-center justify-between">
-              <Label>Kompakter Modus</Label>
+              <Label>{t('screens.settings.display.compact', 'Kompakter Modus')}</Label>
               <Switch
                 checked={localSettings.display.compactMode}
                 onCheckedChange={(checked) => updateSetting('display', 'compactMode', checked)}
@@ -206,7 +206,7 @@ export function SettingsScreen({
             </div>
             
             <div className="flex items-center justify-between">
-              <Label>Sprache</Label>
+              <Label>{t('screens.settings.display.language', 'Sprache')}</Label>
               <Select
                 value={localSettings.display.language}
                 onValueChange={(value) => updateSetting('display', 'language', value)}
@@ -215,9 +215,9 @@ export function SettingsScreen({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="de">Deutsch</SelectItem>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="fr">Français</SelectItem>
+                  <SelectItem value="de">{t('screens.settings.display.languages.de', 'Deutsch')}</SelectItem>
+                  <SelectItem value="en">{t('screens.settings.display.languages.en', 'English')}</SelectItem>
+                  <SelectItem value="fr">{t('screens.settings.display.languages.fr', 'Français')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -230,14 +230,14 @@ export function SettingsScreen({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Volume2 className="h-5 w-5" />
-            Audio
+            {t('screens.settings.sections.audio', 'Audio')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label>Master-Lautstärke</Label>
+                <Label>{t('screens.settings.audio.master', 'Master-Lautstärke')}</Label>
                 <Badge variant="outline">{localSettings.audio.masterVolume}%</Badge>
               </div>
               <Slider
@@ -250,7 +250,7 @@ export function SettingsScreen({
             </div>
             
             <div className="flex items-center justify-between">
-              <Label>Soundeffekte</Label>
+              <Label>{t('screens.settings.audio.effects', 'Soundeffekte')}</Label>
               <Switch
                 checked={localSettings.audio.soundEffects}
                 onCheckedChange={(checked) => updateSetting('audio', 'soundEffects', checked)}
@@ -258,7 +258,7 @@ export function SettingsScreen({
             </div>
             
             <div className="flex items-center justify-between">
-              <Label>Hintergrundmusik</Label>
+              <Label>{t('screens.settings.audio.music', 'Hintergrundmusik')}</Label>
               <Switch
                 checked={localSettings.audio.backgroundMusic}
                 onCheckedChange={(checked) => updateSetting('audio', 'backgroundMusic', checked)}
@@ -273,7 +273,7 @@ export function SettingsScreen({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Globe className="h-5 w-5" />
-            Gameplay
+            {t('screens.settings.sections.gameplay', 'Gameplay')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -281,10 +281,10 @@ export function SettingsScreen({
             {Object.entries(localSettings.gameplay).map(([key, value]) => (
               <div key={key} className="flex items-center justify-between">
                 <Label className="text-sm">
-                  {key === 'autoCollectResources' && 'Auto-Ressourcen sammeln'}
-                  {key === 'confirmAttacks' && 'Angriffe bestätigen'}
-                  {key === 'showCoordinates' && 'Koordinaten anzeigen'}
-                  {key === 'quickActions' && 'Schnellaktionen'}
+                  {key === 'autoCollectResources' && t('screens.settings.gameplay.autoCollect', 'Auto-Ressourcen sammeln')}
+                  {key === 'confirmAttacks' && t('screens.settings.gameplay.confirmAttacks', 'Angriffe bestätigen')}
+                  {key === 'showCoordinates' && t('screens.settings.gameplay.showCoordinates', 'Koordinaten anzeigen')}
+                  {key === 'quickActions' && t('screens.settings.gameplay.quickActions', 'Schnellaktionen')}
                 </Label>
                 <Switch
                   checked={value}
@@ -301,26 +301,26 @@ export function SettingsScreen({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Daten & Datenschutz
+            {t('screens.settings.sections.privacy', 'Daten & Datenschutz')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-3">
             <Button variant="outline" className="w-full justify-start" onClick={exportSettings}>
               <Download className="h-4 w-4 mr-2" />
-              Einstellungen exportieren
+              {t('screens.settings.privacy.export', 'Einstellungen exportieren')}
             </Button>
             
             <Button variant="outline" className="w-full justify-start">
               <ExternalLink className="h-4 w-4 mr-2" />
-              Datenschutzerklärung
+              {t('screens.settings.privacy.policy', 'Datenschutzerklärung')}
             </Button>
             
             <Separator />
             
             <Button variant="destructive" className="w-full justify-start">
               <Trash2 className="h-4 w-4 mr-2" />
-              Alle Daten löschen
+              {t('screens.settings.privacy.deleteAll', 'Alle Daten löschen')}
             </Button>
           </div>
         </CardContent>
@@ -332,10 +332,10 @@ export function SettingsScreen({
           <div className="flex gap-3">
             <Button variant="outline" className="flex-1" onClick={resetSettings}>
               <RefreshCw className="h-4 w-4 mr-2" />
-              Zurücksetzen
+              {t('screens.settings.actions.reset', 'Zurücksetzen')}
             </Button>
             <Button className="flex-1">
-              Speichern
+              {t('screens.settings.actions.save', 'Speichern')}
             </Button>
           </div>
         </CardContent>

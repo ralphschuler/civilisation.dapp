@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/Tabs';
 import { Badge } from '../ui/Badge';
 import { MarchPlannerScreen } from './MarchPlannerScreen';
 import { Route, MapPin, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface WorldMapScreenProps {
   village: Village;
@@ -116,6 +117,7 @@ export function WorldMapScreen({
   onCreatePreset,
   onDeletePreset
 }: WorldMapScreenProps) {
+  const { t } = useI18n();
   const [activeTab, setActiveTab] = useState('map');
   const [selectedTarget, setSelectedTarget] = useState<VillageInfo | null>(null);
   const [viewBox, setViewBox] = useState({ x: 0, y: 0, width: 400, height: 384 });
@@ -486,10 +488,10 @@ export function WorldMapScreen({
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <MapPin className="h-5 w-5" />
-              Welt & Märsche
+              {t('screens.world.title', 'Welt & Märsche')}
             </div>
             <span className="text-sm text-muted-foreground">
-              Koordinaten: ({Math.floor(myVillagePosition.x / CHUNK_SIZE)}|{Math.floor(myVillagePosition.y / CHUNK_SIZE)})
+              {t('screens.world.coords', 'Koordinaten')}: ({Math.floor(myVillagePosition.x / CHUNK_SIZE)}|{Math.floor(myVillagePosition.y / CHUNK_SIZE)})
             </span>
           </CardTitle>
         </CardHeader>
@@ -499,11 +501,11 @@ export function WorldMapScreen({
         <TabsList className="grid grid-cols-2 w-full">
           <TabsTrigger value="map">
             <MapPin className="h-4 w-4 mr-2" />
-            Karte
+            {t('screens.world.tabs.map', 'Karte')}
           </TabsTrigger>
           <TabsTrigger value="march-planner">
             <Route className="h-4 w-4 mr-2" />
-            Marschplaner
+            {t('screens.world.tabs.planner', 'Marschplaner')}
             {activeMarchesCount > 0 && (
               <Badge variant="secondary" className="ml-2 text-xs">
                 {activeMarchesCount}
@@ -524,7 +526,7 @@ export function WorldMapScreen({
                     size="icon"
                     className="absolute top-2 left-1/2 -translate-x-1/2 z-10 min-touch hover:bg-background/50"
                     onClick={() => scrollMap('up')}
-                    aria-label="Nach oben scrollen"
+                    aria-label={t('screens.world.scroll.up', 'Nach oben scrollen')}
                   >
                     <ChevronUp className="h-6 w-6" />
                   </Button>
@@ -534,7 +536,7 @@ export function WorldMapScreen({
                     size="icon"
                     className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 min-touch hover:bg-background/50"
                     onClick={() => scrollMap('down')}
-                    aria-label="Nach unten scrollen"
+                    aria-label={t('screens.world.scroll.down', 'Nach unten scrollen')}
                   >
                     <ChevronDown className="h-6 w-6" />
                   </Button>
@@ -544,7 +546,7 @@ export function WorldMapScreen({
                     size="icon"
                     className="absolute top-1/2 left-2 -translate-y-1/2 z-10 min-touch hover:bg-background/50"
                     onClick={() => scrollMap('left')}
-                    aria-label="Nach links scrollen"
+                    aria-label={t('screens.world.scroll.left', 'Nach links scrollen')}
                   >
                     <ChevronLeft className="h-6 w-6" />
                   </Button>
@@ -554,7 +556,7 @@ export function WorldMapScreen({
                     size="icon"
                     className="absolute top-1/2 right-2 -translate-y-1/2 z-10 min-touch hover:bg-background/50"
                     onClick={() => scrollMap('right')}
-                    aria-label="Nach rechts scrollen"
+                    aria-label={t('screens.world.scroll.right', 'Nach rechts scrollen')}
                   >
                     <ChevronRight className="h-6 w-6" />
                   </Button>
@@ -567,7 +569,7 @@ export function WorldMapScreen({
                       className="min-touch hover:bg-background/50"
                       onClick={zoomIn}
                       disabled={currentZoom >= MAX_ZOOM}
-                      aria-label="Hineinzoomen"
+                      aria-label={t('screens.world.zoom.in', 'Hineinzoomen')}
                     >
                       <ZoomIn className="h-6 w-6" />
                     </Button>
@@ -577,7 +579,7 @@ export function WorldMapScreen({
                       className="min-touch hover:bg-background/50"
                       onClick={zoomOut}
                       disabled={currentZoom <= MIN_ZOOM}
-                      aria-label="Herauszoomen"
+                      aria-label={t('screens.world.zoom.out', 'Herauszoomen')}
                     >
                       <ZoomOut className="h-6 w-6" />
                     </Button>

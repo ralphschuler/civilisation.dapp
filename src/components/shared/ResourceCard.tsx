@@ -2,6 +2,7 @@ import { Card, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Progress } from '../ui/Progress';
 import { getResourceIcon } from '../../data/gameData';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface ResourceCardProps {
   resource: string;
@@ -18,26 +19,14 @@ export function ResourceCard({
   capacity,
   className = ""
 }: ResourceCardProps) {
+  const { t } = useI18n();
   const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
     if (num >= 1000) return `${(num / 1000).toFixed(1)}k`;
     return num.toLocaleString();
   };
 
-  const getResourceName = (resource: string) => {
-    const names: { [key: string]: string } = {
-      wood: 'Holz',
-      clay: 'Lehm',
-      iron: 'Eisen',
-      coal: 'Kohle',
-      wheat: 'Weizen',
-      bread: 'Brot',
-      meat: 'Fleisch',
-      gold: 'Gold',
-      villager: 'Dorfbewohner'
-    };
-    return names[resource] || resource;
-  };
+  const getResourceName = (res: string) => t(`screens.resources.names.${res}`, res);
 
   return (
     <Card className={`hover:shadow-md transition-shadow ${className}`}>
@@ -61,7 +50,7 @@ export function ResourceCard({
               className="h-2"
             />
             <div className="text-xs text-muted-foreground text-right">
-              {Math.round((amount / capacity) * 100)}% von {formatNumber(capacity)}
+              {Math.round((amount / capacity) * 100)}% {t('screens.resources.of', 'von')} {formatNumber(capacity)}
             </div>
           </div>
         )}

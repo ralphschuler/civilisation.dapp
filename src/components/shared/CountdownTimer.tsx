@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Badge } from '../ui/Badge';
 import { Progress } from '../ui/Progress';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface CountdownTimerProps {
   targetTime: number;
@@ -17,6 +18,7 @@ export function CountdownTimer({
   variant = 'default',
   className = ""
 }: CountdownTimerProps) {
+  const { t } = useI18n();
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
 
@@ -66,7 +68,7 @@ export function CountdownTimer({
   if (timeRemaining === 0) {
     return (
       <Badge variant="outline" className={`text-green-600 ${className}`}>
-        Abgeschlossen
+        {t('common.completed', 'Abgeschlossen')}
       </Badge>
     );
   }

@@ -4,6 +4,7 @@ import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { Separator } from '../ui/Separator';
 import { ArrowLeft } from 'lucide-react';
+import { useI18n } from '@/providers/i18n-provider';
 import { useNavigate } from 'react-router-dom';
 import { calculateResourceProduction, getResourceIcon } from '../../data/gameData';
 
@@ -15,6 +16,7 @@ interface StatsScreenProps {
 
 export function StatsScreen({ village, resources, playerStats }: StatsScreenProps) {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const formatNumber = (num: number) => {
     if (num >= 1000000) {
       return `${(num / 1000000).toFixed(1)}M`;
@@ -81,7 +83,7 @@ export function StatsScreen({ village, resources, playerStats }: StatsScreenProp
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            Spielerstatistiken
+            {t('screens.stats.title', 'Spielerstatistiken')}
           </CardTitle>
         </CardHeader>
       </Card>
@@ -91,18 +93,18 @@ export function StatsScreen({ village, resources, playerStats }: StatsScreenProp
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>📊</span>
-            Allgemeine Statistiken
+            {t('screens.stats.general.title', 'Allgemeine Statistiken')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20 rounded-lg">
               <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{totalBuildingLevels}</div>
-              <div className="text-sm text-blue-700 dark:text-blue-300">Gesamt-Gebäudestufen</div>
+              <div className="text-sm text-blue-700 dark:text-blue-300">{t('screens.stats.general.totalBuildingLevels', 'Gesamt-Gebäudestufen')}</div>
             </div>
             <div className="text-center p-4 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20 rounded-lg">
               <div className="text-3xl font-bold text-green-600 dark:text-green-400">{totalArmy}</div>
-              <div className="text-sm text-green-700 dark:text-green-300">Armeeeinheiten</div>
+              <div className="text-sm text-green-700 dark:text-green-300">{t('screens.stats.general.armyUnits', 'Armeeeinheiten')}</div>
             </div>
           </div>
           
@@ -111,11 +113,11 @@ export function StatsScreen({ village, resources, playerStats }: StatsScreenProp
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20 rounded-lg">
               <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">{playerStats.battlesWon}</div>
-              <div className="text-sm text-purple-700 dark:text-purple-300">Gewonnene Kämpfe</div>
+              <div className="text-sm text-purple-700 dark:text-purple-300">{t('screens.stats.general.battlesWon', 'Gewonnene Kämpfe')}</div>
             </div>
             <div className="text-center p-4 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20 rounded-lg">
               <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">{formatTime(playerStats.playtime)}</div>
-              <div className="text-sm text-orange-700 dark:text-orange-300">Spielzeit</div>
+              <div className="text-sm text-orange-700 dark:text-orange-300">{t('screens.stats.general.playtime', 'Spielzeit')}</div>
             </div>
           </div>
         </CardContent>
@@ -126,7 +128,7 @@ export function StatsScreen({ village, resources, playerStats }: StatsScreenProp
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>💰</span>
-            Aktuelle Ressourcen
+            {t('screens.stats.currentResources.title', 'Aktuelle Ressourcen')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -152,7 +154,7 @@ export function StatsScreen({ village, resources, playerStats }: StatsScreenProp
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>🏭</span>
-            Produktion pro Stunde
+            {t('screens.stats.production.title', 'Produktion pro Stunde')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -177,7 +179,7 @@ export function StatsScreen({ village, resources, playerStats }: StatsScreenProp
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>🏆</span>
-            Gesamtstatistiken
+            {t('screens.stats.total.title', 'Gesamtstatistiken')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -187,28 +189,28 @@ export function StatsScreen({ village, resources, playerStats }: StatsScreenProp
                 Object.values(playerStats.totalResourcesGathered).reduce((sum, val) => sum + val, 0)
               )}
             </div>
-            <div className="text-sm text-muted-foreground">Gesamte Ressourcen gesammelt</div>
+            <div className="text-sm text-muted-foreground">{t('screens.stats.total.totalResources', 'Gesamte Ressourcen gesammelt')}</div>
           </div>
           
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <div className="text-xl font-bold">{playerStats.totalUnitsTrained}</div>
-              <div className="text-xs text-muted-foreground">Einheiten ausgebildet</div>
+              <div className="text-xs text-muted-foreground">{t('screens.stats.total.unitsTrained', 'Einheiten ausgebildet')}</div>
             </div>
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <div className="text-xl font-bold">{playerStats.totalBuildingsUpgraded}</div>
-              <div className="text-xs text-muted-foreground">Gebäude ausgebaut</div>
+              <div className="text-xs text-muted-foreground">{t('screens.stats.total.buildingsUpgraded', 'Gebäude ausgebaut')}</div>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
               <div className="text-xl font-bold text-green-700 dark:text-green-400">{playerStats.battlesWon}</div>
-              <div className="text-xs text-green-600 dark:text-green-300">Siege</div>
+              <div className="text-xs text-green-600 dark:text-green-300">{t('screens.stats.total.victories', 'Siege')}</div>
             </div>
             <div className="text-center p-3 bg-red-50 dark:bg-red-950/20 rounded-lg">
               <div className="text-xl font-bold text-red-700 dark:text-red-400">{playerStats.battlesLost}</div>
-              <div className="text-xs text-red-600 dark:text-red-300">Niederlagen</div>
+              <div className="text-xs text-red-600 dark:text-red-300">{t('screens.stats.total.defeats', 'Niederlagen')}</div>
             </div>
           </div>
         </CardContent>
@@ -219,7 +221,7 @@ export function StatsScreen({ village, resources, playerStats }: StatsScreenProp
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>📈</span>
-            Gesammelte Ressourcen (Gesamt)
+            {t('screens.stats.collected.title', 'Gesammelte Ressourcen (Gesamt)')}
           </CardTitle>
         </CardHeader>
         <CardContent>

@@ -85,14 +85,14 @@ export function TradeScreen({
   };
 
   const resourceOptions = [
-    { value: 'wood', label: 'Holz', icon: '🪵' },
-    { value: 'clay', label: 'Lehm', icon: '🧱' },
-    { value: 'iron', label: 'Eisen', icon: '⚔️' },
-    { value: 'coal', label: 'Kohle', icon: '⚫' },
-    { value: 'wheat', label: 'Weizen', icon: '🌾' },
-    { value: 'bread', label: 'Brot', icon: '🍞' },
-    { value: 'meat', label: 'Fleisch', icon: '🥩' },
-    { value: 'gold', label: 'Gold', icon: '🪙' }
+    { value: 'wood', label: t('screens.resources.names.wood', 'Holz'), icon: '🪵' },
+    { value: 'clay', label: t('screens.resources.names.clay', 'Lehm'), icon: '🧱' },
+    { value: 'iron', label: t('screens.resources.names.iron', 'Eisen'), icon: '⚔️' },
+    { value: 'coal', label: t('screens.resources.names.coal', 'Kohle'), icon: '⚫' },
+    { value: 'wheat', label: t('screens.resources.names.wheat', 'Weizen'), icon: '🌾' },
+    { value: 'bread', label: t('screens.resources.names.bread', 'Brot'), icon: '🍞' },
+    { value: 'meat', label: t('screens.resources.names.meat', 'Fleisch'), icon: '🥩' },
+    { value: 'gold', label: t('screens.resources.names.gold', 'Gold'), icon: '🪙' }
   ];
 
   const canCreateTrade = offerAmount > 0 && requestAmount > 0 && 
@@ -146,7 +146,7 @@ export function TradeScreen({
                           {/* Trade Details */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <span className="text-sm text-muted-foreground">Bietet:</span>
+                              <span className="text-sm text-muted-foreground">{t('screens.trade.offers', 'Bietet:')}</span>
                               {Object.entries(trade.offering).map(([resource, amount]) => (
                                 <Badge key={resource} variant="secondary" className="flex items-center gap-1">
                                   <span>{getResourceIcon(resource)}</span>
@@ -158,7 +158,7 @@ export function TradeScreen({
                             <ArrowRightLeft className="h-4 w-4 text-muted-foreground" />
                             
                             <div className="flex items-center gap-2">
-                              <span className="text-sm text-muted-foreground">Möchte:</span>
+                              <span className="text-sm text-muted-foreground">{t('screens.trade.wants', 'Möchte:')}</span>
                               {Object.entries(trade.requesting).map(([resource, amount]) => (
                                 <Badge key={resource} variant="outline" className="flex items-center gap-1">
                                   <span>{getResourceIcon(resource)}</span>
@@ -173,13 +173,13 @@ export function TradeScreen({
                             <div className="flex items-center gap-4">
                               <div className="flex items-center gap-1">
                                 <TrendingUp className="h-3 w-3" />
-                                <span>Ratio: {trade.ratio.toFixed(1)}:1</span>
+                                <span>{t('screens.trade.ratio', 'Ratio')}: {trade.ratio.toFixed(1)}:1</span>
                               </div>
                               <div>
-                                Entfernung: {trade.distance} Felder
+                                {t('screens.trade.distance', 'Entfernung')}: {trade.distance} {t('screens.trade.fields', 'Felder')}
                               </div>
                               <div>
-                                Reisezeit: {calculateTravelTime(trade.distance)}min
+                                {t('screens.trade.travelTime', 'Reisezeit')}: {calculateTravelTime(trade.distance)}{t('screens.trade.minutesShort', 'min')}
                               </div>
                             </div>
                           </div>
@@ -192,10 +192,10 @@ export function TradeScreen({
                               className="flex-1"
                               onClick={() => onExecuteTrade?.(trade.id)}
                             >
-                              Handeln
+                              {t('screens.trade.execute', 'Handeln')}
                             </Button>
                             <Button variant="outline" size="sm">
-                              Details
+                              {t('screens.trade.details', 'Details')}
                             </Button>
                           </div>
                         </div>
@@ -211,12 +211,12 @@ export function TradeScreen({
         <TabsContent value="create">
           <Card>
             <CardHeader>
-              <CardTitle>Neues Handelsangebot erstellen</CardTitle>
+              <CardTitle>{t('screens.trade.createTitle', 'Neues Handelsangebot erstellen')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* What you offer */}
               <div className="space-y-3">
-                <h4 className="font-medium">Du bietest an:</h4>
+                <h4 className="font-medium">{t('screens.trade.youOffer', 'Du bietest an:')}</h4>
                 <div className="flex gap-2">
                   <Select value={selectedResource} onValueChange={setSelectedResource}>
                     <SelectTrigger className="w-32">
@@ -242,7 +242,7 @@ export function TradeScreen({
                   />
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Verfügbar: {((resources as any)[selectedResource] || 0).toLocaleString()}
+                  {t('screens.trade.availableAmount', 'Verfügbar')}: {((resources as any)[selectedResource] || 0).toLocaleString()}
                 </div>
               </div>
 
@@ -252,7 +252,7 @@ export function TradeScreen({
 
               {/* What you want */}
               <div className="space-y-3">
-                <h4 className="font-medium">Du möchtest:</h4>
+                <h4 className="font-medium">{t('screens.trade.youWant', 'Du möchtest:')}</h4>
                 <div className="flex gap-2">
                   <Select value={requestResource} onValueChange={setRequestResource}>
                     <SelectTrigger className="w-32">
@@ -278,7 +278,7 @@ export function TradeScreen({
                 </div>
                 {offerAmount > 0 && requestAmount > 0 && (
                   <div className="text-sm text-muted-foreground">
-                    Tauschverhältnis: {(offerAmount / requestAmount).toFixed(2)}:1
+                    {t('screens.trade.exchangeRatio', 'Tauschverhältnis')}: {(offerAmount / requestAmount).toFixed(2)}:1
                   </div>
                 )}
               </div>
@@ -300,14 +300,14 @@ export function TradeScreen({
                 }}
               >
                 <Send className="h-4 w-4 mr-2" />
-                Angebot erstellen
+                {t('screens.trade.createOffer', 'Angebot erstellen')}
               </Button>
 
               {!canCreateTrade && (
                 <p className="text-sm text-red-500 text-center">
-                  {offerAmount === 0 ? 'Gib eine Menge ein' :
-                   (resources as any)[selectedResource] < offerAmount ? 'Nicht genügend Ressourcen' :
-                   'Gib eine gewünschte Menge ein'}
+                  {offerAmount === 0 ? t('screens.trade.validation.enterAmount', 'Gib eine Menge ein') :
+                   (resources as any)[selectedResource] < offerAmount ? t('screens.trade.validation.notEnough', 'Nicht genügend Ressourcen') :
+                   t('screens.trade.validation.enterDesired', 'Gib eine gewünschte Menge ein')}
                 </p>
               )}
             </CardContent>
@@ -317,13 +317,13 @@ export function TradeScreen({
         <TabsContent value="history">
           <Card>
             <CardHeader>
-              <CardTitle>Handelsgeschichte</CardTitle>
+              <CardTitle>{t('screens.trade.historyTitle', 'Handelsgeschichte')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-center py-8">
                 <div className="text-4xl mb-2">📦</div>
                 <p className="text-muted-foreground">
-                  Noch keine Handelsgeschichte
+                  {t('screens.trade.noHistory', 'Noch keine Handelsgeschichte')}
                 </p>
               </div>
             </CardContent>

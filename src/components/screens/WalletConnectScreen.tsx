@@ -2,16 +2,18 @@ import { useMiniKit } from "@worldcoin/minikit-js/minikit-provider";
 import { Button } from "@/components/ui/Button";
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
+import { useI18n } from '@/providers/i18n-provider';
 
 export function WalletConnectScreen() {
   const { isInstalled } = useMiniKit();
   const { authenticated, authenticate } = useAuthStore();
+  const { t } = useI18n();
 
   if (!isInstalled) {
     return (
       <div>
-        <p>MiniKit is not installed</p>
-        <span>This app has to be run using the Worldcoin app.</span>
+        <p>{t('screens.wallet.minikitMissing', 'MiniKit is not installed')}</p>
+        <span>{t('screens.wallet.runInApp', 'This app has to be run using the Worldcoin app.')}</span>
       </div>
     );
   }
@@ -26,7 +28,7 @@ export function WalletConnectScreen() {
         onClick={authenticate}
         className="bg-blue-500 text-white px-4 py-2 rounded-md"
       >
-        Authenticate
+        {t('screens.wallet.authenticate', 'Authenticate')}
       </Button>
     </div>
   );

@@ -6,6 +6,7 @@ import { Input } from './ui/Input';
 import { Badge } from './ui/Badge';
 import { Separator } from './ui/Separator';
 import { useState } from 'react';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface ArmyPanelProps {
   army: Army;
@@ -16,6 +17,7 @@ interface ArmyPanelProps {
 
 export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanelProps) {
   const [trainQuantities, setTrainQuantities] = useState<{ [unitId: string]: number }>({});
+  const { t } = useI18n();
 
   const getTrainQuantity = (unitId: string) => trainQuantities[unitId] || 1;
   const setTrainQuantity = (unitId: string, quantity: number) => {
@@ -73,10 +75,10 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>⚔️</span>
-            Armeeübersicht
+            {t('screens.units.overview.title', 'Armeeübersicht')}
           </CardTitle>
           <CardDescription>
-            Gesamte Armee: {totalArmySize.toLocaleString()} Einheiten
+            {t('screens.units.overview.totalArmy', 'Gesamte Armee')}: {totalArmySize.toLocaleString()} {t('screens.units.common.units', 'Einheiten')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -92,7 +94,7 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
                       <div>
                         <div className="font-medium">{unit.name}</div>
                         <div className="text-sm text-muted-foreground">
-                          Angriff: {unit.attack} | DEF: inf {unit.def.inf} / cav {unit.def.cav} / ranged {unit.def.ranged}
+                          {t('screens.units.stats.attack', 'Angriff')}: {unit.attack} | {t('screens.units.stats.def', 'DEF')}: inf {unit.def.inf} / cav {unit.def.cav} / rng {unit.def.ranged}
                         </div>
                       </div>
                     </div>
@@ -107,7 +109,7 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
             <div className="text-center py-8">
               <span className="text-4xl mb-2 block">🏚️</span>
               <p className="text-muted-foreground">
-                Noch keine Einheiten trainiert
+                {t('screens.units.overview.noneTrained', 'Noch keine Einheiten trainiert')}
               </p>
             </div>
           )}
@@ -119,11 +121,11 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>🏰</span>
-            Einheiten ausbilden
+            {t('screens.units.training.title', 'Einheiten ausbilden')}
           </CardTitle>
           <CardDescription>
-            Kaserne Level {barracksLevel} 
-            {barracksLevel === 0 && " - Muss erst gebaut werden"}
+            {t('screens.village.buildings.barracks', 'Kaserne')} {t('screens.units.common.level', 'Level')} {barracksLevel} 
+            {barracksLevel === 0 && ` - ${t('screens.units.training.mustBuild', 'Muss erst gebaut werden')}`}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -177,10 +179,10 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
 
                       <div className="flex items-center justify-between mb-4">
                         <div className="text-sm text-muted-foreground">
-                          Ausbildungszeit: {formatTime(unit.trainTime * quantity)}
+                          {t('screens.units.training.time', 'Ausbildungszeit')}: {formatTime(unit.trainTime * quantity)}
                         </div>
                         <Badge variant="outline">
-                          Level {unit.buildingLevelRequired}+ benötigt
+                          {t('screens.units.common.level', 'Level')} {unit.buildingLevelRequired}+ {t('screens.units.training.required', 'benötigt')}
                         </Badge>
                       </div>
 
@@ -198,15 +200,15 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
                           onClick={() => onTrainUnit(unit.id, quantity)}
                           className="flex-1"
                         >
-                          {canTrain ? 'Ausbilden' : 'Nicht verfügbar'}
+                          {canTrain ? t('screens.units.training.train', 'Ausbilden') : t('screens.units.common.unavailable', 'Nicht verfügbar')}
                         </Button>
                       </div>
                       
                       {!canTrain && (
                         <p className="text-xs text-red-500 mt-2">
                           {buildings[unit.buildingRequired]?.level < unit.buildingLevelRequired 
-                            ? `Kaserne Level ${unit.buildingLevelRequired} benötigt`
-                            : 'Nicht genügend Ressourcen oder Bevölkerung'
+                            ? `${t('screens.village.buildings.barracks', 'Kaserne')} ${t('screens.units.common.level', 'Level')} ${unit.buildingLevelRequired} ${t('screens.units.training.required', 'benötigt')}`
+                            : t('screens.units.training.notEnough', 'Nicht genügend Ressourcen oder Bevölkerung')
                           }
                         </p>
                       )}
@@ -219,7 +221,7 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
                 <div className="text-center py-8">
                   <span className="text-4xl mb-2 block">🚧</span>
                   <p className="text-muted-foreground">
-                    Kaserne Level {barracksLevel} - Keine Einheiten verfügbar
+                    {t('screens.village.buildings.barracks', 'Kaserne')} {t('screens.units.common.level', 'Level')} {barracksLevel} - {t('screens.units.training.noneAvailable', 'Keine Einheiten verfügbar')}
                   </p>
                 </div>
               )}
@@ -228,10 +230,10 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
             <div className="text-center py-12">
               <span className="text-4xl mb-4 block">🏗️</span>
               <p className="text-muted-foreground text-lg mb-2">
-                Kaserne muss erst gebaut werden
+                {t('screens.units.training.mustBuildBarracks', 'Kaserne muss erst gebaut werden')}
               </p>
               <p className="text-sm text-muted-foreground">
-                Baue eine Kaserne im Dorf-Screen, um Einheiten zu trainieren
+                {t('screens.units.training.buildHint', 'Baue eine Kaserne im Dorf-Screen, um Einheiten zu trainieren')}
               </p>
             </div>
           )}

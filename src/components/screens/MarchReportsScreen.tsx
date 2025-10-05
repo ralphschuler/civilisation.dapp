@@ -105,7 +105,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
           onClick={() => setSelectedReport(null)}
           className="min-touch"
         >
-          ← Zurück zur Übersicht
+          ← {t('screens.marchReports.backToOverview', 'Zurück zur Übersicht')}
         </Button>
 
         {/* Battle Report Details */}
@@ -113,7 +113,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
-              Kampfbericht #{selectedReport.id.slice(-6)}
+              {t('screens.marchReports.battleReportTitle', 'Kampfbericht')} #{selectedReport.id.slice(-6)}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -125,9 +125,9 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                     <div className="text-2xl font-bold text-blue-600 mb-1">
                       {selectedReport.attacker}
                     </div>
-                    <div className="text-sm text-muted-foreground">Angreifer</div>
+                    <div className="text-sm text-muted-foreground">{t('battle.attacker', 'Angreifer')}</div>
                     <div className="text-xs mt-2">
-                      {getTotalUnits(selectedReport.attackerArmy)} Einheiten
+                      {getTotalUnits(selectedReport.attackerArmy)} {t('screens.marchReports.units', 'Einheiten')}
                     </div>
                   </div>
                 </CardContent>
@@ -139,9 +139,9 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                     <div className="text-2xl font-bold text-red-600 mb-1">
                       {selectedReport.defender}
                     </div>
-                    <div className="text-sm text-muted-foreground">Verteidiger</div>
+                    <div className="text-sm text-muted-foreground">{t('battle.defender', 'Verteidiger')}</div>
                     <div className="text-xs mt-2">
-                      {getTotalUnits(selectedReport.defenderArmy)} Einheiten
+                      {getTotalUnits(selectedReport.defenderArmy)} {t('screens.marchReports.units', 'Einheiten')}
                     </div>
                   </div>
                 </CardContent>
@@ -156,7 +156,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                   <Shield className="h-6 w-6 text-blue-500" />
                 }
                 <span className="text-xl font-bold">
-                  {selectedReport.winner === 'attacker' ? 'Sieg' : 'Niederlage'}
+                  {selectedReport.winner === 'attacker' ? t('battle.victory', 'Sieg') : t('battle.defeat', 'Niederlage')}
                 </span>
               </div>
               <div className="text-sm text-muted-foreground">
@@ -169,19 +169,19 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BarChart3 className="h-5 w-5" />
-                  Kampffaktoren
+                  {t('screens.marchReports.factors.title', 'Kampffaktoren')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {Object.entries(selectedReport.factors).map(([factor, value]) => {
                     const factorNames = {
-                      counter: 'Konter-Bonus',
-                      wall: 'Mauer-Bonus',
-                      moral: 'Moral',
-                      tech: 'Technologie',
-                      terrain: 'Gelände',
-                      variance: 'Glück'
+                      counter: t('screens.marchReports.factors.counter', 'Konter-Bonus'),
+                      wall: t('screens.marchReports.factors.wall', 'Mauer-Bonus'),
+                      moral: t('screens.marchReports.factors.moral', 'Moral'),
+                      tech: t('screens.marchReports.factors.tech', 'Technologie'),
+                      terrain: t('screens.marchReports.factors.terrain', 'Gelände'),
+                      variance: t('screens.marchReports.factors.variance', 'Glück')
                     };
 
                     const isPositive = value > 0;
@@ -214,7 +214,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
             <div className="grid grid-cols-2 gap-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Verluste Angreifer</CardTitle>
+                  <CardTitle className="text-lg">{t('battle.losses.attacker', 'Verluste Angreifer')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
@@ -227,7 +227,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                       )
                     ))}
                     {getTotalUnits(selectedReport.attackerLosses) === 0 && (
-                      <p className="text-sm text-muted-foreground">Keine Verluste</p>
+                      <p className="text-sm text-muted-foreground">{t('screens.marchReports.noLosses', 'Keine Verluste')}</p>
                     )}
                   </div>
                 </CardContent>
@@ -235,7 +235,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Verluste Verteidiger</CardTitle>
+                  <CardTitle className="text-lg">{t('battle.losses.defender', 'Verluste Verteidiger')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
@@ -248,7 +248,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                       )
                     ))}
                     {getTotalUnits(selectedReport.defenderLosses) === 0 && (
-                      <p className="text-sm text-muted-foreground">Keine Verluste</p>
+                      <p className="text-sm text-muted-foreground">{t('screens.marchReports.noLosses', 'Keine Verluste')}</p>
                     )}
                   </div>
                 </CardContent>
@@ -319,21 +319,21 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                     {selectedReport.replay.map((phase, index) => (
                       <div key={index} className="border-l-2 border-muted pl-4">
                         <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="outline">
-                            Phase {index + 1}: {phase.phase}
-                          </Badge>
+                            <Badge variant="outline">
+                            {t('screens.marchReports.phase', 'Phase')} {index + 1}: {phase.phase}
+                            </Badge>
                         </div>
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
-                            <div className="font-medium">Angreifer</div>
+                            <div className="font-medium">{t('battle.attacker', 'Angreifer')}</div>
                             <div className="text-muted-foreground">
-                              Schaden: {phase.damage.attacker}
+                              {t('screens.marchReports.damage', 'Schaden')}: {phase.damage.attacker}
                             </div>
                           </div>
                           <div>
-                            <div className="font-medium">Verteidiger</div>
+                            <div className="font-medium">{t('battle.defender', 'Verteidiger')}</div>
                             <div className="text-muted-foreground">
-                              Schaden: {phase.damage.defender}
+                              {t('screens.marchReports.damage', 'Schaden')}: {phase.damage.defender}
                             </div>
                           </div>
                         </div>
@@ -356,7 +356,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BarChart3 className="h-5 w-5" />
-            Marsch-Statistiken
+            {t('screens.marchReports.stats.title', 'Marsch-Statistiken')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -384,7 +384,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-3 w-full">
           <TabsTrigger value="completed">
-            Abgeschlossen
+            {t('screens.marchReports.tabs.completed', 'Abgeschlossen')}
             {completedMarches.length > 0 && (
               <Badge variant="secondary" className="ml-2 text-xs">
                 {completedMarches.length}
@@ -392,27 +392,27 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
             )}
           </TabsTrigger>
           <TabsTrigger value="returning">
-            Rückkehrend
+            {t('screens.marchReports.tabs.returning', 'Rückkehrend')}
             {returningMarches.length > 0 && (
               <Badge variant="secondary" className="ml-2 text-xs">
                 {returningMarches.length}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="analysis">Analyse</TabsTrigger>
+          <TabsTrigger value="analysis">{t('screens.marchReports.tabs.analysis', 'Analyse')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="completed">
           <Card>
             <CardHeader>
-              <CardTitle>Abgeschlossene Märsche</CardTitle>
+              <CardTitle>{t('screens.marchReports.completed.title', 'Abgeschlossene Märsche')}</CardTitle>
             </CardHeader>
             <CardContent>
               {completedMarches.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-2">📜</div>
                   <p className="text-muted-foreground">
-                    Noch keine abgeschlossenen Märsche
+                    {t('screens.marchReports.completed.empty', 'Noch keine abgeschlossenen Märsche')}
                   </p>
                 </div>
               ) : (
@@ -452,7 +452,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
 
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
-                              <div className="text-muted-foreground">Ziel</div>
+                              <div className="text-muted-foreground">{t('screens.marchReports.completed.target', 'Ziel')}</div>
                               <div>({march.targetVillage.x}|{march.targetVillage.y})</div>
                               {march.targetVillage.player && (
                                 <div className="text-xs text-muted-foreground">
@@ -461,7 +461,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                               )}
                             </div>
                             <div>
-                              <div className="text-muted-foreground">Ankunft</div>
+                              <div className="text-muted-foreground">{t('screens.marchReports.completed.arrival', 'Ankunft')}</div>
                               <div>{formatTime(march.arrivalTime)}</div>
                             </div>
                           </div>
@@ -470,14 +470,14 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                             <div className="flex items-center gap-2 p-2 bg-yellow-50 rounded">
                               <Coins className="h-4 w-4 text-yellow-600" />
                               <span className="text-sm font-medium">
-                                Beute: {formatNumber(Object.values(march.loot).reduce((sum, amount) => sum + amount, 0))}
+                                {t('screens.marchReports.loot', 'Beute')}: {formatNumber(Object.values(march.loot).reduce((sum, amount) => sum + amount, 0))}
                               </span>
                             </div>
                           )}
 
                           {march.notes && (
                             <div className="text-sm bg-muted p-2 rounded">
-                              <span className="font-medium">Notizen: </span>
+                              <span className="font-medium">{t('screens.marchReports.notes', 'Notizen')}: </span>
                               {march.notes}
                             </div>
                           )}
@@ -494,14 +494,14 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
         <TabsContent value="returning">
           <Card>
             <CardHeader>
-              <CardTitle>Rückkehrende Truppen</CardTitle>
+              <CardTitle>{t('screens.marchReports.returning.title', 'Rückkehrende Truppen')}</CardTitle>
             </CardHeader>
             <CardContent>
               {returningMarches.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-2">🏃‍♂️</div>
                   <p className="text-muted-foreground">
-                    Keine rückkehrenden Truppen
+                    {t('screens.marchReports.returning.empty', 'Keine rückkehrenden Truppen')}
                   </p>
                 </div>
               ) : (
@@ -516,21 +516,21 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Users className="h-4 w-4 text-blue-600" />
-                            <span className="font-medium">Rückkehr aus {march.targetVillage.name}</span>
+                            <span className="font-medium">{t('screens.marchReports.returning.from', 'Rückkehr aus')} {march.targetVillage.name}</span>
                           </div>
                           <Badge variant="outline">
-                            {getTotalUnits(march.army)} Einheiten
+                            {getTotalUnits(march.army)} {t('screens.marchReports.units', 'Einheiten')}
                           </Badge>
                         </div>
 
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span>Fortschritt</span>
+                            <span>{t('screens.marchReports.progress', 'Fortschritt')}</span>
                             <span>{progress.toFixed(0)}%</span>
                           </div>
                           <Progress value={progress} className="h-2" />
                           <div className="text-xs text-muted-foreground">
-                            Ankunft: {march.returnTime ? formatTime(march.returnTime) : 'Unbekannt'}
+                            {t('screens.marchReports.arrival', 'Ankunft')}: {march.returnTime ? formatTime(march.returnTime) : t('screens.marchReports.unknown', 'Unbekannt')}
                           </div>
                         </div>
 
@@ -538,7 +538,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                           <div className="flex items-center gap-2 p-2 bg-yellow-50 rounded">
                             <Coins className="h-4 w-4 text-yellow-600" />
                             <span className="text-sm font-medium">
-                              Transportiert: {formatNumber(Object.values(march.loot).reduce((sum, amount) => sum + amount, 0))} Ressourcen
+                              {t('screens.marchReports.transporting', 'Transportiert')}: {formatNumber(Object.values(march.loot).reduce((sum, amount) => sum + amount, 0))} {t('screens.resources.resources', 'Ressourcen')}
                             </span>
                           </div>
                         )}

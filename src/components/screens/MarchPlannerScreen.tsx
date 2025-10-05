@@ -28,6 +28,7 @@ import {
   Zap
 } from 'lucide-react';
 import { Village, Army, AttackType, March, MarchPreset, VillageInfo } from '../../types/game';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface MarchPlannerScreenProps {
   village: Village;
@@ -50,6 +51,7 @@ export function MarchPlannerScreen({
   onDeletePreset,
   selectedTarget
 }: MarchPlannerScreenProps) {
+  const { t } = useI18n();
   const [activeTab, setActiveTab] = useState('planner');
   const [attackType, setAttackType] = useState<AttackType>('raid');
   const [selectedPreset, setSelectedPreset] = useState<string>('none');
@@ -209,23 +211,23 @@ export function MarchPlannerScreen({
     switch (type) {
       case 'raid':
         return {
-          name: 'Plünderung',
+          name: t('screens.march.attackType.raid.name', 'Plünderung'),
           icon: <Zap className="h-4 w-4" />,
-          description: 'Schneller Angriff zum Erbeuten von Ressourcen',
+          description: t('screens.march.attackType.raid.description', 'Schneller Angriff zum Erbeuten von Ressourcen'),
           color: 'text-yellow-600'
         };
       case 'siege':
         return {
-          name: 'Belagerung',
+          name: t('screens.march.attackType.siege.name', 'Belagerung'),
           icon: <Shield className="h-4 w-4" />,
-          description: 'Angriff auf Mauern und Verteidigungen',
+          description: t('screens.march.attackType.siege.description', 'Angriff auf Mauern und Verteidigungen'),
           color: 'text-orange-600'
         };
       case 'conquer':
         return {
-          name: 'Eroberung',
+          name: t('screens.march.attackType.conquer.name', 'Eroberung'),
           icon: <Crown className="h-4 w-4" />,
-          description: 'Vollständige Übernahme des Dorfes',
+          description: t('screens.march.attackType.conquer.description', 'Vollständige Übernahme des Dorfes'),
           color: 'text-red-600'
         };
     }
@@ -240,18 +242,18 @@ export function MarchPlannerScreen({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Route className="h-5 w-5" />
-            Marschplaner
+            {t('screens.march.title', 'Marschplaner')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-3 bg-muted rounded-lg">
               <div className="text-2xl font-bold text-blue-600">{activeMarchesCount}</div>
-              <div className="text-xs text-muted-foreground">Aktive Märsche</div>
+              <div className="text-xs text-muted-foreground">{t('screens.march.stats.active', 'Aktive Märsche')}</div>
             </div>
             <div className="text-center p-3 bg-muted rounded-lg">
               <div className="text-2xl font-bold text-green-600">{marchPresets.length}</div>
-              <div className="text-xs text-muted-foreground">Gespeicherte Presets</div>
+              <div className="text-xs text-muted-foreground">{t('screens.march.stats.savedPresets', 'Gespeicherte Presets')}</div>
             </div>
           </div>
         </CardContent>
@@ -259,16 +261,16 @@ export function MarchPlannerScreen({
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-3 w-full">
-          <TabsTrigger value="planner">Planen</TabsTrigger>
+          <TabsTrigger value="planner">{t('screens.march.tabs.planner', 'Planen')}</TabsTrigger>
           <TabsTrigger value="active">
-            Aktive Märsche
+            {t('screens.march.tabs.active', 'Aktive Märsche')}
             {activeMarchesCount > 0 && (
               <Badge variant="secondary" className="ml-2 text-xs">
                 {activeMarchesCount}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="presets">Presets</TabsTrigger>
+          <TabsTrigger value="presets">{t('screens.march.tabs.presets', 'Presets')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="planner">
@@ -278,7 +280,7 @@ export function MarchPlannerScreen({
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Target className="h-5 w-5" />
-                  Angriffstyp
+                  {t('screens.march.attackType.title', 'Angriffstyp')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -309,13 +311,13 @@ export function MarchPlannerScreen({
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5" />
-                  Ziel
+                  {t('screens.march.target.title', 'Ziel')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label htmlFor="targetX">X-Koordinate</Label>
+                    <Label htmlFor="targetX">{t('screens.march.target.x', 'X-Koordinate')}</Label>
                     <Input
                       id="targetX"
                       type="number"
@@ -325,7 +327,7 @@ export function MarchPlannerScreen({
                     />
                   </div>
                   <div>
-                    <Label htmlFor="targetY">Y-Koordinate</Label>
+                    <Label htmlFor="targetY">{t('screens.march.target.y', 'Y-Koordinate')}</Label>
                     <Input
                       id="targetY"
                       type="number"
@@ -336,12 +338,12 @@ export function MarchPlannerScreen({
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="targetPlayer">Spieler (optional)</Label>
+                  <Label htmlFor="targetPlayer">{t('screens.march.target.player', 'Spieler (optional)')}</Label>
                   <Input
                     id="targetPlayer"
                     value={targetPlayer}
                     onChange={(e) => setTargetPlayer(e.target.value)}
-                    placeholder="Spielername"
+                    placeholder={t('screens.march.target.playerPlaceholder', 'Spielername')}
                     className="min-touch"
                   />
                 </div>
@@ -349,8 +351,8 @@ export function MarchPlannerScreen({
                   <div className="p-3 bg-accent rounded-lg">
                     <div className="font-medium">{selectedTarget.name}</div>
                     <div className="text-sm text-muted-foreground">
-                      Spieler: {selectedTarget.player || 'Unbekannt'} • 
-                      Punkte: {formatNumber(selectedTarget.points)}
+                      {t('screens.march.target.playerShort', 'Spieler')}: {selectedTarget.player || t('screens.march.target.unknown', 'Unbekannt')} • 
+                      {t('screens.march.target.points', 'Punkte')}: {formatNumber(selectedTarget.points)}
                     </div>
                   </div>
                 )}
@@ -362,22 +364,22 @@ export function MarchPlannerScreen({
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Users className="h-5 w-5" />
-                  Armee
+                  {t('screens.march.army.title', 'Armee')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Preset Selection */}
                 <div>
-                  <Label htmlFor="preset">Preset verwenden</Label>
+                  <Label htmlFor="preset">{t('screens.march.army.usePreset', 'Preset verwenden')}</Label>
                   <Select value={selectedPreset} onValueChange={setSelectedPreset}>
                     <SelectTrigger className="min-touch">
-                      <SelectValue placeholder="Kein Preset ausgewählt" />
+                      <SelectValue placeholder={t('screens.march.army.noPresetSelected', 'Kein Preset ausgewählt')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">Kein Preset</SelectItem>
+                      <SelectItem value="none">{t('screens.march.army.noPreset', 'Kein Preset')}</SelectItem>
                       {marchPresets.map(preset => (
                         <SelectItem key={preset.id} value={preset.id}>
-                          {preset.name} ({getTotalUnits(preset.army)} Einheiten)
+                          {preset.name} ({getTotalUnits(preset.army)} {t('screens.march.army.units', 'Einheiten')})
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -387,7 +389,7 @@ export function MarchPlannerScreen({
                 {/* Custom Army Setup */}
                 {(!selectedPreset || selectedPreset === 'none') && (
                   <div className="space-y-3">
-                    <h4 className="font-medium">Eigene Zusammenstellung</h4>
+                    <h4 className="font-medium">{t('screens.march.army.custom', 'Eigene Zusammenstellung')}</h4>
                     <div className="grid grid-cols-2 gap-3">
                       {Object.keys(customArmy).map(unitType => (
                         <div key={unitType}>
@@ -405,7 +407,7 @@ export function MarchPlannerScreen({
                             className="min-touch"
                           />
                           <div className="text-xs text-muted-foreground">
-                            Verfügbar: {village.army[unitType] || 0}
+                            {t('screens.march.army.available', 'Verfügbar')}: {village.army[unitType] || 0}
                           </div>
                         </div>
                       ))}
@@ -417,7 +419,7 @@ export function MarchPlannerScreen({
                 <div className="p-3 bg-muted rounded-lg">
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <div className="font-medium">Gesamte Einheiten</div>
+                      <div className="font-medium">{t('screens.march.army.totalUnits', 'Gesamte Einheiten')}</div>
                       <div className="text-muted-foreground">
                         {getTotalUnits(selectedPreset && selectedPreset !== 'none' ? 
                           marchPresets.find(p => p.id === selectedPreset)?.army || customArmy : 
@@ -426,7 +428,7 @@ export function MarchPlannerScreen({
                       </div>
                     </div>
                     <div>
-                      <div className="font-medium">Tragfähigkeit</div>
+                      <div className="font-medium">{t('screens.march.army.carry', 'Tragfähigkeit')}</div>
                       <div className="text-muted-foreground">
                         {calculateCarryCapacity(selectedPreset && selectedPreset !== 'none' ? 
                           marchPresets.find(p => p.id === selectedPreset)?.army || customArmy : 
@@ -444,33 +446,33 @@ export function MarchPlannerScreen({
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Clock className="h-5 w-5" />
-                  Zeitplanung
+                  {t('screens.march.timing.title', 'Zeitplanung')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div>
-                  <Label htmlFor="departure">Abmarsch</Label>
+                  <Label htmlFor="departure">{t('screens.march.timing.departure', 'Abmarsch')}</Label>
                   <Select value={departureTime} onValueChange={setDepartureTime}>
                     <SelectTrigger className="min-touch">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="now">Sofort</SelectItem>
-                      <SelectItem value="5">In 5 Minuten</SelectItem>
-                      <SelectItem value="15">In 15 Minuten</SelectItem>
-                      <SelectItem value="30">In 30 Minuten</SelectItem>
-                      <SelectItem value="60">In 1 Stunde</SelectItem>
+                      <SelectItem value="now">{t('screens.march.timing.now', 'Sofort')}</SelectItem>
+                      <SelectItem value="5">{t('screens.march.timing.in5', 'In 5 Minuten')}</SelectItem>
+                      <SelectItem value="15">{t('screens.march.timing.in15', 'In 15 Minuten')}</SelectItem>
+                      <SelectItem value="30">{t('screens.march.timing.in30', 'In 30 Minuten')}</SelectItem>
+                      <SelectItem value="60">{t('screens.march.timing.in60', 'In 1 Stunde')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <Label htmlFor="notes">Notizen (optional)</Label>
+                  <Label htmlFor="notes">{t('screens.march.timing.notesLabel', 'Notizen (optional)')}</Label>
                   <Textarea
                     id="notes"
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Notizen zum Angriff..."
+                    placeholder={t('screens.march.timing.notesPlaceholder', 'Notizen zum Angriff...')}
                     rows={2}
                   />
                 </div>
@@ -483,21 +485,21 @@ export function MarchPlannerScreen({
                 <AlertDialogTrigger asChild>
                   <Button className="flex-1 min-touch">
                     <Send className="h-4 w-4 mr-2" />
-                    Marsch starten
+                    {t('screens.march.actions.start', 'Marsch starten')}
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Marsch bestätigen</AlertDialogTitle>
+                    <AlertDialogTitle>{t('screens.march.confirm.title', 'Marsch bestätigen')}</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Möchtest du den {getAttackTypeInfo(attackType).name.toLowerCase()} auf 
-                      ({targetX}|{targetY}) wirklich starten?
+                      {t('screens.march.confirm.prefix', 'Möchtest du den')} {getAttackTypeInfo(attackType).name.toLowerCase()} {t('screens.march.confirm.to', 'auf')} 
+                      ({targetX}|{targetY}) {t('screens.march.confirm.suffix', 'wirklich starten?')}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                    <AlertDialogCancel>{t('common.cancel', 'Abbrechen')}</AlertDialogCancel>
                     <AlertDialogAction onClick={handleCreateMarch}>
-                      Bestätigen
+                      {t('screens.march.confirm.confirm', 'Bestätigen')}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -512,40 +514,40 @@ export function MarchPlannerScreen({
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Preset erstellen</AlertDialogTitle>
+                      <AlertDialogTitle>{t('screens.march.preset.createTitle', 'Preset erstellen')}</AlertDialogTitle>
                       <AlertDialogDescription>
-                        Möchtest du diese Armeezusammenstellung als Preset speichern?
+                        {t('screens.march.preset.createQuestion', 'Möchtest du diese Armeezusammenstellung als Preset speichern?')}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="space-y-3 py-4">
                       <div>
-                        <Label htmlFor="presetName">Name</Label>
+                        <Label htmlFor="presetName">{t('screens.march.preset.nameLabel', 'Name')}</Label>
                         <Input
                           id="presetName"
                           value={newPresetName}
                           onChange={(e) => setNewPresetName(e.target.value)}
-                          placeholder="z.B. Schneller Raid"
+                          placeholder={t('screens.march.preset.namePlaceholder', 'z.B. Schneller Raid')}
                           className="min-touch"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="presetDescription">Beschreibung</Label>
+                        <Label htmlFor="presetDescription">{t('screens.march.preset.descriptionLabel', 'Beschreibung')}</Label>
                         <Input
                           id="presetDescription"
                           value={newPresetDescription}
                           onChange={(e) => setNewPresetDescription(e.target.value)}
-                          placeholder="z.B. Optimiert für schnelle Plünderungen"
+                          placeholder={t('screens.march.preset.descriptionPlaceholder', 'z.B. Optimiert für schnelle Plünderungen')}
                           className="min-touch"
                         />
                       </div>
                     </div>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                      <AlertDialogCancel>{t('common.cancel', 'Abbrechen')}</AlertDialogCancel>
                       <AlertDialogAction 
                         onClick={handleCreatePreset}
                         disabled={!newPresetName.trim()}
                       >
-                        Erstellen
+                        {t('screens.march.preset.create', 'Erstellen')}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -558,21 +560,21 @@ export function MarchPlannerScreen({
         <TabsContent value="active">
           <Card>
             <CardHeader>
-              <CardTitle>Aktive Märsche</CardTitle>
+              <CardTitle>{t('screens.march.active.title', 'Aktive Märsche')}</CardTitle>
             </CardHeader>
             <CardContent>
               {activeMarchesCount === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-2">⚔️</div>
                   <p className="text-muted-foreground">
-                    Keine aktiven Märsche
+                    {t('screens.march.active.empty', 'Keine aktiven Märsche')}
                   </p>
                   <Button 
                     className="mt-4" 
                     variant="outline"
                     onClick={() => setActiveTab('planner')}
                   >
-                    Ersten Marsch planen
+                    {t('screens.march.active.planFirst', 'Ersten Marsch planen')}
                   </Button>
                 </div>
               ) : (
@@ -601,27 +603,27 @@ export function MarchPlannerScreen({
                                 march.status === 'marching' ? 'default' :
                                 'outline'
                               }>
-                                {march.status === 'planning' ? 'Geplant' :
-                                 march.status === 'marching' ? 'Unterwegs' :
-                                 'Angekommen'}
+                                {march.status === 'planning' ? t('screens.march.status.planning', 'Geplant') :
+                                 march.status === 'marching' ? t('screens.march.status.marching', 'Unterwegs') :
+                                 t('screens.march.status.arrived', 'Angekommen')}
                               </Badge>
                             </div>
 
                             <div className="text-sm text-muted-foreground">
-                              <div>Ziel: ({march.targetVillage.x}|{march.targetVillage.y})</div>
-                              <div>Entfernung: {march.distance.toFixed(1)} Felder</div>
-                              <div>Einheiten: {getTotalUnits(march.army)}</div>
+                              <div>{t('screens.march.active.target', 'Ziel')}: ({march.targetVillage.x}|{march.targetVillage.y})</div>
+                              <div>{t('screens.march.active.distance', 'Entfernung')}: {march.distance.toFixed(1)} {t('screens.march.active.fields', 'Felder')}</div>
+                              <div>{t('screens.march.active.units', 'Einheiten')}: {getTotalUnits(march.army)}</div>
                             </div>
 
                             {march.status === 'marching' && (
                               <div className="space-y-2">
                                 <div className="flex justify-between text-sm">
-                                  <span>Fortschritt</span>
+                                  <span>{t('screens.march.active.progress', 'Fortschritt')}</span>
                                   <span>{progress.toFixed(0)}%</span>
                                 </div>
                                 <Progress value={progress} className="h-2" />
                                 <div className="text-xs text-muted-foreground">
-                                  Ankunft: {formatTime(march.arrivalTime)}
+                                  {t('screens.march.active.arrival', 'Ankunft')}: {formatTime(march.arrivalTime)}
                                 </div>
                               </div>
                             )}
@@ -635,14 +637,14 @@ export function MarchPlannerScreen({
                                   className="min-touch"
                                 >
                                   <Trash2 className="h-4 w-4 mr-1" />
-                                  Abbrechen
+                                  {t('common.cancel', 'Abbrechen')}
                                 </Button>
                               </div>
                             )}
 
                             {march.notes && (
                               <div className="text-sm bg-muted p-2 rounded">
-                                <span className="font-medium">Notizen: </span>
+                                <span className="font-medium">{t('screens.march.active.notes', 'Notizen')}: </span>
                                 {march.notes}
                               </div>
                             )}
@@ -660,10 +662,10 @@ export function MarchPlannerScreen({
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                <span>Gespeicherte Presets</span>
+                <span>{t('screens.march.presets.title', 'Gespeicherte Presets')}</span>
                 <Button size="sm" onClick={() => setActiveTab('planner')}>
                   <Plus className="h-4 w-4 mr-1" />
-                  Neu erstellen
+                  {t('screens.march.presets.new', 'Neu erstellen')}
                 </Button>
               </CardTitle>
             </CardHeader>
@@ -672,14 +674,14 @@ export function MarchPlannerScreen({
                 <div className="text-center py-8">
                   <div className="text-4xl mb-2">📋</div>
                   <p className="text-muted-foreground">
-                    Keine Presets gespeichert
+                    {t('screens.march.presets.empty', 'Keine Presets gespeichert')}
                   </p>
                   <Button 
                     className="mt-4" 
                     variant="outline"
                     onClick={() => setActiveTab('planner')}
                   >
-                    Erstes Preset erstellen
+                    {t('screens.march.presets.createFirst', 'Erstes Preset erstellen')}
                   </Button>
                 </div>
               ) : (
@@ -711,18 +713,18 @@ export function MarchPlannerScreen({
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Preset löschen</AlertDialogTitle>
+                                <AlertDialogTitle>{t('screens.march.presets.deleteTitle', 'Preset löschen')}</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Möchtest du das Preset "{preset.name}" wirklich löschen?
+                                  {t('screens.march.presets.deleteQuestionPrefix', 'Möchtest du das Preset')} "{preset.name}" {t('screens.march.presets.deleteQuestionSuffix', 'wirklich löschen?')}
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                                <AlertDialogCancel>{t('common.cancel', 'Abbrechen')}</AlertDialogCancel>
                                 <AlertDialogAction 
                                   onClick={() => onDeletePreset(preset.id)}
                                   variant="destructive"
                                 >
-                                  Löschen
+                                  {t('screens.march.presets.delete', 'Löschen')}
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
@@ -736,13 +738,13 @@ export function MarchPlannerScreen({
 
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                          <div className="font-medium">Einheiten</div>
+                          <div className="font-medium">{t('screens.march.army.units', 'Einheiten')}</div>
                           <div className="text-muted-foreground">
                             {getTotalUnits(preset.army)}
                           </div>
                         </div>
                         <div>
-                          <div className="font-medium">Tragfähigkeit</div>
+                          <div className="font-medium">{t('screens.march.army.carry', 'Tragfähigkeit')}</div>
                           <div className="text-muted-foreground">
                             {calculateCarryCapacity(preset.army)}
                           </div>

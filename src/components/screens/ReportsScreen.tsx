@@ -48,10 +48,10 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-    if (days > 0) return `vor ${days} Tag${days > 1 ? 'en' : ''}`;
-    if (hours > 0) return `vor ${hours} Stunde${hours > 1 ? 'n' : ''}`;
-    if (minutes > 0) return `vor ${minutes} Minute${minutes > 1 ? 'n' : ''}`;
-    return 'gerade eben';
+    if (days > 0) return `${t('screens.reports.time.ago', 'vor')} ${days} ${t(days > 1 ? 'screens.reports.time.days' : 'screens.reports.time.day', days > 1 ? 'Tagen' : 'Tag')}`;
+    if (hours > 0) return `${t('screens.reports.time.ago', 'vor')} ${hours} ${t(hours > 1 ? 'screens.reports.time.hours' : 'screens.reports.time.hour', hours > 1 ? 'Stunden' : 'Stunde')}`;
+    if (minutes > 0) return `${t('screens.reports.time.ago', 'vor')} ${minutes} ${t(minutes > 1 ? 'screens.reports.time.minutes' : 'screens.reports.time.minute', minutes > 1 ? 'Minuten' : 'Minute')}`;
+    return t('screens.reports.time.justNow', 'gerade eben');
   };
 
   const getReportIcon = (type: ReportType) => {
@@ -80,13 +80,13 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
 
   const getReportTypeLabel = (type: ReportType) => {
     const labels = {
-      battle: 'Kampf',
-      trade: 'Handel',
-      spy: 'Spionage',
-      building: 'Gebäude',
-      event: 'Ereignis',
-      system: 'System'
-    };
+      battle: t('screens.reports.types.battle', 'Kampf'),
+      trade: t('screens.reports.types.trade', 'Handel'),
+      spy: t('screens.reports.types.spy', 'Spionage'),
+      building: t('screens.reports.types.building', 'Gebäude'),
+      event: t('screens.reports.types.event', 'Ereignis'),
+      system: t('screens.reports.types.system', 'System')
+    } as const;
     return labels[type];
   };
 
@@ -172,7 +172,7 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
                     {report.battleData && getBattleResultIcon(report.battleData.result)}
                     {report.important && (
                       <Badge variant="destructive" className="text-micro px-2 py-0.5">
-                        Wichtig
+                        {t('screens.reports.badges.important', 'Wichtig')}
                       </Badge>
                     )}
                   </div>
@@ -258,7 +258,10 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
         <Alert>
           <TrendingUp className="h-4 w-4" />
           <AlertDescription>
-            Du hast {unreadCount} ungelesene Berichte{importantCount > 0 && `, davon ${importantCount} wichtige`}
+            {t('screens.reports.unreadSummary.prefix', 'Du hast')} {unreadCount} {t('screens.reports.unreadSummary.unread', 'ungelesene Berichte')}
+            {importantCount > 0 && <>
+              {`, ${t('screens.reports.unreadSummary.ofWhich', 'davon')} ${importantCount} ${t('screens.reports.unreadSummary.important', 'wichtige')}`}
+            </>}
           </AlertDescription>
         </Alert>
       )}
@@ -292,12 +295,11 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
                   ) : (
                     <div className="text-center py-12">
                       <div className="text-4xl mb-3">📭</div>
-                      <h3 className="text-section font-medium mb-2">Keine Berichte</h3>
+                      <h3 className="text-section font-medium mb-2">{t('screens.reports.empty.title', 'Keine Berichte')}</h3>
                       <p className="text-caption text-muted-foreground">
                         {activeTab === 'unread' 
-                          ? 'Alle Berichte wurden bereits gelesen.'
-                          : 'Keine Berichte in dieser Kategorie vorhanden.'
-                        }
+                          ? t('screens.reports.empty.allRead', 'Alle Berichte wurden bereits gelesen.')
+                          : t('screens.reports.empty.noneInCategory', 'Keine Berichte in dieser Kategorie vorhanden.')}
                       </p>
                     </div>
                   )}
@@ -331,7 +333,7 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Eye className="h-5 w-5" />
-                    Spionage-Bericht: {selectedReport.spyData.target}
+                    {t('screens.reports.spy.title', 'Spionage-Bericht')}: {selectedReport.spyData.target}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -339,14 +341,14 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
                     <Alert>
                       <TrendingDown className="h-4 w-4" />
                       <AlertDescription>
-                        Deine Spione wurden entdeckt!
+                        {t('screens.reports.spy.discovered', 'Deine Spione wurden entdeckt!')}
                       </AlertDescription>
                     </Alert>
                   )}
                   
                   {selectedReport.spyData.resources && (
                     <div>
-                      <h4 className="font-medium mb-2">Ressourcen</h4>
+                      <h4 className="font-medium mb-2">{t('screens.reports.spy.resources', 'Ressourcen')}</h4>
                       <div className="grid grid-cols-2 gap-2">
                         {Object.entries(selectedReport.spyData.resources).map(([resource, amount]) => (
                           <div key={resource} className="flex justify-between p-2 bg-muted/30 rounded-md">
@@ -360,7 +362,7 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
 
                   {selectedReport.spyData.units && (
                     <div>
-                      <h4 className="font-medium mb-2">Einheiten</h4>
+                      <h4 className="font-medium mb-2">{t('screens.reports.spy.units', 'Einheiten')}</h4>
                       <div className="grid grid-cols-2 gap-2">
                         {Object.entries(selectedReport.spyData.units).map(([unit, count]) => (
                           <div key={unit} className="flex justify-between p-2 bg-muted/30 rounded-md">
@@ -374,12 +376,12 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
 
                   {selectedReport.spyData.buildings && (
                     <div>
-                      <h4 className="font-medium mb-2">Gebäude</h4>
+                      <h4 className="font-medium mb-2">{t('screens.reports.spy.buildings', 'Gebäude')}</h4>
                       <div className="grid grid-cols-2 gap-2">
                         {Object.entries(selectedReport.spyData.buildings).map(([building, level]) => (
                           <div key={building} className="flex justify-between p-2 bg-muted/30 rounded-md">
                             <span className="text-caption">{building}</span>
-                            <span className="text-caption font-medium">Stufe {level}</span>
+                            <span className="text-caption font-medium">{t('screens.reports.spy.level', 'Stufe')} {level}</span>
                           </div>
                         ))}
                       </div>
@@ -387,7 +389,7 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
                   )}
 
                   <Button onClick={() => setShowDetailDialog(false)} className="w-full">
-                    Schließen
+                    {t('common.close', 'Schließen')}
                   </Button>
                 </CardContent>
               </Card>
@@ -401,7 +403,7 @@ export function ReportsScreen({ reports = mockReports }: ReportsScreenProps) {
                 {selectedReport.summary}
               </div>
               <Button onClick={() => setShowDetailDialog(false)} className="w-full">
-                Schließen
+                {t('common.close', 'Schließen')}
               </Button>
             </div>
           )}

@@ -5,11 +5,13 @@ import { Separator } from '../ui/Separator';
 import { Settings, BarChart3, Route, Trophy, HelpCircle, Info, Moon, Sun, Volume2, VolumeX, Users } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface MoreScreenProps {}
 
 export function MoreScreen({}: MoreScreenProps) {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
@@ -17,16 +19,16 @@ export function MoreScreen({}: MoreScreenProps) {
     {
       id: 'stats',
       icon: BarChart3,
-      title: 'Spielerstatistiken',
-      description: 'Fortschritt, Ranglisten, Erfolge',
-      badge: 'Neu',
+      title: t('screens.stats.title', 'Spielerstatistiken'),
+      description: t('screens.more.quick.stats.description', 'Fortschritt, Ranglisten, Erfolge'),
+      badge: t('screens.more.badges.new', 'Neu'),
       color: 'primary'
     },
     {
       id: 'achievements',
       icon: Trophy,
-      title: 'Erfolge & Quests',
-      description: 'Belohnungen, Season-Ziele',
+      title: t('screens.achievements.title', 'Erfolge & Quests'),
+      description: t('screens.more.quick.achievements.description', 'Belohnungen, Season-Ziele'),
       badge: '3',
       color: 'warning'
     }
@@ -36,16 +38,16 @@ export function MoreScreen({}: MoreScreenProps) {
     {
       id: 'settings',
       icon: Settings,
-      title: 'Einstellungen',
-      description: 'Benachrichtigungen, Sprache, Account',
+      title: t('screens.settings.title', 'Einstellungen'),
+      description: t('screens.more.settings.description', 'Benachrichtigungen, Sprache, Account'),
       badge: null,
       color: 'muted'
     },
     {
       id: 'help',
       icon: HelpCircle,
-      title: 'Hilfe & Support',
-      description: 'Tutorial, FAQ, Kontakt',
+      title: t('screens.help.title', 'Hilfe & Support'),
+      description: t('screens.more.help.description', 'Tutorial, FAQ, Kontakt'),
       badge: null,
       color: 'muted'
     }
@@ -61,15 +63,15 @@ export function MoreScreen({}: MoreScreenProps) {
       {/* Quick Settings */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-section">Schnelleinstellungen</CardTitle>
+          <CardTitle className="text-section">{t('screens.more.quickSettings.title', 'Schnelleinstellungen')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {darkMode ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
               <div>
-                <div className="font-medium text-body">Dunkles Design</div>
-                <div className="text-caption text-muted-foreground">Augen schonen bei Nacht</div>
+                <div className="font-medium text-body">{t('screens.more.quickSettings.darkMode', 'Dunkles Design')}</div>
+                <div className="text-caption text-muted-foreground">{t('screens.more.quickSettings.darkModeHint', 'Augen schonen bei Nacht')}</div>
               </div>
             </div>
             <Button
@@ -78,7 +80,7 @@ export function MoreScreen({}: MoreScreenProps) {
               onClick={toggleDarkMode}
               className="min-touch"
             >
-              {darkMode ? 'Hell' : 'Dunkel'}
+              {darkMode ? t('common.light', 'Hell') : t('common.dark', 'Dunkel')}
             </Button>
           </div>
           
@@ -88,8 +90,8 @@ export function MoreScreen({}: MoreScreenProps) {
             <div className="flex items-center gap-3">
               {soundEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
               <div>
-                <div className="font-medium text-body">Sound-Effekte</div>
-                <div className="text-caption text-muted-foreground">Bestätigungen und Warnungen</div>
+                <div className="font-medium text-body">{t('screens.more.quickSettings.sound', 'Sound-Effekte')}</div>
+                <div className="text-caption text-muted-foreground">{t('screens.more.quickSettings.soundHint', 'Bestätigungen und Warnungen')}</div>
               </div>
             </div>
             <Button
@@ -98,7 +100,7 @@ export function MoreScreen({}: MoreScreenProps) {
               onClick={() => setSoundEnabled(!soundEnabled)}
               className="min-touch"
             >
-              {soundEnabled ? 'An' : 'Aus'}
+              {soundEnabled ? t('common.on', 'An') : t('common.off', 'Aus')}
             </Button>
           </div>
         </CardContent>
@@ -107,7 +109,7 @@ export function MoreScreen({}: MoreScreenProps) {
       {/* Game Features */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-section">Spiel-Features</CardTitle>
+          <CardTitle className="text-section">{t('screens.more.features.title', 'Spiel-Features')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {quickActions.map((action) => (
@@ -142,7 +144,7 @@ export function MoreScreen({}: MoreScreenProps) {
       {/* Settings & Support */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-section">Einstellungen & Support</CardTitle>
+          <CardTitle className="text-section">{t('screens.more.settingsSupport.title', 'Einstellungen & Support')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {settingsActions.map((action) => (
@@ -169,38 +171,37 @@ export function MoreScreen({}: MoreScreenProps) {
         <CardHeader className="pb-3">
           <CardTitle className="text-section flex items-center gap-2">
             <Info className="h-4 w-4" />
-            Civilization Mobile
+            {t('app.title', 'Tribal Wars')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-2 gap-3 text-caption">
             <div>
-              <span className="text-muted-foreground">Version:</span>
+              <span className="text-muted-foreground">{t('screens.more.info.version', 'Version')}:</span>
               <div className="font-medium">v2.0.0</div>
             </div>
             <div>
-              <span className="text-muted-foreground">Shard:</span>
+              <span className="text-muted-foreground">{t('screens.more.info.shard', 'Shard')}:</span>
               <div className="font-medium">Europa-1</div>
             </div>
             <div>
-              <span className="text-muted-foreground">Online:</span>
-              <div className="font-medium text-success">Verbunden</div>
+              <span className="text-muted-foreground">{t('screens.more.info.online', 'Online')}:</span>
+              <div className="font-medium text-success">{t('screens.more.info.connected', 'Verbunden')}</div>
             </div>
             <div>
-              <span className="text-muted-foreground">Sync:</span>
-              <div className="font-medium text-caption">vor 2min</div>
+              <span className="text-muted-foreground">{t('screens.more.info.sync', 'Sync')}:</span>
+              <div className="font-medium text-caption">{t('screens.more.info.syncAgo', 'vor 2min')}</div>
             </div>
           </div>
           
           <Separator />
           
           <div className="text-caption text-muted-foreground leading-relaxed">
-            Ein mobiles 4X-Light-Strategiespiel im Stil von Tribal Wars/Civilization. 
-            Baue deine Stadt auf, trainiere Armeen und erobere Provinzen in asynchronen PvP-Kämpfen.
+            {t('screens.more.info.description', 'Ein mobiles 4X-Light-Strategiespiel im Stil von Tribal Wars/Civilization. Baue deine Stadt auf, trainiere Armeen und erobere Provinzen in asynchronen PvP-Kämpfen.')}
           </div>
           
           <div className="text-micro text-muted-foreground">
-            © 2025 Civilization Mobile Team. Alle Rechte vorbehalten.
+            {t('screens.more.info.copyright', '© 2025 Civilization Mobile Team. Alle Rechte vorbehalten.')}
           </div>
         </CardContent>
       </Card>

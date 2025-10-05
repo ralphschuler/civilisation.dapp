@@ -81,7 +81,7 @@ export function VillageScreen({
       {activeUpgrades.length > 0 && (
         <Card className="mb-4">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base">🚧 Aktive Bauarbeiten</CardTitle>
+            <CardTitle className="text-base">🚧 {t('screens.village.active', 'Aktive Bauarbeiten')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {activeUpgrades.map(({ buildingId, building }) => {
@@ -95,12 +95,7 @@ export function VillageScreen({
                 <div key={buildingId} className="flex items-center justify-between p-2 bg-muted rounded-lg">
                   <div className="flex-1">
                     <div className="font-medium text-sm">
-                      {buildingId === 'headquarters' ? 'Hauptgebäude' :
-                       buildingId === 'barracks' ? 'Kaserne' :
-                       buildingId === 'timberCamp' ? 'Holzfäller' :
-                       buildingId === 'clayPit' ? 'Lehmgrube' :
-                       buildingId === 'ironMine' ? 'Eisenmine' :
-                       buildingId}
+                      {t(`screens.village.buildings.${buildingId}`, buildingId)}
                     </div>
                     <div className="text-xs text-muted-foreground">
                       {t('villageInfo.level', 'Level')} {building.level} → {building.upgrading!.targetLevel}

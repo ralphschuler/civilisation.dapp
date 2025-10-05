@@ -4,6 +4,7 @@ import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Package, TrendingUp, Clock } from 'lucide-react';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface ResourcesScreenProps {
   resources: Resources;
@@ -22,6 +23,7 @@ export function ResourcesScreen({
   storageCapacity,
   onCollectResource
 }: ResourcesScreenProps) {
+  const { t } = useI18n();
   const formatNumber = (num: number) => {
     if (num >= 1000000) {
       return `${(num / 1000000).toFixed(1)}M`;
@@ -48,7 +50,7 @@ export function ResourcesScreen({
   const resourceData = [
     {
       key: 'wood',
-      name: 'Holz',
+      name: t('screens.resources.names.wood', 'Holz'),
       icon: '🪵',
       amount: resources.wood,
       uncollected: uncollectedResources.wood,
@@ -57,7 +59,7 @@ export function ResourcesScreen({
     },
     {
       key: 'clay',
-      name: 'Lehm',
+      name: t('screens.resources.names.clay', 'Lehm'),
       icon: '🧱',
       amount: resources.clay,
       uncollected: uncollectedResources.clay,
@@ -66,7 +68,7 @@ export function ResourcesScreen({
     },
     {
       key: 'iron',
-      name: 'Eisen',
+      name: t('screens.resources.names.iron', 'Eisen'),
       icon: '⚔️',
       amount: resources.iron,
       uncollected: uncollectedResources.iron,
@@ -75,7 +77,7 @@ export function ResourcesScreen({
     },
     {
       key: 'coal',
-      name: 'Kohle',
+      name: t('screens.resources.names.coal', 'Kohle'),
       icon: '⚫',
       amount: resources.coal,
       uncollected: uncollectedResources.coal,
@@ -84,7 +86,7 @@ export function ResourcesScreen({
     },
     {
       key: 'wheat',
-      name: 'Weizen',
+      name: t('screens.resources.names.wheat', 'Weizen'),
       icon: '🌾',
       amount: resources.wheat,
       uncollected: uncollectedResources.wheat,
@@ -93,7 +95,7 @@ export function ResourcesScreen({
     },
     {
       key: 'bread',
-      name: 'Brot',
+      name: t('screens.resources.names.bread', 'Brot'),
       icon: '🍞',
       amount: resources.bread,
       uncollected: uncollectedResources.bread,
@@ -102,7 +104,7 @@ export function ResourcesScreen({
     },
     {
       key: 'meat',
-      name: 'Fleisch',
+      name: t('screens.resources.names.meat', 'Fleisch'),
       icon: '🥩',
       amount: resources.meat,
       uncollected: uncollectedResources.meat,
@@ -111,7 +113,7 @@ export function ResourcesScreen({
     },
     {
       key: 'gold',
-      name: 'Gold',
+      name: t('screens.resources.names.gold', 'Gold'),
       icon: '🪙',
       amount: resources.gold,
       uncollected: uncollectedResources.gold,
@@ -182,7 +184,7 @@ export function ResourcesScreen({
                       variant={collectableAmount === 0 ? "secondary" : "default"}
                     >
                       <Package className="w-3 h-3 mr-1" />
-                      {collectableAmount === 0 ? 'Lager voll' : `+${formatNumber(collectableAmount)}`}
+                      {collectableAmount === 0 ? t('screens.resources.storage.full', 'Lager voll') : `+${formatNumber(collectableAmount)}`}
                     </Button>
                   )}
                 </div>
@@ -198,7 +200,7 @@ export function ResourcesScreen({
           <CardContent className="p-3">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-lg">👥</span>
-              <span className="text-caption font-medium">Bevölkerung</span>
+              <span className="text-caption font-medium">{t('common.population', 'Bevölkerung')}</span>
             </div>
             <div className="space-y-1.5">
               <div className="flex items-baseline justify-between">
@@ -225,7 +227,7 @@ export function ResourcesScreen({
           <CardContent className="p-3">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-lg">📦</span>
-              <span className="text-caption font-medium">Lager</span>
+              <span className="text-caption font-medium">{t('screens.resources.storage.title', 'Lager')}</span>
             </div>
             <div className="space-y-1.5">
               <div className="flex items-baseline justify-between">
@@ -233,11 +235,11 @@ export function ResourcesScreen({
                   {formatNumber(storageCapacity)}
                 </span>
                 <span className="text-micro text-muted-foreground">
-                  Max
+                  {t('screens.resources.storage.max', 'Max')}
                 </span>
               </div>
               <div className="text-micro text-muted-foreground">
-                Ausbau über Lager-Gebäude
+                {t('screens.resources.storage.upgradeHint', 'Ausbau über Lager-Gebäude')}
               </div>
             </div>
           </CardContent>
@@ -254,7 +256,7 @@ export function ResourcesScreen({
               size="sm"
             >
               <Package className="w-4 h-4 mr-2" />
-              Alle sammeln ({Math.floor(getTotalUncollected())} Ressourcen)
+              {t('screens.resources.collectAll', 'Alle sammeln')} ({Math.floor(getTotalUncollected())} {t('screens.resources.resources', 'Ressourcen')})
             </Button>
           </CardContent>
         </Card>
