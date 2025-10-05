@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Badge } from '../ui/badge';
-import { Progress } from '../ui/progress';
+import { Badge } from '../ui/Badge';
+import { Progress } from '../ui/Progress';
 
 interface CountdownTimerProps {
   targetTime: number;

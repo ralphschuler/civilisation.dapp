@@ -1,10 +1,10 @@
 import { Army, Building, Resources } from '../types/game';
 import { UNIT_TYPES, getUnitIcon, getResourceIcon } from '../data/gameData';
-import { Button } from './ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Input } from './ui/input';
-import { Badge } from './ui/badge';
-import { Separator } from './ui/separator';
+import { Button } from './ui/Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/Card';
+import { Input } from './ui/Input';
+import { Badge } from './ui/Badge';
+import { Separator } from './ui/Separator';
 import { useState } from 'react';
 
 interface ArmyPanelProps {
@@ -44,7 +44,7 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
     }
 
     // Check all resource costs
-    for (const [resource, cost] of Object.entries(unit.cost)) {
+    for (const [resource, cost] of Object.entries(unit.trainCost)) {
       const totalCost = cost * quantity;
       if ((resources as any)[resource] < totalCost) {
         return false;
@@ -52,7 +52,7 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
     }
 
     // Check population
-    const populationCost = unit.populationCost * quantity;
+    const populationCost = unit.pop * quantity;
     return (resources.villager + populationCost) <= resources.maxPopulation;
   };
 
@@ -92,7 +92,7 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
                       <div>
                         <div className="font-medium">{unit.name}</div>
                         <div className="text-sm text-muted-foreground">
-                          Angriff: {unit.attack} | Verteidigung: {unit.defense}
+                          Angriff: {unit.attack} | DEF: inf {unit.def.inf} / cav {unit.def.cav} / ranged {unit.def.ranged}
                         </div>
                       </div>
                     </div>
@@ -143,14 +143,14 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
                             <h4 className="font-medium text-lg">{unit.name}</h4>
                             <div className="flex gap-4 text-sm text-muted-foreground">
                               <span>⚔️ {unit.attack}</span>
-                              <span>🛡️ {unit.defense}</span>
+                              <span>🛡️ inf {unit.def.inf}/cav {unit.def.cav}/rng {unit.def.ranged}</span>
                               <span>💨 {unit.speed}</span>
-                              <span>📦 {unit.carryCapacity}</span>
+                              <span>📦 {unit.carry}</span>
                             </div>
                           </div>
                         </div>
                         <Badge variant="outline">
-                          👥 {unit.populationCost}
+                          👥 {unit.pop}
                         </Badge>
                       </div>
                       
@@ -158,7 +158,7 @@ export function ArmyPanel({ army, buildings, resources, onTrainUnit }: ArmyPanel
                       
                       {/* Resource Costs */}
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                        {Object.entries(unit.cost).map(([resource, cost]) => {
+                        {Object.entries(unit.trainCost).map(([resource, cost]) => {
                           const totalCost = cost * quantity;
                           const hasEnough = (resources as any)[resource] >= totalCost;
                           return (

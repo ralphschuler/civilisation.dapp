@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button } from './ui/button';
+import { Button } from './ui/Button';
 
 const NAVIGATION_ITEMS = [
   { id: '/village', icon: '🏛️', label: 'Village' },

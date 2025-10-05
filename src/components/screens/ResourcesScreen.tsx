@@ -1,8 +1,8 @@
 import { Resources, UncollectedResources } from '../../types/game';
 import { calculateResourceProduction } from '../../data/gameData';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/Button';
+import { Badge } from '../ui/Badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Package, TrendingUp, Clock } from 'lucide-react';
 
 interface ResourcesScreenProps {

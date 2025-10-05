@@ -1,6 +1,6 @@
-import { Card, CardContent } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Progress } from '../ui/progress';
+import { Card, CardContent } from '../ui/Card';
+import { Badge } from '../ui/Badge';
+import { Progress } from '../ui/Progress';
 import { getResourceIcon } from '../../data/gameData';
 
 interface ResourceCardProps {

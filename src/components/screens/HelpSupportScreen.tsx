@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Separator } from '../ui/separator';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
+import { Button } from '../ui/Button';
+import { Badge } from '../ui/Badge';
+import { Separator } from '../ui/Separator';
+import { Input } from '../ui/Input';
+import { Textarea } from '../ui/Textarea';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/Accordion';
 import { 
   HelpCircle, 
   MessageCircle, 

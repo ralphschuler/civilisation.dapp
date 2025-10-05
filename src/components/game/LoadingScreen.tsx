@@ -1,6 +1,6 @@
-import { Card, CardContent } from '../ui/card';
-import { Progress } from '../ui/progress';
-import { Skeleton } from '../ui/skeleton';
+import { Card, CardContent } from '../ui/Card';
+import { Progress } from '../ui/Progress';
+import { Skeleton } from '../ui/Skeleton';
 
 interface LoadingScreenProps {
   message?: string;

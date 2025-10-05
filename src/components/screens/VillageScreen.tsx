@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Village, Building } from '../../types/game';
 import { VillageGrid } from '../VillageGrid';
 import { BuildingModal } from '../BuildingModal';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 
 interface VillageScreenProps {
   village: Village;

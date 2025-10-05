@@ -1,9 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Progress } from '../ui/progress';
-import { Separator } from '../ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
+import { Button } from '../ui/Button';
+import { Badge } from '../ui/Badge';
+import { Progress } from '../ui/Progress';
+import { Separator } from '../ui/Separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/Tabs';
 import { Trophy, Target, Zap, Crown, Swords, Shield, TrendingUp, Package, Users, MapPin, Clock, Star, Gift, CheckCircle, Lock, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 

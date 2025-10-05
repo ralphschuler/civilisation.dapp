@@ -1,5 +1,5 @@
 import { useMiniKit } from "@worldcoin/minikit-js/minikit-provider";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 

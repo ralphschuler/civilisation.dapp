@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Building, Resources } from '../types/game';
 import { BUILDING_TYPES, calculateBuildingCost, getBuildingIcon, getResourceIcon } from '../data/gameData';
-import { Button } from './ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from './ui/sheet';
-import { Badge } from './ui/badge';
+import { Button } from './ui/Button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from './ui/Sheet';
+import { Badge } from './ui/Badge';
 
 interface BuildingModalProps {
   building: Building | null;
@@ -23,7 +23,8 @@ export function BuildingModal({ building, resources, isOpen, onClose, onUpgrade 
   const nextLevel = currentLevel + 1;
   const maxLevel = buildingData.maxLevel;
   
-  const upgradeCost = calculateBuildingCost(buildingData, currentLevel);
+  // Calculate correct upgrade cost for the next level
+  const upgradeCost = calculateBuildingCost(building.type as keyof typeof BUILDING_TYPES, nextLevel);
 
   const canUpgrade = nextLevel <= maxLevel && 
     Object.entries(upgradeCost).every(([resource, cost]) => 
@@ -34,7 +35,7 @@ export function BuildingModal({ building, resources, isOpen, onClose, onUpgrade 
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="bottom" className="h-[50vh] rounded-t-lg">
+      <SheetContent side="bottom" className="h-[85vh] rounded-t-lg">
         <SheetHeader className="pb-4">
           <SheetTitle className="flex items-center gap-3">
             <span className="text-3xl">{getBuildingIcon(building.type)}</span>
@@ -54,7 +55,7 @@ export function BuildingModal({ building, resources, isOpen, onClose, onUpgrade 
           </SheetTitle>
         </SheetHeader>
 
-        <div className="space-y-4 overflow-y-auto max-h-[calc(50vh-120px)]">
+        <div className="space-y-4">
           {/* Aktuelle Stufe Info */}
           <div className="bg-muted/50 rounded-lg p-3">
             <h4 className="font-medium mb-2">Aktuelle Stufe</h4>
