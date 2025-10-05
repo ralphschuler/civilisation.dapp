@@ -1,12 +1,5 @@
-import {
-  Routes,
-  Route,
-  Navigate,
-  useNavigate,
-} from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useGameState } from "@/hooks/useGameState";
-import { ResourceHeader } from "@/components/game/ResourceHeader";
-import { MobileNavigation } from "@/components/MobileNavigation";
 import { ErrorBoundary } from "@/components/game/ErrorBoundary";
 import { VillageInfoModal } from "@/components/game/VillageInfoModal";
 import { GameLayout } from "@/components/layout/GameLayout";
@@ -29,13 +22,13 @@ import { MarchPlannerScreen } from "@/components/screens/MarchPlannerScreen";
 import { MarchReportsScreen } from "@/components/screens/MarchReportsScreen";
 import { calculateStorageCapacity } from "@/data/gameData";
 
-import WalletConnectPage from "@/pages/walletConnect";
-import NotFoundPage from "@/pages/notFound";
+import WalletConnectPage from "@/components/screens/walletConnect";
+import NotFoundPage from "@/components/screens/notFound";
 
 function AppContent() {
   const navigate = useNavigate();
   const { authenticated } = useAuthStore();
-  
+
   const {
     gameState,
     upgradeBuilding,
@@ -50,13 +43,9 @@ function AppContent() {
     deleteMarchPreset,
   } = useGameState();
 
-  const {
-    village,
-    selectedBuilding,
-    selectedVillageInfo,
-    playerStats,
-  } = gameState;
-  
+  const { village, selectedBuilding, selectedVillageInfo, playerStats } =
+    gameState;
+
   const storageCapacity = calculateStorageCapacity(
     village.buildings.storage?.level || 1,
   );
@@ -71,7 +60,6 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto">
-
       <Routes>
         <Route path="/" element={<Navigate to="/village" replace />} />
         <Route path="/wallet-connect" element={<WalletConnectPage />} />

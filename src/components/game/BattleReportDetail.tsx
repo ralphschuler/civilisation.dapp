@@ -1,49 +1,71 @@
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Separator } from '../ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Alert, AlertDescription } from '../ui/alert';
-import { 
-  Swords, 
-  Shield, 
-  Target, 
-  TrendingDown, 
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Alert, AlertDescription } from "../ui/alert";
+import {
+  Swords,
+  Shield,
+  Target,
+  TrendingDown,
   Lightbulb,
   Trophy,
   Skull,
-  Minus
-} from 'lucide-react';
-import { BattleResult } from '../../types/reports';
+  Minus,
+} from "lucide-react";
+import { BattleResult } from "../../types/reports";
 
 interface BattleReportDetailProps {
   battleData: BattleResult;
   onClose: () => void;
 }
 
-export function BattleReportDetail({ battleData, onClose }: BattleReportDetailProps) {
-  const { attacker, defender, result, loot, wallDamage, reasons, suggestions, phases } = battleData;
+export function BattleReportDetail({
+  battleData,
+  onClose,
+}: BattleReportDetailProps) {
+  const {
+    attacker,
+    defender,
+    result,
+    loot,
+    wallDamage,
+    reasons,
+    suggestions,
+    phases,
+  } = battleData;
 
   const getResultIcon = () => {
     switch (result) {
-      case 'victory': return <Trophy className="h-5 w-5 text-success" />;
-      case 'defeat': return <Skull className="h-5 w-5 text-destructive" />;
-      default: return <Minus className="h-5 w-5 text-muted-foreground" />;
+      case "victory":
+        return <Trophy className="h-5 w-5 text-success" />;
+      case "defeat":
+        return <Skull className="h-5 w-5 text-destructive" />;
+      default:
+        return <Minus className="h-5 w-5 text-muted-foreground" />;
     }
   };
 
   const getResultColor = () => {
     switch (result) {
-      case 'victory': return 'bg-success/10 border-success/20';
-      case 'defeat': return 'bg-destructive/10 border-destructive/20';
-      default: return 'bg-muted/10 border-border';
+      case "victory":
+        return "bg-success/10 border-success/20";
+      case "defeat":
+        return "bg-destructive/10 border-destructive/20";
+      default:
+        return "bg-muted/10 border-border";
     }
   };
 
-  const renderUnitLosses = (units: Record<string, { sent?: number; lost?: number; defending?: number; }>) => (
+  const renderUnitLosses = (
+    units: Record<string, { sent?: number; lost?: number; defending?: number }>,
+  ) => (
     <div className="grid grid-cols-2 gap-2">
       {Object.entries(units).map(([unit, data]) => (
-        <div key={unit} className="flex justify-between items-center p-2 bg-muted/30 rounded-md">
+        <div
+          key={unit}
+          className="flex justify-between items-center p-2 bg-muted/30 rounded-md"
+        >
           <span className="text-caption">{unit}</span>
           <div className="text-caption text-right">
             {data.sent && <div>Gesendet: {data.sent}</div>}
@@ -57,20 +79,28 @@ export function BattleReportDetail({ battleData, onClose }: BattleReportDetailPr
 
   const renderPhaseStep = (phase: string, data: any, index: number) => (
     <div key={phase} className="flex items-start gap-3">
-      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-caption
-        ${index === 0 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+      <div
+        className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-caption
+        ${index === 0 ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+      >
         {index + 1}
       </div>
       <div className="flex-1 space-y-2">
         <h4 className="text-section font-medium">{phase}</h4>
         {data.attackerLosses && Object.keys(data.attackerLosses).length > 0 && (
           <div className="text-caption text-muted-foreground">
-            Angreifer Verluste: {Object.entries(data.attackerLosses).map(([unit, count]) => `${unit}: ${count}`).join(', ')}
+            Angreifer Verluste:{" "}
+            {Object.entries(data.attackerLosses)
+              .map(([unit, count]) => `${unit}: ${count}`)
+              .join(", ")}
           </div>
         )}
         {data.defenderLosses && Object.keys(data.defenderLosses).length > 0 && (
           <div className="text-caption text-muted-foreground">
-            Verteidiger Verluste: {Object.entries(data.defenderLosses).map(([unit, count]) => `${unit}: ${count}`).join(', ')}
+            Verteidiger Verluste:{" "}
+            {Object.entries(data.defenderLosses)
+              .map(([unit, count]) => `${unit}: ${count}`)
+              .join(", ")}
           </div>
         )}
         {data.wallDamage && (
@@ -89,7 +119,14 @@ export function BattleReportDetail({ battleData, onClose }: BattleReportDetailPr
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
             {getResultIcon()}
-            <span>Kampfergebnis: {result === 'victory' ? 'Sieg' : result === 'defeat' ? 'Niederlage' : 'Unentschieden'}</span>
+            <span>
+              Kampfergebnis:{" "}
+              {result === "victory"
+                ? "Sieg"
+                : result === "defeat"
+                  ? "Niederlage"
+                  : "Unentschieden"}
+            </span>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -158,9 +195,7 @@ export function BattleReportDetail({ battleData, onClose }: BattleReportDetailPr
                 Angreifer Verluste
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              {renderUnitLosses(attacker.units)}
-            </CardContent>
+            <CardContent>{renderUnitLosses(attacker.units)}</CardContent>
           </Card>
 
           <Card>
@@ -170,9 +205,7 @@ export function BattleReportDetail({ battleData, onClose }: BattleReportDetailPr
                 Verteidiger Verluste
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              {renderUnitLosses(defender.units)}
-            </CardContent>
+            <CardContent>{renderUnitLosses(defender.units)}</CardContent>
           </Card>
         </TabsContent>
 
@@ -182,13 +215,13 @@ export function BattleReportDetail({ battleData, onClose }: BattleReportDetailPr
               <CardTitle>Kampfverlauf</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {renderPhaseStep('Fernkampf', phases.ranged, 0)}
+              {renderPhaseStep("Fernkampf", phases.ranged, 0)}
               <Separator />
-              {renderPhaseStep('Sturmangriff', phases.charge, 1)}
+              {renderPhaseStep("Sturmangriff", phases.charge, 1)}
               <Separator />
-              {renderPhaseStep('Nahkampf', phases.melee, 2)}
+              {renderPhaseStep("Nahkampf", phases.melee, 2)}
               <Separator />
-              {renderPhaseStep('Belagerung', phases.siege, 3)}
+              {renderPhaseStep("Belagerung", phases.siege, 3)}
             </CardContent>
           </Card>
         </TabsContent>
@@ -199,7 +232,7 @@ export function BattleReportDetail({ battleData, onClose }: BattleReportDetailPr
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Target className="h-5 w-5" />
-                  Warum {result === 'victory' ? 'gewonnen' : 'verloren'}?
+                  Warum {result === "victory" ? "gewonnen" : "verloren"}?
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -261,7 +294,10 @@ export function BattleReportDetail({ battleData, onClose }: BattleReportDetailPr
               <CardContent>
                 <ul className="space-y-3">
                   {suggestions.map((suggestion, index) => (
-                    <li key={index} className="flex items-start gap-3 p-3 bg-muted/30 rounded-md">
+                    <li
+                      key={index}
+                      className="flex items-start gap-3 p-3 bg-muted/30 rounded-md"
+                    >
                       <Lightbulb className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
                       <span className="text-caption">{suggestion}</span>
                     </li>
