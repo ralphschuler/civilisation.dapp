@@ -4,11 +4,11 @@ Civilisation DApp is a decentralized application (DApp) for a village-building g
 
 ## Features
 
-- **Frontend**: Built with React, Vite, and Zustand for state management.
-- **Custom Hooks**: Includes a `useGameState` hook for managing game logic.
-- **Persistence**: Game progress is saved using Web `localStorage`.
-- **Smart Contracts**: Utilizes OpenZeppelin libraries for secure and upgradeable contracts.
-- **Storybook Integration**: Component-driven development with Storybook.
+- **Frontend**: React + Vite SPA with Zustand stores backed by repository persistence.
+- **Worldchain connectivity**: wagmi + viem for read-only calls, MiniKit `sendTransaction` for writes (gas-sponsored inside the World App WebView).
+- **UX preferences**: Async-persisted Zustand store using IndexedDB keeps theme, tutorial state, and volume per device.
+- **Smart contracts**: OpenZeppelin-powered diamond architecture deployed to Worldchain.
+- **Storybook integration**: Component-driven development with Storybook.
 
 ## Project Structure
 
@@ -45,6 +45,10 @@ To get started with development:
 ## Deployment
 
 The application is designed to be deployed within the World App WebView. Ensure all configurations are set correctly before deployment.
+
+## Documentation
+
+- [Static Worldchain dApp – Architecture & Best Practices](docs/worldchain-architecture.md)
 
 ## Contributing
 

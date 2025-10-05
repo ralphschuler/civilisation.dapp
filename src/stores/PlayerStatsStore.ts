@@ -3,38 +3,34 @@
  * Interacts with repositories for persistence
  */
 
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
-import { PlayerStats } from '@/types/game';
-import { getRepository } from '../repositories/RepositoryFactory';
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
+import { type PlayerStats } from "@/types/game";
+import { getRepository } from "@/lib/repositories/RepositoryFactory";
 
-interface PlayerStatsState {
-  // State
+type PlayerStatsState = {
   stats: PlayerStats | null;
   isLoading: boolean;
   error: string | null;
-
-  // Actions
   loadStats: () => Promise<void>;
   updateStats: (stats: PlayerStats) => Promise<void>;
   incrementBattlesWon: () => Promise<void>;
   incrementBattlesLost: () => Promise<void>;
   incrementBuildingsUpgraded: () => Promise<void>;
   incrementUnitsTrained: (count: number) => Promise<void>;
-  addResourcesGathered: (resources: Partial<PlayerStats['totalResourcesGathered']>) => Promise<void>;
+  addResourcesGathered: (
+    resources: Partial<PlayerStats["totalResourcesGathered"]>,
+  ) => Promise<void>;
   incrementPlaytime: (seconds: number) => void;
   reset: () => void;
-}
+};
 
 export const usePlayerStatsStore = create<PlayerStatsState>()(
   devtools(
     (set, get) => ({
-      // Initial State
       stats: null,
       isLoading: false,
       error: null,
-
-      // Actions
       loadStats: async () => {
         set({ isLoading: true, error: null });
         try {
@@ -42,23 +38,25 @@ export const usePlayerStatsStore = create<PlayerStatsState>()(
           const stats = await repository.playerStats.getStats();
           set({ stats, isLoading: false });
         } catch (error) {
-          set({ 
-            error: error instanceof Error ? error.message : 'Failed to load stats',
-            isLoading: false
+          set({
+            error:
+              error instanceof Error ? error.message : "Failed to load stats",
+            isLoading: false,
           });
         }
       },
-
       updateStats: async (stats: PlayerStats) => {
         try {
           const repository = getRepository();
           await repository.playerStats.updateStats(stats);
           set({ stats });
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'Failed to update stats' });
+          set({
+            error:
+              error instanceof Error ? error.message : "Failed to update stats",
+          });
         }
       },
-
       incrementBattlesWon: async () => {
         try {
           const repository = getRepository();
@@ -66,10 +64,14 @@ export const usePlayerStatsStore = create<PlayerStatsState>()(
           const stats = await repository.playerStats.getStats();
           set({ stats });
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'Failed to increment battles won' });
+          set({
+            error:
+              error instanceof Error
+                ? error.message
+                : "Failed to increment battles won",
+          });
         }
       },
-
       incrementBattlesLost: async () => {
         try {
           const repository = getRepository();
@@ -77,10 +79,14 @@ export const usePlayerStatsStore = create<PlayerStatsState>()(
           const stats = await repository.playerStats.getStats();
           set({ stats });
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'Failed to increment battles lost' });
+          set({
+            error:
+              error instanceof Error
+                ? error.message
+                : "Failed to increment battles lost",
+          });
         }
       },
-
       incrementBuildingsUpgraded: async () => {
         try {
           const repository = getRepository();
@@ -88,10 +94,14 @@ export const usePlayerStatsStore = create<PlayerStatsState>()(
           const stats = await repository.playerStats.getStats();
           set({ stats });
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'Failed to increment buildings upgraded' });
+          set({
+            error:
+              error instanceof Error
+                ? error.message
+                : "Failed to increment buildings upgraded",
+          });
         }
       },
-
       incrementUnitsTrained: async (count: number) => {
         try {
           const repository = getRepository();
@@ -99,37 +109,46 @@ export const usePlayerStatsStore = create<PlayerStatsState>()(
           const stats = await repository.playerStats.getStats();
           set({ stats });
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'Failed to increment units trained' });
+          set({
+            error:
+              error instanceof Error
+                ? error.message
+                : "Failed to increment units trained",
+          });
         }
       },
-
-      addResourcesGathered: async (resources: Partial<PlayerStats['totalResourcesGathered']>) => {
+      addResourcesGathered: async (
+        resources: Partial<PlayerStats["totalResourcesGathered"]>,
+      ) => {
         try {
           const repository = getRepository();
           await repository.playerStats.addResourcesGathered(resources);
           const stats = await repository.playerStats.getStats();
           set({ stats });
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'Failed to add resources gathered' });
+          set({
+            error:
+              error instanceof Error
+                ? error.message
+                : "Failed to add resources gathered",
+          });
         }
       },
-
       incrementPlaytime: (seconds: number) => {
         const { stats } = get();
         if (!stats) return;
 
-        const updatedStats = {
+        const updatedStats: PlayerStats = {
           ...stats,
-          playtime: stats.playtime + seconds
+          playtime: stats.playtime + seconds,
         };
 
-        get().updateStats(updatedStats);
+        void get().updateStats(updatedStats);
       },
-
       reset: () => {
         set({ stats: null, isLoading: false, error: null });
-      }
+      },
     }),
-    { name: 'PlayerStatsStore' }
-  )
+    { name: "PlayerStatsStore" },
+  ),
 );

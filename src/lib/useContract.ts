@@ -1,36 +1,28 @@
-import { useMemo } from "react";
-import { type Abi, createPublicClient, http } from "viem";
-import { worldchain } from "viem/chains";
+import { type Abi} from "viem";
+import { useReadContract } from "wagmi";
 import { MiniKit } from "@worldcoin/minikit-js";
 
 type UseContractProps = {
   address: `0x${string}`;
   abi: Abi;
-  rpcUrl?: string;
 };
 
-export function useContract({ address, abi, rpcUrl }: UseContractProps) {
-  const client = useMemo(
-    () =>
-      createPublicClient({
-        chain: worldchain,
-        transport: http(
-          rpcUrl ?? "https://worldchain-mainnet.g.alchemy.com/public",
-        ),
-      }),
-    [rpcUrl],
-  );
-
+export function useContract({ address, abi }: UseContractProps) {
   async function read<T = unknown>(
     functionName: string,
     args: unknown[] = [],
   ): Promise<T> {
-    return client.readContract({
+    return useReadContract({
       address,
       abi,
       functionName,
       args,
-    }) as Promise<T>;
+      query: {
+        enabled: true,
+        refetchOnWindowFocus: true,
+        staleTime: 15_000
+      }
+    }).data as T;
   }
 
   async function write(

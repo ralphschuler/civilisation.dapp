@@ -1,9 +1,10 @@
 import { ReactNode, useEffect } from 'react';
-import { initializeStores, useGameStore, useVillageStore } from '@/lib/stores';
+import { initializeStores, useGameStore, useVillageStore, usePlayerStatsStore } from '@/stores';
 
 export function StoresProvider({ children }: { children: ReactNode }) {
   const isInitialized = useGameStore((s) => s.isInitialized);
   const village = useVillageStore((s) => s.village);
+  const playerStats = usePlayerStatsStore((s) => s.stats);
 
   useEffect(() => {
     initializeStores().catch((err) => {
@@ -11,7 +12,7 @@ export function StoresProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  if (!isInitialized || !village) {
+  if (!isInitialized || !village || !playerStats) {
     return null;
   }
 

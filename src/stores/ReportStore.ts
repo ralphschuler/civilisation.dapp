@@ -5,18 +5,16 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+
 import { Report } from '@/types/reports';
-import { getRepository } from '../repositories/RepositoryFactory';
+import { getRepository } from '@/lib/repositories/RepositoryFactory';
 
 interface ReportState {
-  // State
   reports: Report[];
   unreadCount: number;
   selectedReport: Report | null;
   isLoading: boolean;
   error: string | null;
-
-  // Actions
   loadReports: () => Promise<void>;
   loadUnreadCount: () => Promise<void>;
   getReport: (reportId: string) => Promise<void>;
@@ -30,40 +28,36 @@ interface ReportState {
 export const useReportStore = create<ReportState>()(
   devtools(
     (set, get) => ({
-      // Initial State
       reports: [],
       unreadCount: 0,
       selectedReport: null,
       isLoading: false,
       error: null,
-
-      // Actions
       loadReports: async () => {
         set({ isLoading: true, error: null });
         try {
           const repository = getRepository();
           const reports = await repository.report.getReports();
           set({ reports, isLoading: false });
-          // Also update unread count
           await get().loadUnreadCount();
         } catch (error) {
-          set({ 
+          set({
             error: error instanceof Error ? error.message : 'Failed to load reports',
-            isLoading: false
+            isLoading: false,
           });
         }
       },
-
       loadUnreadCount: async () => {
         try {
           const repository = getRepository();
           const unreadCount = await repository.report.getUnreadCount();
           set({ unreadCount });
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'Failed to load unread count' });
+          set({
+            error: error instanceof Error ? error.message : 'Failed to load unread count',
+          });
         }
       },
-
       getReport: async (reportId: string) => {
         set({ isLoading: true, error: null });
         try {
@@ -71,75 +65,77 @@ export const useReportStore = create<ReportState>()(
           const report = await repository.report.getReport(reportId);
           set({ selectedReport: report, isLoading: false });
         } catch (error) {
-          set({ 
+          set({
             error: error instanceof Error ? error.message : 'Failed to load report',
-            isLoading: false
+            isLoading: false,
           });
         }
       },
-
       createReport: async (reportData: Omit<Report, 'id'>) => {
         try {
           const repository = getRepository();
           const report = await repository.report.createReport(reportData);
-          set(state => ({ 
+          set((state) => ({
             reports: [report, ...state.reports],
-            unreadCount: state.unreadCount + 1
+            unreadCount: state.unreadCount + (report.read ? 0 : 1),
           }));
           return report;
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'Failed to create report' });
+          set({
+            error: error instanceof Error ? error.message : 'Failed to create report',
+          });
           return null;
         }
       },
-
       markAsRead: async (reportId: string) => {
         try {
           const repository = getRepository();
           await repository.report.markReportAsRead(reportId);
-          set(state => ({
-            reports: state.reports.map(r => 
-              r.id === reportId ? { ...r, read: true } : r
+          set((state) => ({
+            reports: state.reports.map((report) =>
+              report.id === reportId ? { ...report, read: true } : report,
             ),
             unreadCount: Math.max(0, state.unreadCount - 1),
-            selectedReport: state.selectedReport?.id === reportId 
-              ? { ...state.selectedReport, read: true } 
-              : state.selectedReport
+            selectedReport:
+              state.selectedReport?.id === reportId
+                ? { ...state.selectedReport, read: true }
+                : state.selectedReport,
           }));
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'Failed to mark report as read' });
+          set({
+            error: error instanceof Error ? error.message : 'Failed to mark report as read',
+          });
         }
       },
-
       deleteReport: async (reportId: string) => {
         try {
           const repository = getRepository();
-          const report = get().reports.find(r => r.id === reportId);
+          const report = get().reports.find((item) => item.id === reportId);
           await repository.report.deleteReport(reportId);
-          set(state => ({
-            reports: state.reports.filter(r => r.id !== reportId),
+          set((state) => ({
+            reports: state.reports.filter((item) => item.id !== reportId),
             unreadCount: !report?.read ? Math.max(0, state.unreadCount - 1) : state.unreadCount,
-            selectedReport: state.selectedReport?.id === reportId ? null : state.selectedReport
+            selectedReport: state.selectedReport?.id === reportId ? null : state.selectedReport,
           }));
         } catch (error) {
-          set({ error: error instanceof Error ? error.message : 'Failed to delete report' });
+          set({
+            error: error instanceof Error ? error.message : 'Failed to delete report',
+          });
         }
       },
-
       setSelectedReport: (report: Report | null) => {
         set({ selectedReport: report });
       },
-
       reset: () => {
-        set({ 
-          reports: [], 
-          unreadCount: 0, 
-          selectedReport: null, 
-          isLoading: false, 
-          error: null 
+        set({
+          reports: [],
+          unreadCount: 0,
+          selectedReport: null,
+          isLoading: false,
+          error: null,
         });
-      }
+      },
     }),
-    { name: 'ReportStore' }
-  )
+    { name: 'ReportStore' },
+  ),
 );
