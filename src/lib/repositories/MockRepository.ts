@@ -24,7 +24,9 @@ import {
   TechTree,
   Province,
   NeutralCamp,
-  VillageInfo
+  VillageInfo,
+  BuildingId,
+  UnitId,
 } from '@/types/game';
 import { Report } from '@/types/reports';
 
@@ -388,16 +390,26 @@ class MockTechTreeRepository implements ITechTreeRepository {
     this.techTree = { ...techTree };
   }
 
-  async unlockBuilding(buildingId: string): Promise<void> {
-    if (!this.techTree.unlockedBuildings.includes(buildingId as any)) {
-      this.techTree.unlockedBuildings.push(buildingId as any);
+  async unlockBuilding(buildingId: BuildingId): Promise<void> {
+    if (this.techTree.unlockedBuildings.includes(buildingId)) {
+      return;
     }
+
+    this.techTree = {
+      ...this.techTree,
+      unlockedBuildings: [...this.techTree.unlockedBuildings, buildingId],
+    };
   }
 
-  async unlockUnit(unitId: string): Promise<void> {
-    if (!this.techTree.unlockedUnits.includes(unitId as any)) {
-      this.techTree.unlockedUnits.push(unitId as any);
+  async unlockUnit(unitId: UnitId): Promise<void> {
+    if (this.techTree.unlockedUnits.includes(unitId)) {
+      return;
     }
+
+    this.techTree = {
+      ...this.techTree,
+      unlockedUnits: [...this.techTree.unlockedUnits, unitId],
+    };
   }
 
   async upgradeSmithyLine(line: 'inf' | 'cav' | 'ranged' | 'siege', stat: 'attack' | 'defense'): Promise<void> {
@@ -457,7 +469,7 @@ class MockNeutralCampRepository implements INeutralCampRepository {
     this.camps.delete(campId);
   }
 
-  async getCampsInProvince(provinceId: string): Promise<NeutralCamp[]> {
+  async getCampsInProvince(_provinceId: string): Promise<NeutralCamp[]> {
     // In a real implementation, this would filter by provinceId
     return this.getAllCamps();
   }

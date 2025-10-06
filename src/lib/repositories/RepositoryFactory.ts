@@ -59,11 +59,11 @@ class RepositoryFactory {
   private static createRepository(config: RepositoryConfig): IRepository {
     switch (config.type) {
       case 'mock':
-        console.log('🎮 Using Mock Repository (in-memory data)');
+        console.info('🎮 Using Mock Repository (in-memory data)');
         return new MockRepository();
 
       case 'localStorage':
-        console.log('💾 Using LocalStorage Repository');
+        console.info('💾 Using LocalStorage Repository');
         return new LocalStorageRepository();
 
       case 'indexedDB':
