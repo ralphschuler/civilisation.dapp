@@ -22,33 +22,7 @@ import {
   Crown,
 } from "lucide-react";
 import { useI18n, T } from "@/providers/i18n-provider";
-
-interface VillageInfo {
-  id: string;
-  name: string;
-  x: number;
-  y: number;
-  level: number;
-  player: string | null;
-  points: number;
-  population: number;
-  maxPopulation: number;
-  buildings: {
-    [key: string]: number;
-  };
-  army: {
-    spearman: number;
-    soldier: number;
-    archer: number;
-    knight: number;
-    trebuchet: number;
-  };
-  wall: number;
-  lastActivity: string;
-  alliance?: string;
-  playerRank?: number;
-  defenseBonus: number;
-}
+import type { VillageInfo } from "@/types/game";
 
 interface VillageInfoModalProps {
   isOpen: boolean;
@@ -99,7 +73,7 @@ export function VillageInfoModal({
   const getTravelTime = (distance: number, unitType: string) => {
     const speeds: { [key: string]: number } = {
       spearman: 18,
-      soldier: 22,
+      swordsman: 22,
       archer: 18,
       knight: 10,
       trebuchet: 30,
@@ -452,7 +426,7 @@ export function VillageInfoModal({
                       icon: "🛡️",
                     },
                     {
-                      type: "soldier",
+                      type: "swordsman",
                       name: <T k="units.swordsman" f="Swordsman" />,
                       icon: "⚔️",
                     },

@@ -1,14 +1,17 @@
 import { Outlet } from "react-router-dom";
-import { useGameState } from "@/hooks/useGameState";
 import { GameHeader } from "@/components/game/GameHeader";
 import { MobileNavigation } from "@/components/MobileNavigation";
 import { useNavigate } from "react-router-dom";
 import { calculateStorageCapacity } from "@/data/gameData";
+import { useVillageStore } from "@/stores";
 
 export function GameLayout() {
   const navigate = useNavigate();
-  const { gameState } = useGameState();
-  const { village } = gameState;
+  const village = useVillageStore((state) => state.village);
+
+  if (!village) {
+    return null;
+  }
 
   const storageCapacity = calculateStorageCapacity(
     village.buildings.storage?.level || 1,

@@ -29,7 +29,7 @@ import { useI18n } from '@/providers/i18n-provider';
 import { BattleReportDetail } from '../game/BattleReportDetail';
 import { Report, ReportType } from '../../types/reports';
 import { mockReports } from '../../data/mockReports';
-import { useReportStore } from '@/lib/stores';
+import { useReportStore } from '@/stores';
 
 interface ReportsScreenProps {
   reports?: Report[]; // optional legacy prop; store data is preferred

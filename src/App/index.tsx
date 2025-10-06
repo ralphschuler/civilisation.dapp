@@ -1,5 +1,5 @@
+import { useCallback, useMemo } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { useGameState } from "@/hooks/useGameState";
 import { ErrorBoundary } from "@/components/game/ErrorBoundary";
 import { VillageInfoModal } from "@/components/game/VillageInfoModal";
 import { GameLayout } from "@/components/layout/GameLayout";
@@ -24,39 +24,127 @@ import { calculateStorageCapacity } from "@/data/gameData";
 
 import { WalletConnectScreen } from "@/components/screens/WalletConnectScreen";
 import { NotFoundScreen } from "@/components/screens/NotFoundScreen";
+import type { March, MarchPreset } from "@/types/game";
+import {
+  useGameStore,
+  useVillageStore,
+  useMarchStore,
+  usePlayerStatsStore,
+} from "@/stores";
 
 function AppContent() {
   const navigate = useNavigate();
   const { authenticated } = useAuthStore();
+  const village = useVillageStore((state) => state.village);
+  const upgradeBuilding = useVillageStore((state) => state.upgradeBuilding);
+  const collectResources = useVillageStore((state) => state.collectResources);
 
-  const {
-    gameState,
-    upgradeBuilding,
-    trainUnit,
-    setSelectedBuilding,
-    collectResources,
-    getTotalUncollectedResources,
-    setSelectedVillageInfo,
-    createMarch,
-    cancelMarch,
-    createMarchPreset,
-    deleteMarchPreset,
-  } = useGameState();
-
-  const { village, selectedBuilding, selectedVillageInfo, playerStats } =
-    gameState;
-
-  const storageCapacity = calculateStorageCapacity(
-    village.buildings.storage?.level || 1,
+  const selectedBuilding = useGameStore((state) => state.selectedBuilding);
+  const setSelectedBuilding = useGameStore((state) => state.setSelectedBuilding);
+  const selectedVillageInfo = useGameStore(
+    (state) => state.selectedVillageInfo,
+  );
+  const setSelectedVillageInfo = useGameStore(
+    (state) => state.setSelectedVillageInfo,
   );
 
-  const handleVillageSelect = (villageId: string) => {
-    if (villageId === village.id) {
-      // Navigate to village when selecting own village
-      navigate("/village");
-    }
-    // Handle other village selection for attacks/spying
-  };
+  const marches = useMarchStore((state) => state.marches);
+  const marchPresets = useMarchStore((state) => state.marchPresets);
+  const createMarch = useMarchStore((state) => state.createMarch);
+  const cancelMarch = useMarchStore((state) => state.cancelMarch);
+  const createMarchPreset = useMarchStore((state) => state.createMarchPreset);
+  const deleteMarchPreset = useMarchStore((state) => state.deleteMarchPreset);
+
+  const playerStats = usePlayerStatsStore((state) => state.stats);
+
+  const storageCapacity = useMemo(() => {
+    if (!village) return 0;
+    return calculateStorageCapacity(village.buildings.storage?.level || 1);
+  }, [village]);
+
+  const battleReports = useMemo(
+    () =>
+      marches
+        .filter((march) => march.battleReport)
+        .map((march) => march.battleReport!)
+        .sort((a, b) => b.timestamp - a.timestamp),
+    [marches],
+  );
+
+  const handleVillageSelect = useCallback(
+    (villageId: string) => {
+      if (!village) return;
+
+      if (villageId === village.id) {
+        navigate("/village");
+      }
+    },
+    [village, navigate],
+  );
+
+  const handleTrainUnit = useCallback((unitId: string, quantity: number) => {
+    console.warn("trainUnit not yet implemented", { unitId, quantity });
+  }, []);
+
+  const handleUpgradeBuilding = useCallback(
+    (buildingId: string) => {
+      if (!village) return;
+      const building = village.buildings[buildingId];
+      if (!building) return;
+
+      void upgradeBuilding(buildingId, {
+        ...building,
+        upgrading: {
+          targetLevel: building.level + 1,
+          completionTime: Date.now() + 300000,
+        },
+      });
+    },
+    [upgradeBuilding, village],
+  );
+
+  const handleCollectResources = useCallback(
+    (resourceType?: Parameters<typeof collectResources>[0]) => {
+      void collectResources(resourceType);
+    },
+    [collectResources],
+  );
+
+  const handleCreateMarch = useCallback(
+    (march: Omit<March, "id">) => {
+      void createMarch(march);
+    },
+    [createMarch],
+  );
+
+  const handleCancelMarch = useCallback(
+    (marchId: string) => {
+      void cancelMarch(marchId);
+    },
+    [cancelMarch],
+  );
+
+  const handleCreatePreset = useCallback(
+    (preset: Omit<MarchPreset, "id">) => {
+      void createMarchPreset(preset);
+    },
+    [createMarchPreset],
+  );
+
+  const handleDeletePreset = useCallback(
+    (presetId: string) => {
+      void deleteMarchPreset(presetId);
+    },
+    [deleteMarchPreset],
+  );
+
+  const handleBackToMore = useCallback(() => {
+    navigate("/more");
+  }, [navigate]);
+
+  if (!village || !playerStats) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto">
@@ -81,7 +169,7 @@ function AppContent() {
                   village={village}
                   selectedBuilding={selectedBuilding}
                   onBuildingSelect={setSelectedBuilding}
-                  onUpgradeBuilding={upgradeBuilding}
+                  onUpgradeBuilding={handleUpgradeBuilding}
                 />
               }
             />
@@ -90,14 +178,14 @@ function AppContent() {
               element={
                 <WorldMapScreen
                   village={village}
-                  marches={gameState.marches}
-                  marchPresets={gameState.marchPresets}
+                  marches={marches}
+                  marchPresets={marchPresets}
                   onVillageSelect={handleVillageSelect}
                   onVillageInfo={setSelectedVillageInfo}
-                  onCreateMarch={createMarch}
-                  onCancelMarch={cancelMarch}
-                  onCreatePreset={createMarchPreset}
-                  onDeletePreset={deleteMarchPreset}
+                  onCreateMarch={handleCreateMarch}
+                  onCancelMarch={handleCancelMarch}
+                  onCreatePreset={handleCreatePreset}
+                  onDeletePreset={handleDeletePreset}
                 />
               }
             />
@@ -107,7 +195,7 @@ function AppContent() {
                 <UnitsScreen
                   village={village}
                   resources={village.resources}
-                  onTrainUnit={trainUnit}
+                  onTrainUnit={handleTrainUnit}
                 />
               }
             />
@@ -119,7 +207,7 @@ function AppContent() {
                   uncollectedResources={village.uncollectedResources}
                   buildingLevels={village.buildings}
                   storageCapacity={storageCapacity}
-                  onCollectResource={collectResources}
+                  onCollectResource={handleCollectResources}
                 />
               }
             />
@@ -135,12 +223,40 @@ function AppContent() {
                 />
               }
             />
-            <Route path="/achievements" element={<AchievementsScreen />} />
+            <Route
+              path="/achievements"
+              element={<AchievementsScreen onBack={handleBackToMore} />}
+            />
             <Route path="/settings" element={<SettingsScreen />} />
             <Route path="/help" element={<HelpSupportScreen />} />
-            <Route path="/trade" element={<TradeScreen />} />
-            <Route path="/march-planner" element={<MarchPlannerScreen />} />
-            <Route path="/march-reports" element={<MarchReportsScreen />} />
+            <Route
+              path="/trade"
+              element={<TradeScreen resources={village.resources} />}
+            />
+            <Route
+              path="/march-planner"
+              element={
+                <MarchPlannerScreen
+                  village={village}
+                  marches={marches}
+                  marchPresets={marchPresets}
+                  onCreateMarch={handleCreateMarch}
+                  onCancelMarch={handleCancelMarch}
+                  onCreatePreset={handleCreatePreset}
+                  onDeletePreset={handleDeletePreset}
+                  selectedTarget={selectedVillageInfo}
+                />
+              }
+            />
+            <Route
+              path="/march-reports"
+              element={
+                <MarchReportsScreen
+                  marches={marches}
+                  battleReports={battleReports}
+                />
+              }
+            />
           </Route>
         </Route>
 

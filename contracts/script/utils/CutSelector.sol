@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-import {IDiamondCut} from "../../src/diamond/core/DiamondCut/IDiamondCut.sol";
-import {FacetCut, FacetCutAction} from "../../src/diamond/core/DiamondCut/DiamondCutLib.sol";
+import {IDiamondCut} from "../../src/core/interfaces/IDiamondCut.sol";
+import {FacetCut, FacetCutAction} from "../../src/core/protocols/DiamondCut/DiamondCutLib.sol";
 import {SelectorFetcher} from "./SelectorFetcher.sol";
 
 /// @title CutSelector
