@@ -1,52 +1,31 @@
-name: Deploy App and Contracts
+name: Deploy Contracts
 
 on:
-  push:
-    branches: ['main']
+  release:
+    types: [published, released]
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'GitHub environment to deploy the contracts to'
+        required: true
+        type: choice
+        options:
+          - testnet
+          - mainnet
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
   deployments: write
+  id-token: write
 
 concurrency:
-  group: 'deploy-app-and-contracts'
+  group: deploy-contracts-${{ github.event_name == 'workflow_dispatch' && inputs.environment || github.event_name == 'release' && github.event.release.prerelease && 'testnet' || 'mainnet' }}
   cancel-in-progress: false
 
 jobs:
-  build-app:
+  deploy:
     runs-on: ubuntu-latest
-    environment: testnet
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v5
-        with:
-          submodules: recursive
-
-      - name: Setup Bun.js
-        uses: oven-sh/setup-bun@v2
-
-      - name: Install Dependencies
-        run: bun install
-
-      - name: Build App
-        env:
-          VITE_PUBLIC_APP_ID: ${{ vars.WORLD_APP_ID }}
-          VITE_PUBLIC_CONTRACT_ADDRESS: ${{ vars.WORLD_CONTRACT_ADDRESS }}
-        run: bun run build
-
-      - name: Upload Build Artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: ./dist
-
-  deploy-contracts:
-    runs-on: ubuntu-latest
-    environment: testnet
-    needs: build-app
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || github.event_name == 'release' && github.event.release.prerelease && 'testnet' || 'mainnet' }}
 
     steps:
       - name: Checkout Repository
@@ -104,7 +83,7 @@ jobs:
       - name: Save Diamond Address as GitHub Environment variable
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          ENVIRONMENT: testnet
+          ENVIRONMENT: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || github.event_name == 'release' && github.event.release.prerelease && 'testnet' || 'mainnet' }}
           DIAMOND_ADDR: ${{ steps.extract.outputs.diamond_address }}
         run: |
           set -e
