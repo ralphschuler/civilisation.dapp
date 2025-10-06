@@ -1,0 +1,52 @@
+name: Deploy App
+
+on:
+  release:
+    types: [published, released]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'GitHub environment to deploy the app to'
+        required: true
+        type: choice
+        options:
+          - testnet
+          - mainnet
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  deployments: write
+
+concurrency:
+  group: deploy-app-${{ github.event_name == 'workflow_dispatch' && inputs.environment || github.event_name == 'release' && github.event.release.prerelease && 'testnet' || 'mainnet' }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || github.event_name == 'release' && github.event.release.prerelease && 'testnet' || 'mainnet' }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Setup Bun.js
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Build App
+        env:
+          VITE_PUBLIC_APP_ID: ${{ vars.WORLD_APP_ID }}
+          VITE_PUBLIC_CONTRACT_ADDRESS: ${{ vars.WORLD_CONTRACT_ADDRESS }}
+        run: bun run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist
