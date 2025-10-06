@@ -50,7 +50,15 @@ The application is designed to be deployed within the World App WebView. Ensure 
 
 ## Documentation
 
-- [Static Worldchain dApp – Architecture & Best Practices](docs/worldchain-architecture.md)
+The complete documentation set lives in the [`docs/`](docs/index.md) directory and is mirrored to the GitHub wiki. Start with the
+[documentation index](docs/index.md) and explore topic-specific guides:
+
+- [Project overview](docs/overview.md)
+- [Getting started](docs/getting-started.md)
+- [Frontend architecture](docs/frontend.md)
+- [Smart contracts](docs/smart-contracts.md)
+- [Worldchain architecture & best practices](docs/worldchain-architecture.md)
+- [CI/CD workflows](docs/workflows.md)
 
 ## Contributing
 
