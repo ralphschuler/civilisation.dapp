@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.30;
 
-import "../core/protocols/ERC173/_ERC173.sol";
+import {IERC165} from "../core/interfaces/IERC165.sol";
 
 /**
  * @dev ERC1155标准的接口合约，实现了EIP1155的功能

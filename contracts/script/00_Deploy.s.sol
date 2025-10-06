@@ -10,6 +10,7 @@ import {IDiamondCut} from "../src/core/interfaces/IDiamondCut.sol";
 import {DiamondInit} from "../src/core/DiamondInit.sol";
 import {IDiamondInit} from "../src/core/interfaces/IDiamondInit.sol";
 import {StringUtils} from "./utils/StringUtils.sol";
+import {IWorldID} from "../src/interfaces/IWorldID.sol";
 
 // Always required
 import {DiamondCutFacet} from "../src/core/protocols/DiamondCut/DiamondCut.sol";
@@ -55,10 +56,35 @@ contract Deploy is Script, CutSelector {
             IDiamondInit.init.selector,
             deployer
         );
-        DiamondArgs memory args = DiamondArgs(
-            address(diamondInit),
-            initCalldata
-        );
+        IWorldID worldId = IWorldID(address(0));
+        string memory worldIdAppId;
+        string memory worldIdActionId;
+        uint256 worldIdGroupId;
+
+        if (vm.envExists("WORLD_ID_ROUTER")) {
+            worldId = IWorldID(vm.envAddress("WORLD_ID_ROUTER"));
+        }
+
+        if (vm.envExists("WORLD_ID_APP_ID")) {
+            worldIdAppId = vm.envString("WORLD_ID_APP_ID");
+        }
+
+        if (vm.envExists("WORLD_ID_ACTION_ID")) {
+            worldIdActionId = vm.envString("WORLD_ID_ACTION_ID");
+        }
+
+        if (vm.envExists("WORLD_ID_GROUP_ID")) {
+            worldIdGroupId = vm.envUint("WORLD_ID_GROUP_ID");
+        }
+
+        DiamondArgs memory args = DiamondArgs({
+            init: address(diamondInit),
+            initCalldata: initCalldata,
+            worldId: worldId,
+            worldIdAppId: worldIdAppId,
+            worldIdActionId: worldIdActionId,
+            worldIdGroupId: worldIdGroupId
+        });
 
         // --- 4. Deploy Diamond with CutFacet ---
         Diamond diamond = new Diamond(initialCut, args);

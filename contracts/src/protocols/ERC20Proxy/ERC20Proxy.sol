@@ -60,11 +60,4 @@ contract ERC20Proxy is ERC173, IERC20 {
         return true;
     }
 
-    // --- Events (ERC20) ---
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 value
-    );
 }

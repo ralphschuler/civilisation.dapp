@@ -3,11 +3,10 @@ pragma solidity ^0.8.30;
 
 import {ERC173} from "../../core/protocols/ERC173/ERC173.sol";
 import {ERC1155Lib} from "./ERC1155Lib.sol";
-import {IERC1155} from "../../interfaces/IERC1155.sol";
 
 /// @title ERC1155Facet
 /// @notice ERC1155 Facet for game resources: GOLD, IRON, STONE, WOOD
-contract ERC1155Facet is ERC173, ERC1155 {
+contract ERC1155Facet is ERC173 {
     // --- Metadata ---
     function uri(uint256 id) external pure returns (string memory) {
         return "ipfs://someJSON.json";
@@ -34,7 +33,7 @@ contract ERC1155Facet is ERC173, ERC1155 {
     }
 
     function setApprovalForAll(address operator, bool approved) external {
-        ResourcesLib.s().operatorApprovals[msg.sender][operator] = approved;
+        ERC1155Lib.s().operatorApprovals[msg.sender][operator] = approved;
         emit ApprovalForAll(msg.sender, operator, approved);
     }
 

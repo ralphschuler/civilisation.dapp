@@ -1,0 +1,62 @@
+# .github/dependabot.yml
+version: 2
+updates:
+  # ─── Bun / npm Dependencies ───────────────────────────────
+  - package-ecosystem: "bun"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    labels:
+      - "dependencies"
+      - "bun"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    allow:
+      - dependency-type: "all"
+    versioning-strategy: increase
+    groups:
+      bun-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # ─── GitHub Actions ──────────────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:30"
+    labels:
+      - "ci"
+      - "dependencies"
+    commit-message:
+      prefix: "ci(deps)"
+      include: "scope"
+    groups:
+      gh-actions:
+        patterns:
+          - "*"
+
+  # ─── Foundry / Forge (Solidity) ──────────────────────────
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:00"
+    labels:
+      - "solidity"
+      - "dependencies"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      forge-deps:
+        patterns:
+          - "*"
