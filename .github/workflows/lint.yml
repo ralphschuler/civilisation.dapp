@@ -30,7 +30,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Bun.js
         uses: oven-sh/setup-bun@v2
@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Foundry
         uses: foundry-rs/foundry-toolchain@v1

@@ -29,12 +29,12 @@ jobs:
             exit 1
           fi
       - name: Checkout Failing Ref
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ env.FAILED_HEAD_SHA }}
           fetch-depth: 0
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: 'npm'
@@ -55,7 +55,7 @@ jobs:
         run: npm test --silent
       - name: Create pull request with fixes
         if: success()
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           commit-message: "fix(ci): auto-fix failing tests via Codex"
           branch: codex/auto-fix-${{ github.event.workflow_run.run_id }}
