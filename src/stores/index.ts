@@ -11,56 +11,67 @@ export { useTechTreeStore } from './TechTreeStore';
 export { useAuthStore } from './authStore';
 export { useUXStore } from './uxStore';
 
+async function loadStores() {
+  const [
+    { useGameStore },
+    { useVillageStore },
+    { useMarchStore },
+    { useReportStore },
+    { usePlayerStatsStore },
+    { useTechTreeStore },
+  ] = await Promise.all([
+    import('./gameStore'),
+    import('./VillageStore'),
+    import('./MarchStore'),
+    import('./ReportStore'),
+    import('./PlayerStatsStore'),
+    import('./TechTreeStore'),
+  ]);
+
+  return {
+    useGameStore,
+    useVillageStore,
+    useMarchStore,
+    useReportStore,
+    usePlayerStatsStore,
+    useTechTreeStore,
+  };
+}
+
 /**
  * Initialize all stores
  * Call this on app startup
  */
-export async function initializeStores() {
-  const { useGameStore } = await import('./gameStore');
-  const { useVillageStore } = await import('./VillageStore');
-  const { useMarchStore } = await import('./MarchStore');
-  const { useReportStore } = await import('./ReportStore');
-  const { usePlayerStatsStore } = await import('./PlayerStatsStore');
-  const { useTechTreeStore } = await import('./TechTreeStore');
+export async function initializeStores(): Promise<void> {
+  const stores = await loadStores();
 
-  await useGameStore.getState().initialize();
+  await stores.useGameStore.getState().initialize();
 
   await Promise.all([
-    useVillageStore.getState().loadVillage('village1'),
-    useMarchStore.getState().loadMarches(),
-    useMarchStore.getState().loadMarchPresets(),
-    useReportStore.getState().loadReports(),
-    usePlayerStatsStore.getState().loadStats(),
-    useTechTreeStore.getState().loadTechTree(),
+    stores.useVillageStore.getState().loadVillage('village1'),
+    stores.useMarchStore.getState().loadMarches(),
+    stores.useMarchStore.getState().loadMarchPresets(),
+    stores.useReportStore.getState().loadReports(),
+    stores.usePlayerStatsStore.getState().loadStats(),
+    stores.useTechTreeStore.getState().loadTechTree(),
   ]);
 
-  console.log('✅ All stores initialized');
+  console.info('✅ All stores initialized');
 }
 
 /**
  * Reset all stores
  * Useful for testing or logout
  */
-export function resetAllStores() {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { useGameStore } = require('./gameStore');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { useVillageStore } = require('./VillageStore');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { useMarchStore } = require('./MarchStore');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { useReportStore } = require('./ReportStore');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { usePlayerStatsStore } = require('./PlayerStatsStore');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { useTechTreeStore } = require('./TechTreeStore');
+export async function resetAllStores(): Promise<void> {
+  const stores = await loadStores();
 
-  useGameStore.getState().reset();
-  useVillageStore.getState().reset();
-  useMarchStore.getState().reset();
-  useReportStore.getState().reset();
-  usePlayerStatsStore.getState().reset();
-  useTechTreeStore.getState().reset();
+  stores.useGameStore.getState().reset();
+  stores.useVillageStore.getState().reset();
+  stores.useMarchStore.getState().reset();
+  stores.useReportStore.getState().reset();
+  stores.usePlayerStatsStore.getState().reset();
+  stores.useTechTreeStore.getState().reset();
 
-  console.log('🔄 All stores reset');
+  console.info('🔄 All stores reset');
 }

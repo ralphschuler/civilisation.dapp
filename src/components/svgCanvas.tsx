@@ -1,24 +1,36 @@
-import React, { useId } from "react";
+import { useId, useMemo, type PropsWithChildren, type SVGProps } from 'react';
 
-const SvgCanvas = (props: React.PropsWithChildren<{}>) => {
+type SvgCanvasProps = PropsWithChildren<SVGProps<SVGSVGElement>>;
+
+const DEFAULT_VIEWBOX = '-400 -300 800 600';
+
+const SvgCanvas = (props: SvgCanvasProps) => {
+  const { children, viewBox: viewBoxProp, preserveAspectRatio = 'xMidYMid meet', role = 'img', 'aria-label': ariaLabelProp, ...rest } = props;
   const id = useId();
-  const viewBox = [
-    window.innerWidth / -2,
-    100 - window.innerHeight,
-    window.innerWidth,
-    window.innerHeight,
-  ];
+
+  const computedViewBox = useMemo(() => {
+    if (typeof window === 'undefined') {
+      return DEFAULT_VIEWBOX;
+    }
+
+    const { innerHeight, innerWidth } = window;
+    return `${innerWidth / -2} ${100 - innerHeight} ${innerWidth} ${innerHeight}`;
+  }, []);
+
+  const ariaLabel = ariaLabelProp ?? 'SVG Canvas';
+  const viewBox = viewBoxProp ?? computedViewBox;
 
   return (
     <svg
-      role="img"
-      aria-label="SVG Canvas"
+      {...rest}
       id={id}
-      preserveAspectRatio="xMidYMid meet"
-      viewBox={viewBox.join(" ")}
+      role={role}
+      aria-label={ariaLabel}
+      preserveAspectRatio={preserveAspectRatio}
+      viewBox={viewBox}
     >
       <title>SVG Canvas</title>
-      {props.children}
+      {children}
     </svg>
   );
 };

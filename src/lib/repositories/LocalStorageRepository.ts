@@ -24,7 +24,9 @@ import {
   TechTree,
   Province,
   NeutralCamp,
-  VillageInfo
+  VillageInfo,
+  BuildingId,
+  UnitId,
 } from '@/types/game';
 import { Report } from '@/types/reports';
 
@@ -224,7 +226,7 @@ class LocalStorageGameStateRepository implements IGameStateRepository {
  * March Repository Implementation
  */
 class LocalStorageMarchRepository implements IMarchRepository {
-  private getMarches(): Map<string, March> {
+  private readMarches(): Map<string, March> {
     const marches = getFromStorage<Record<string, March>>(STORAGE_KEYS.MARCHES, {});
     return new Map(Object.entries(marches));
   }
@@ -235,17 +237,17 @@ class LocalStorageMarchRepository implements IMarchRepository {
   }
 
   async getMarches(): Promise<March[]> {
-    const marches = this.getMarches();
+    const marches = this.readMarches();
     return Array.from(marches.values());
   }
 
   async getMarch(marchId: string): Promise<March | null> {
-    const marches = this.getMarches();
+    const marches = this.readMarches();
     return marches.get(marchId) || null;
   }
 
   async createMarch(march: Omit<March, 'id'>): Promise<March> {
-    const marches = this.getMarches();
+    const marches = this.readMarches();
     const id = `march_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const newMarch = { ...march, id };
     marches.set(id, newMarch);
@@ -254,13 +256,13 @@ class LocalStorageMarchRepository implements IMarchRepository {
   }
 
   async cancelMarch(marchId: string): Promise<void> {
-    const marches = this.getMarches();
+    const marches = this.readMarches();
     marches.delete(marchId);
     this.saveMarches(marches);
   }
 
   async updateMarch(march: March): Promise<void> {
-    const marches = this.getMarches();
+    const marches = this.readMarches();
     marches.set(march.id, march);
     this.saveMarches(marches);
   }
@@ -279,7 +281,7 @@ class LocalStorageMarchRepository implements IMarchRepository {
  * MarchPreset Repository Implementation
  */
 class LocalStorageMarchPresetRepository implements IMarchPresetRepository {
-  private getPresets(): Map<string, MarchPreset> {
+  private readPresets(): Map<string, MarchPreset> {
     const presets = getFromStorage<Record<string, MarchPreset>>(STORAGE_KEYS.MARCH_PRESETS, {});
     return new Map(Object.entries(presets));
   }
@@ -290,17 +292,17 @@ class LocalStorageMarchPresetRepository implements IMarchPresetRepository {
   }
 
   async getPresets(): Promise<MarchPreset[]> {
-    const presets = this.getPresets();
+    const presets = this.readPresets();
     return Array.from(presets.values());
   }
 
   async getPreset(presetId: string): Promise<MarchPreset | null> {
-    const presets = this.getPresets();
+    const presets = this.readPresets();
     return presets.get(presetId) || null;
   }
 
   async createPreset(preset: Omit<MarchPreset, 'id'>): Promise<MarchPreset> {
-    const presets = this.getPresets();
+    const presets = this.readPresets();
     const id = `preset_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const newPreset = { ...preset, id };
     presets.set(id, newPreset);
@@ -309,13 +311,13 @@ class LocalStorageMarchPresetRepository implements IMarchPresetRepository {
   }
 
   async updatePreset(preset: MarchPreset): Promise<void> {
-    const presets = this.getPresets();
+    const presets = this.readPresets();
     presets.set(preset.id, preset);
     this.savePresets(presets);
   }
 
   async deletePreset(presetId: string): Promise<void> {
-    const presets = this.getPresets();
+    const presets = this.readPresets();
     const preset = presets.get(presetId);
     if (preset?.isDefault) {
       throw new Error('Cannot delete default preset');
@@ -329,7 +331,7 @@ class LocalStorageMarchPresetRepository implements IMarchPresetRepository {
  * Report Repository Implementation
  */
 class LocalStorageReportRepository implements IReportRepository {
-  private getReports(): Map<string, Report> {
+  private readReports(): Map<string, Report> {
     const reports = getFromStorage<Record<string, Report>>(STORAGE_KEYS.REPORTS, {});
     return new Map(Object.entries(reports));
   }
@@ -340,17 +342,17 @@ class LocalStorageReportRepository implements IReportRepository {
   }
 
   async getReports(): Promise<Report[]> {
-    const reports = this.getReports();
+    const reports = this.readReports();
     return Array.from(reports.values()).sort((a, b) => b.timestamp - a.timestamp);
   }
 
   async getReport(reportId: string): Promise<Report | null> {
-    const reports = this.getReports();
+    const reports = this.readReports();
     return reports.get(reportId) || null;
   }
 
   async createReport(report: Omit<Report, 'id'>): Promise<Report> {
-    const reports = this.getReports();
+    const reports = this.readReports();
     const id = `report_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const newReport = { ...report, id } as Report;
     reports.set(id, newReport);
@@ -359,24 +361,23 @@ class LocalStorageReportRepository implements IReportRepository {
   }
 
   async markReportAsRead(reportId: string): Promise<void> {
-    const reports = this.getReports();
+    const reports = this.readReports();
     const report = reports.get(reportId);
     if (report) {
-      report.read = true;
-      reports.set(reportId, report);
+      reports.set(reportId, { ...report, read: true });
       this.saveReports(reports);
     }
   }
 
   async deleteReport(reportId: string): Promise<void> {
-    const reports = this.getReports();
+    const reports = this.readReports();
     reports.delete(reportId);
     this.saveReports(reports);
   }
 
   async getUnreadCount(): Promise<number> {
-    const reports = await this.getReports();
-    return reports.filter(r => !r.read).length;
+    const reports = this.readReports();
+    return Array.from(reports.values()).filter(r => !r.read).length;
   }
 }
 
@@ -457,20 +458,32 @@ class LocalStorageTechTreeRepository implements ITechTreeRepository {
     saveToStorage(STORAGE_KEYS.TECH_TREE, techTree);
   }
 
-  async unlockBuilding(buildingId: string): Promise<void> {
+  async unlockBuilding(buildingId: BuildingId): Promise<void> {
     const techTree = await this.getTechTree();
-    if (!techTree.unlockedBuildings.includes(buildingId as any)) {
-      techTree.unlockedBuildings.push(buildingId as any);
-      await this.updateTechTree(techTree);
+    if (techTree.unlockedBuildings.includes(buildingId)) {
+      return;
     }
+
+    const updated: TechTree = {
+      ...techTree,
+      unlockedBuildings: [...techTree.unlockedBuildings, buildingId],
+    };
+
+    await this.updateTechTree(updated);
   }
 
-  async unlockUnit(unitId: string): Promise<void> {
+  async unlockUnit(unitId: UnitId): Promise<void> {
     const techTree = await this.getTechTree();
-    if (!techTree.unlockedUnits.includes(unitId as any)) {
-      techTree.unlockedUnits.push(unitId as any);
-      await this.updateTechTree(techTree);
+    if (techTree.unlockedUnits.includes(unitId)) {
+      return;
     }
+
+    const updated: TechTree = {
+      ...techTree,
+      unlockedUnits: [...techTree.unlockedUnits, unitId],
+    };
+
+    await this.updateTechTree(updated);
   }
 
   async upgradeSmithyLine(line: 'inf' | 'cav' | 'ranged' | 'siege', stat: 'attack' | 'defense'): Promise<void> {
@@ -555,7 +568,7 @@ class LocalStorageNeutralCampRepository implements INeutralCampRepository {
     this.saveCamps(camps);
   }
 
-  async getCampsInProvince(provinceId: string): Promise<NeutralCamp[]> {
+  async getCampsInProvince(_provinceId: string): Promise<NeutralCamp[]> {
     // In a real implementation, this would filter by provinceId
     return this.getAllCamps();
   }

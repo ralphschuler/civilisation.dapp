@@ -4,18 +4,20 @@
  * Following Civilization Mobile Guidelines
  */
 
-import { 
-  Village, 
-  GameState, 
-  March, 
-  MarchPreset, 
+import {
+  Village,
+  GameState,
+  March,
+  MarchPreset,
   PlayerStats,
   TechTree,
   Province,
   NeutralCamp,
-  VillageInfo
+  VillageInfo,
+  BuildingId,
+  UnitId,
 } from '@/types/game';
-import { BattleReport, SpyReport, Report } from '@/types/reports';
+import { Report } from '@/types/reports';
 
 /**
  * Village Repository - Manages player villages
@@ -93,8 +95,8 @@ export interface IPlayerStatsRepository {
 export interface ITechTreeRepository {
   getTechTree(): Promise<TechTree>;
   updateTechTree(techTree: TechTree): Promise<void>;
-  unlockBuilding(buildingId: string): Promise<void>;
-  unlockUnit(unitId: string): Promise<void>;
+  unlockBuilding(buildingId: BuildingId): Promise<void>;
+  unlockUnit(unitId: UnitId): Promise<void>;
   upgradeSmithyLine(line: 'inf' | 'cav' | 'ranged' | 'siege', stat: 'attack' | 'defense'): Promise<void>;
   advanceEra(era: TechTree['era']): Promise<void>;
 }
