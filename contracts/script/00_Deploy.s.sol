@@ -4,16 +4,16 @@ pragma solidity ^0.8.30;
 import "forge-std/Script.sol";
 import "forge-std/console2.sol";
 
-import {Diamond, DiamondArgs} from "../src/diamond/core/Diamond.sol";
-import {FacetCut, FacetCutAction} from "../src/diamond/core/DiamondCut/DiamondCutLib.sol";
-import {IDiamondCut} from "../src/diamond/core/DiamondCut/IDiamondCut.sol";
-import {DiamondInit} from "../src/diamond/initializers/DiamondInit.sol";
-import {IDiamondInit} from "../src/diamond/initializers/IDiamondInit.sol";
+import {Diamond, DiamondArgs} from "../src/core/Diamond.sol";
+import {FacetCut, FacetCutAction} from "../src/core/protocols/DiamondCut/DiamondCutLib.sol";
+import {IDiamondCut} from "../src/core/interfaces/IDiamondCut.sol";
+import {DiamondInit} from "../src/core/DiamondInit.sol";
+import {IDiamondInit} from "../src/core/interfaces/IDiamondInit.sol";
 import {StringUtils} from "./utils/StringUtils.sol";
 
 // Always required
-import {DiamondCutFacet} from "../src/diamond/core/DiamondCut/DiamondCutFacet.sol";
-import {DiamondLoupeFacet} from "../src/diamond/core/DiamondLoupe/DiamondLoupeFacet.sol";
+import {DiamondCutFacet} from "../src/core/protocols/DiamondCut/DiamondCut.sol";
+import {DiamondLoupeFacet} from "../src/core/protocols/DiamondLoupe/DiamondLoupe.sol";
 
 import {CutSelector} from "./utils/CutSelector.sol";
 
@@ -69,7 +69,7 @@ contract Deploy is Script, CutSelector {
         cmd[0] = "bash";
         cmd[1] = "-lc";
         // list only folder names under src/protocol
-        cmd[2] = "find src/protocol -type f -name '*Facet.sol'";
+    cmd[2] = "find src/protocols -type f -name '*Facet.sol'";
         bytes memory out = vm.ffi(cmd);
         string[] memory facetPaths = StringUtils.splitLines(string(out));
 

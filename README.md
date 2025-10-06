@@ -17,6 +17,8 @@ The project is organized as follows:
 - **assets/**: Contains images for buildings, resources, and units.
 - **configs/**: JSON configurations for game entities like buildings, resources, and units.
 - **contracts/**: Smart contracts for the game, including deployment and configuration scripts.
+   - `src/core`: Diamond proxy, initializer, and shared interfaces/protocols migrated from the legacy `src.bak` tree.
+   - `script/`: Foundry deployment helpers wired to the new core layout.
 - **public/**: Static assets for the application.
 - **src/**: Source code for the frontend, including components, hooks, and state management.
 
