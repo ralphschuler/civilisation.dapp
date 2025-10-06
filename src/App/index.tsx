@@ -21,10 +21,12 @@ import { TradeScreen } from "@/components/screens/TradeScreen";
 import { MarchPlannerScreen } from "@/components/screens/MarchPlannerScreen";
 import { MarchReportsScreen } from "@/components/screens/MarchReportsScreen";
 import { calculateStorageCapacity } from "@/data/gameData";
+import { useResourceGeneration } from "@/hooks/useResourceGeneration";
+import type { SupportedResourceKey } from "@/data/resourceIds";
 
 import { WalletConnectScreen } from "@/components/screens/WalletConnectScreen";
 import { NotFoundScreen } from "@/components/screens/NotFoundScreen";
-import type { March, MarchPreset } from "@/types/game";
+import type { March, MarchPreset, Village } from "@/types/game";
 import {
   useGameStore,
   useVillageStore,
@@ -56,6 +58,51 @@ function AppContent() {
   const deleteMarchPreset = useMarchStore((state) => state.deleteMarchPreset);
 
   const playerStats = usePlayerStatsStore((state) => state.stats);
+
+  const {
+    isEnabled: isResourceFacetEnabled,
+    uncollected: onChainUncollected,
+    productionPerHour: onChainProductionPerHour,
+    secondsUntilNextUnit,
+    collectAllResources: collectAllOnChain,
+    collectResource: collectResourceOnChain,
+  } = useResourceGeneration();
+
+  const resolveOnChainResourceKey = useCallback(
+    (resource: keyof Village["uncollectedResources"]): resource is SupportedResourceKey =>
+      resource !== "villager",
+    [],
+  );
+
+  const resolvedUncollectedResources = useMemo(() => {
+    if (!village) return null;
+
+    if (!isResourceFacetEnabled) {
+      return village.uncollectedResources;
+    }
+
+    return {
+      ...village.uncollectedResources,
+      ...onChainUncollected,
+    };
+  }, [isResourceFacetEnabled, onChainUncollected, village]);
+
+  const autoProductionPerHour = useMemo(() => {
+    if (!isResourceFacetEnabled || onChainProductionPerHour <= 0) {
+      return undefined;
+    }
+
+    return {
+      wood: onChainProductionPerHour,
+      clay: onChainProductionPerHour,
+      iron: onChainProductionPerHour,
+      coal: onChainProductionPerHour,
+      wheat: onChainProductionPerHour,
+      bread: onChainProductionPerHour,
+      meat: onChainProductionPerHour,
+      gold: onChainProductionPerHour,
+    } as Partial<Village["uncollectedResources"]>;
+  }, [isResourceFacetEnabled, onChainProductionPerHour]);
 
   const storageCapacity = useMemo(() => {
     if (!village) return 0;
@@ -105,9 +152,24 @@ function AppContent() {
 
   const handleCollectResources = useCallback(
     (resourceType?: Parameters<typeof collectResources>[0]) => {
+      if (isResourceFacetEnabled) {
+        if (resourceType && resolveOnChainResourceKey(resourceType)) {
+          void collectResourceOnChain(resourceType as SupportedResourceKey);
+        } else {
+          void collectAllOnChain();
+        }
+        return;
+      }
+
       void collectResources(resourceType);
     },
-    [collectResources],
+    [
+      collectAllOnChain,
+      collectResourceOnChain,
+      collectResources,
+      isResourceFacetEnabled,
+      resolveOnChainResourceKey,
+    ],
   );
 
   const handleCreateMarch = useCallback(
@@ -204,10 +266,15 @@ function AppContent() {
               element={
                 <ResourcesScreen
                   resources={village.resources}
-                  uncollectedResources={village.uncollectedResources}
+                  uncollectedResources={
+                    resolvedUncollectedResources ?? village.uncollectedResources
+                  }
                   buildingLevels={village.buildings}
                   storageCapacity={storageCapacity}
                   onCollectResource={handleCollectResources}
+                  autoProductionPerHour={autoProductionPerHour}
+                  nextProductionInSeconds={secondsUntilNextUnit}
+                  isOnChainProductionActive={isResourceFacetEnabled}
                 />
               }
             />

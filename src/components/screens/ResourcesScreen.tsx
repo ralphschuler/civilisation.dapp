@@ -14,14 +14,20 @@ interface ResourcesScreenProps {
   };
   storageCapacity: number;
   onCollectResource?: (resourceType?: keyof UncollectedResources) => void;
+  autoProductionPerHour?: Partial<Record<keyof UncollectedResources, number>>;
+  nextProductionInSeconds?: number;
+  isOnChainProductionActive?: boolean;
 }
 
-export function ResourcesScreen({ 
-  resources, 
+export function ResourcesScreen({
+  resources,
   uncollectedResources,
   buildingLevels,
   storageCapacity,
-  onCollectResource
+  onCollectResource,
+  autoProductionPerHour,
+  nextProductionInSeconds,
+  isOnChainProductionActive,
 }: ResourcesScreenProps) {
   const { t } = useI18n();
   const formatNumber = (num: number) => {
@@ -47,6 +53,33 @@ export function ResourcesScreen({
   // Calculate total production from all buildings
   const totalProduction = calculateResourceProduction(buildingLevels);
 
+  const formatDuration = (seconds: number) => {
+    if (seconds <= 0) return "0s";
+    const rounded = Math.floor(seconds);
+    if (rounded < 60) {
+      return `${rounded}s`;
+    }
+    const minutes = Math.floor(rounded / 60);
+    const secs = rounded % 60;
+    if (minutes < 60) {
+      return secs > 0 ? `${minutes}m ${secs}s` : `${minutes}m`;
+    }
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    if (hours < 24) {
+      if (mins === 0) return `${hours}h`;
+      return `${hours}h ${mins}m`;
+    }
+    const days = Math.floor(hours / 24);
+    const remHours = hours % 24;
+    if (remHours === 0) return `${days}d`;
+    return `${days}d ${remHours}h`;
+  };
+
+  const autoProduction = autoProductionPerHour ?? {};
+  const onChainRate = autoProductionPerHour?.wood ?? 0;
+  const isAutoProductionActive = Boolean(isOnChainProductionActive && autoProductionPerHour);
+
   const resourceData = [
     {
       key: 'wood',
@@ -54,7 +87,7 @@ export function ResourcesScreen({
       icon: '🪵',
       amount: resources.wood,
       uncollected: uncollectedResources.wood,
-      production: totalProduction.wood || 0,
+      production: (totalProduction.wood || 0) + (autoProduction.wood || 0),
       color: 'bg-amber-600'
     },
     {
@@ -63,7 +96,7 @@ export function ResourcesScreen({
       icon: '🧱',
       amount: resources.clay,
       uncollected: uncollectedResources.clay,
-      production: totalProduction.clay || 0,
+      production: (totalProduction.clay || 0) + (autoProduction.clay || 0),
       color: 'bg-orange-700'
     },
     {
@@ -72,7 +105,7 @@ export function ResourcesScreen({
       icon: '⚔️',
       amount: resources.iron,
       uncollected: uncollectedResources.iron,
-      production: totalProduction.iron || 0,
+      production: (totalProduction.iron || 0) + (autoProduction.iron || 0),
       color: 'bg-gray-600'
     },
     {
@@ -81,7 +114,7 @@ export function ResourcesScreen({
       icon: '⚫',
       amount: resources.coal,
       uncollected: uncollectedResources.coal,
-      production: totalProduction.coal || 0,
+      production: (totalProduction.coal || 0) + (autoProduction.coal || 0),
       color: 'bg-slate-800'
     },
     {
@@ -90,7 +123,7 @@ export function ResourcesScreen({
       icon: '🌾',
       amount: resources.wheat,
       uncollected: uncollectedResources.wheat,
-      production: totalProduction.wheat || 0,
+      production: (totalProduction.wheat || 0) + (autoProduction.wheat || 0),
       color: 'bg-yellow-600'
     },
     {
@@ -99,7 +132,7 @@ export function ResourcesScreen({
       icon: '🍞',
       amount: resources.bread,
       uncollected: uncollectedResources.bread,
-      production: totalProduction.bread || 0,
+      production: (totalProduction.bread || 0) + (autoProduction.bread || 0),
       color: 'bg-yellow-500'
     },
     {
@@ -108,7 +141,7 @@ export function ResourcesScreen({
       icon: '🥩',
       amount: resources.meat,
       uncollected: uncollectedResources.meat,
-      production: totalProduction.meat || 0,
+      production: (totalProduction.meat || 0) + (autoProduction.meat || 0),
       color: 'bg-red-600'
     },
     {
@@ -117,13 +150,50 @@ export function ResourcesScreen({
       icon: '🪙',
       amount: resources.gold,
       uncollected: uncollectedResources.gold,
-      production: totalProduction.gold || 0,
+      production: (totalProduction.gold || 0) + (autoProduction.gold || 0),
       color: 'bg-yellow-500'
     }
   ];
 
   return (
     <div className="space-y-4">
+      {isAutoProductionActive && (
+        <div className="flex items-center justify-between rounded-lg border border-primary/30 bg-primary/5 p-3">
+          <div className="flex items-center gap-2">
+            <Clock className="h-4 w-4 text-primary" />
+            <div>
+              <p className="text-caption font-medium">
+                {t(
+                  'screens.resources.autoProduction.active',
+                  'Automatische Produktion aktiv',
+                )}
+              </p>
+              <p className="text-micro text-muted-foreground">
+                {t(
+                  'screens.resources.autoProduction.rate',
+                  '+{{amount}} pro Stunde je Ressource',
+                  { amount: onChainRate },
+                )}
+                {nextProductionInSeconds != null && nextProductionInSeconds > 0 && (
+                  <span>
+                    {` • ${t(
+                      'screens.resources.autoProduction.next',
+                      'Nächste Einheit in {{time}}',
+                      { time: formatDuration(nextProductionInSeconds) },
+                    )}`}
+                  </span>
+                )}
+              </p>
+            </div>
+          </div>
+          {hasUncollectedResources && onCollectResource && (
+            <Button size="sm" onClick={() => onCollectResource()} className="h-8">
+              {t('screens.resources.collectAll', 'Alle einsammeln')}
+            </Button>
+          )}
+        </div>
+      )}
+
       {/* Compact Resource Grid - 2x4 Layout with individual collect buttons */}
       <div className="grid grid-cols-2 gap-3">
         {resourceData.map((resource) => {
