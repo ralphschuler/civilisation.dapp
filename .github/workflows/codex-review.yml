@@ -1,7 +1,12 @@
 name: Perform a code review when a pull request is created.
 on:
   pull_request:
-    types: [opened]
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+      - synchronize
+      - edited
 
 jobs:
   codex:
@@ -22,6 +27,33 @@ jobs:
             ${{ github.event.pull_request.base.ref }} \
             +refs/pull/${{ github.event.pull_request.number }}/head
 
+      - name: Summarise changed files
+        id: changed-files
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ github.token }}
+          result-encoding: string
+          script: |
+            const files = await github.paginate(
+              github.rest.pulls.listFiles,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request.number,
+                per_page: 100,
+              },
+            );
+
+            const summary = files
+              .map((file) => {
+                const changeCount =
+                  typeof file.changes === 'number' ? `, ${file.changes} changes` : '';
+                return `- ${file.filename} (${file.status}${changeCount})`;
+              })
+              .join('\n');
+
+            return summary || 'No file changes reported.';
+
       # If you want Codex to build and run code, install any dependencies that
       # need to be downloaded before the "Run Codex" step because Codex's
       # default sandbox disables network access.
@@ -35,6 +67,9 @@ jobs:
             This is PR #${{ github.event.pull_request.number }} for ${{ github.repository }}.
             Base SHA: ${{ github.event.pull_request.base.sha }}
             Head SHA: ${{ github.event.pull_request.head.sha }}
+
+            Changed files:
+            ${{ steps.changed-files.outputs.result }}
 
             Review ONLY the changes introduced by the PR.
             Suggest any improvements, potential bugs, or issues.
