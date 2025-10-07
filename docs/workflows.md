@@ -4,19 +4,20 @@ GitHub Actions automate quality checks, deployments, and documentation updates f
 
 ## Workflow overview
 
-| Workflow           | File                                      | Trigger                 | Purpose                                                                |
-| ------------------ | ----------------------------------------- | ----------------------- | ---------------------------------------------------------------------- |
-| Lint               | `.github/workflows/lint.yml`              | Push / PR               | Run ESLint, Solhint, and Prettier checks to enforce style consistency. |
-| Test Web App       | `.github/workflows/test-app.yml`          | Push / PR               | Install Bun dependencies and execute the Vitest suite for the React client. |
-| Test Smart Contracts | `.github/workflows/test-contracts.yml`  | Push / PR               | Provision Foundry and run the `forge test` suite for Solidity contracts. |
-| Deploy App         | `.github/workflows/deploy-app.yml`        | Manual / Release        | Builds the frontend and deploys static assets.                         |
-| Deploy Contracts   | `.github/workflows/deploy-contracts.yml`  | Manual                  | Broadcasts Foundry deployment scripts to Worldchain.                   |
-| Create Pre-release | `.github/workflows/create-prerelease.yml` | Manual                  | Generates tagged pre-releases for testers.                             |
-| Codex Auto-Fix     | `.github/workflows/codex-autofix.yml`     | On failed workflows     | Invokes Codex to propose fixes when CI breaks.                         |
-| Codex Review       | `.github/workflows/codex-review.yml`      | Pull requests           | Uses Codex to provide automated review feedback.                       |
-| Codex Triage       | `.github/workflows/codex-triage.yml`      | New issues              | Drafts issue summaries and labels via Codex.                           |
-| Codex Document     | `.github/workflows/codex-document.yml`    | Manual / PR label       | Generates or updates missing docs with Codex assistance.               |
-| Wiki Deploy        | `.github/workflows/wiki-deploy.yml`       | Push to `main` / Manual | Syncs the `docs/` directory to the GitHub wiki repository.             |
+| Workflow           | File                                      | Trigger                           | Purpose |
+| ------------------ | ----------------------------------------- | --------------------------------- | ------- |
+| Lint App           | `.github/workflows/lint-app.yml`          | Push / PR / Manual                | Run the frontend ESLint suite against `src/` changes. |
+| Lint Contracts     | `.github/workflows/lint-contracts.yml`    | Push / PR / Manual                | Run Solidity linters against the Foundry project. |
+| Test Web App       | `.github/workflows/test-app.yml`          | Push / PR / Manual                | Install Bun dependencies and execute the Vitest suite for the React client. |
+| Test Smart Contracts | `.github/workflows/test-contracts.yml`  | Push / PR / Manual                | Provision Foundry and run the `forge test` suite for Solidity contracts. |
+| Deploy App         | `.github/workflows/deploy-app.yml`        | Manual / Release                  | Build the frontend and deploy static assets. |
+| Deploy Contract    | `.github/workflows/deploy-contract.yml`   | Manual                            | Broadcast Foundry deployment scripts to Worldchain. |
+| Deploy Wiki        | `.github/workflows/deploy-wiki.yml`       | Push to `main` / Manual           | Sync the `docs/` directory to the GitHub wiki repository. |
+| Auto Prerelease    | `.github/workflows/auto-prerelease.yml`   | Workflow run / Manual (dispatch)  | Create prerelease tags when automated QA succeeds. |
+| AI Auto-Fix        | `.github/workflows/ai-autofix.yml`        | Failed workflow_run completion    | Use the OpenAI Codex action to remediate CI failures and raise a PR. |
+| AI Review          | `.github/workflows/ai-review.yml`         | Pull requests                     | Provide automated review feedback using the OpenAI Codex action. |
+| AI Triage          | `.github/workflows/ai-triage.yml`         | New issues                        | Draft issue summaries and labels via the OpenAI Codex action. |
+| AI Document        | `.github/workflows/ai-document.yml`       | Push (excluding AI branches) / Manual | Refresh project documentation with the OpenAI Codex action. |
 
 ## Operating guidelines
 
