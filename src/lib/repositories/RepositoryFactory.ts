@@ -4,11 +4,11 @@
  * Based on configuration or environment
  */
 
-import { IRepository } from './IRepository';
-import { MockRepository } from './MockRepository';
-import { LocalStorageRepository } from './LocalStorageRepository';
+import { IRepository } from "./IRepository";
+import { MockRepository } from "./MockRepository";
+import { LocalStorageRepository } from "./LocalStorageRepository";
 
-export type RepositoryType = 'mock' | 'localStorage' | 'indexedDB' | 'api';
+export type RepositoryType = "mock" | "localStorage" | "indexedDB" | "api";
 
 /**
  * Repository configuration
@@ -22,7 +22,7 @@ export interface RepositoryConfig {
  * Default configuration - uses localStorage for production, mock for development
  */
 const defaultConfig: RepositoryConfig = {
-  type: (import.meta.env?.MODE === 'development' ? 'mock' : 'localStorage') as RepositoryType
+  type: (import.meta.env?.MODE === "development" ? "mock" : "localStorage") as RepositoryType,
 };
 
 /**
@@ -58,22 +58,22 @@ class RepositoryFactory {
    */
   private static createRepository(config: RepositoryConfig): IRepository {
     switch (config.type) {
-      case 'mock':
-        console.info('🎮 Using Mock Repository (in-memory data)');
+      case "mock":
+        console.info("🎮 Using Mock Repository (in-memory data)");
         return new MockRepository();
 
-      case 'localStorage':
-        console.info('💾 Using LocalStorage Repository');
+      case "localStorage":
+        console.info("💾 Using LocalStorage Repository");
         return new LocalStorageRepository();
 
-      case 'indexedDB':
+      case "indexedDB":
         // TODO: Implement IndexedDB repository (for larger datasets)
-        console.warn('⚠️ IndexedDB not implemented yet, falling back to LocalStorage');
+        console.warn("⚠️ IndexedDB not implemented yet, falling back to LocalStorage");
         return new LocalStorageRepository();
 
-      case 'api':
+      case "api":
         // TODO: Implement API repository (for backend integration)
-        console.warn('⚠️ API Repository not implemented yet, falling back to Mock');
+        console.warn("⚠️ API Repository not implemented yet, falling back to Mock");
         return new MockRepository();
 
       default:

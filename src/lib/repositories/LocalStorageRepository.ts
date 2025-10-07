@@ -13,8 +13,8 @@ import {
   IPlayerStatsRepository,
   ITechTreeRepository,
   IProvinceRepository,
-  INeutralCampRepository
-} from './IRepository';
+  INeutralCampRepository,
+} from "./IRepository";
 import {
   Village,
   GameState,
@@ -27,26 +27,26 @@ import {
   VillageInfo,
   BuildingId,
   UnitId,
-} from '@/types/game';
-import { Report } from '@/types/reports';
+} from "@/types/game";
+import { Report } from "@/types/reports";
 
 // Storage keys
 const STORAGE_KEYS = {
-  VILLAGES: 'civ_mobile_villages',
-  GAME_STATE: 'civ_mobile_game_state',
-  MARCHES: 'civ_mobile_marches',
-  MARCH_PRESETS: 'civ_mobile_march_presets',
-  REPORTS: 'civ_mobile_reports',
-  PLAYER_STATS: 'civ_mobile_player_stats',
-  TECH_TREE: 'civ_mobile_tech_tree',
-  PROVINCES: 'civ_mobile_provinces',
-  NEUTRAL_CAMPS: 'civ_mobile_neutral_camps',
+  VILLAGES: "civ_mobile_villages",
+  GAME_STATE: "civ_mobile_game_state",
+  MARCHES: "civ_mobile_marches",
+  MARCH_PRESETS: "civ_mobile_march_presets",
+  REPORTS: "civ_mobile_reports",
+  PLAYER_STATS: "civ_mobile_player_stats",
+  TECH_TREE: "civ_mobile_tech_tree",
+  PROVINCES: "civ_mobile_provinces",
+  NEUTRAL_CAMPS: "civ_mobile_neutral_camps",
 } as const;
 
 // Minimal initial data to seed a fresh install
 const INITIAL_VILLAGE: Village = {
-  id: 'village1',
-  name: 'Mein Dorf',
+  id: "village1",
+  name: "Mein Dorf",
   x: 200,
   y: 200,
   resources: {
@@ -59,7 +59,7 @@ const INITIAL_VILLAGE: Village = {
     villager: 30,
     wheat: 500,
     wood: 1200,
-    maxPopulation: 240
+    maxPopulation: 240,
   },
   uncollectedResources: {
     bread: 0,
@@ -70,33 +70,33 @@ const INITIAL_VILLAGE: Village = {
     meat: 0,
     villager: 0,
     wheat: 0,
-    wood: 0
+    wood: 0,
   },
   buildings: {
-    townhall: { type: 'townhall', level: 1 },
-    bakery: { type: 'bakery', level: 1 },
-    barracks: { type: 'barracks', level: 0 },
-    claypit: { type: 'claypit', level: 1 },
-    coalpit: { type: 'coalpit', level: 0 },
-    fisher: { type: 'fisher', level: 1 },
-    ironmine: { type: 'ironmine', level: 1 },
-    farm: { type: 'farm', level: 1 },
-    house: { type: 'house', level: 1 },
-    huntershut: { type: 'huntershut', level: 1 },
-    market: { type: 'market', level: 1 },
-    storage: { type: 'storage', level: 1 },
-    wall: { type: 'wall', level: 0 },
-    woodcutter: { type: 'woodcutter', level: 1 }
+    townhall: { type: "townhall", level: 1 },
+    bakery: { type: "bakery", level: 1 },
+    barracks: { type: "barracks", level: 0 },
+    claypit: { type: "claypit", level: 1 },
+    coalpit: { type: "coalpit", level: 0 },
+    fisher: { type: "fisher", level: 1 },
+    ironmine: { type: "ironmine", level: 1 },
+    farm: { type: "farm", level: 1 },
+    house: { type: "house", level: 1 },
+    huntershut: { type: "huntershut", level: 1 },
+    market: { type: "market", level: 1 },
+    storage: { type: "storage", level: 1 },
+    wall: { type: "wall", level: 0 },
+    woodcutter: { type: "woodcutter", level: 1 },
   },
   army: {
     spearman: 0,
     swordsman: 0,
     archer: 0,
     knight: 0,
-    trebuchet: 0
+    trebuchet: 0,
   },
   trainingQueue: [],
-  lastUpdate: Date.now()
+  lastUpdate: Date.now(),
 };
 
 /**
@@ -142,8 +142,8 @@ class LocalStorageVillageRepository implements IVillageRepository {
     const village = villages.get(villageId);
     if (village) return village;
     // Seed default village on first access
-    if (villageId === 'village1') {
-      villages.set('village1', INITIAL_VILLAGE);
+    if (villageId === "village1") {
+      villages.set("village1", INITIAL_VILLAGE);
       this.saveVillages(villages);
       return INITIAL_VILLAGE;
     }
@@ -182,17 +182,17 @@ class LocalStorageVillageRepository implements IVillageRepository {
         x: village.x || 0,
         y: village.y || 0,
         level: village.buildings.townhall?.level || 1,
-        player: 'Player Name',
+        player: "Player Name",
         points: 1000,
         population: village.resources.villager,
         maxPopulation: village.resources.maxPopulation,
         buildings: Object.fromEntries(
-          Object.entries(village.buildings).map(([key, building]) => [key, building.level])
+          Object.entries(village.buildings).map(([key, building]) => [key, building.level]),
         ),
         army: village.army,
         wall: village.buildings.wall?.level || 0,
         lastActivity: new Date().toISOString(),
-        defenseBonus: 0
+        defenseBonus: 0,
       };
     } catch {
       return null;
@@ -246,7 +246,7 @@ class LocalStorageMarchRepository implements IMarchRepository {
     return marches.get(marchId) || null;
   }
 
-  async createMarch(march: Omit<March, 'id'>): Promise<March> {
+  async createMarch(march: Omit<March, "id">): Promise<March> {
     const marches = this.readMarches();
     const id = `march_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const newMarch = { ...march, id };
@@ -270,9 +270,7 @@ class LocalStorageMarchRepository implements IMarchRepository {
   async getActiveMarchesForVillage(villageId: string): Promise<March[]> {
     const marches = await this.getMarches();
     return marches.filter(
-      m => m.fromVillage.id === villageId && 
-           m.status !== 'completed' && 
-           m.status !== 'cancelled'
+      (m) => m.fromVillage.id === villageId && m.status !== "completed" && m.status !== "cancelled",
     );
   }
 }
@@ -301,7 +299,7 @@ class LocalStorageMarchPresetRepository implements IMarchPresetRepository {
     return presets.get(presetId) || null;
   }
 
-  async createPreset(preset: Omit<MarchPreset, 'id'>): Promise<MarchPreset> {
+  async createPreset(preset: Omit<MarchPreset, "id">): Promise<MarchPreset> {
     const presets = this.readPresets();
     const id = `preset_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const newPreset = { ...preset, id };
@@ -320,7 +318,7 @@ class LocalStorageMarchPresetRepository implements IMarchPresetRepository {
     const presets = this.readPresets();
     const preset = presets.get(presetId);
     if (preset?.isDefault) {
-      throw new Error('Cannot delete default preset');
+      throw new Error("Cannot delete default preset");
     }
     presets.delete(presetId);
     this.savePresets(presets);
@@ -351,7 +349,7 @@ class LocalStorageReportRepository implements IReportRepository {
     return reports.get(reportId) || null;
   }
 
-  async createReport(report: Omit<Report, 'id'>): Promise<Report> {
+  async createReport(report: Omit<Report, "id">): Promise<Report> {
     const reports = this.readReports();
     const id = `report_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const newReport = { ...report, id } as Report;
@@ -377,7 +375,7 @@ class LocalStorageReportRepository implements IReportRepository {
 
   async getUnreadCount(): Promise<number> {
     const reports = this.readReports();
-    return Array.from(reports.values()).filter(r => !r.read).length;
+    return Array.from(reports.values()).filter((r) => !r.read).length;
   }
 }
 
@@ -388,14 +386,21 @@ class LocalStoragePlayerStatsRepository implements IPlayerStatsRepository {
   async getStats(): Promise<PlayerStats> {
     return getFromStorage<PlayerStats>(STORAGE_KEYS.PLAYER_STATS, {
       totalResourcesGathered: {
-        bread: 0, clay: 0, coal: 0, gold: 0, iron: 0,
-        meat: 0, villager: 0, wheat: 0, wood: 0
+        bread: 0,
+        clay: 0,
+        coal: 0,
+        gold: 0,
+        iron: 0,
+        meat: 0,
+        villager: 0,
+        wheat: 0,
+        wood: 0,
       },
       totalUnitsTrained: 0,
       totalBuildingsUpgraded: 0,
       battlesWon: 0,
       battlesLost: 0,
-      playtime: 0
+      playtime: 0,
     });
   }
 
@@ -427,10 +432,13 @@ class LocalStoragePlayerStatsRepository implements IPlayerStatsRepository {
     await this.updateStats(stats);
   }
 
-  async addResourcesGathered(resources: Partial<PlayerStats['totalResourcesGathered']>): Promise<void> {
+  async addResourcesGathered(
+    resources: Partial<PlayerStats["totalResourcesGathered"]>,
+  ): Promise<void> {
     const stats = await this.getStats();
     Object.entries(resources).forEach(([key, value]) => {
-      stats.totalResourcesGathered[key as keyof PlayerStats['totalResourcesGathered']] += value || 0;
+      stats.totalResourcesGathered[key as keyof PlayerStats["totalResourcesGathered"]] +=
+        value || 0;
     });
     await this.updateStats(stats);
   }
@@ -442,15 +450,15 @@ class LocalStoragePlayerStatsRepository implements IPlayerStatsRepository {
 class LocalStorageTechTreeRepository implements ITechTreeRepository {
   async getTechTree(): Promise<TechTree> {
     return getFromStorage<TechTree>(STORAGE_KEYS.TECH_TREE, {
-      era: 'village',
-      unlockedBuildings: ['townhall', 'house', 'farm', 'woodcutter', 'claypit'],
-      unlockedUnits: ['spearman', 'archer'],
+      era: "village",
+      unlockedBuildings: ["townhall", "house", "farm", "woodcutter", "claypit"],
+      unlockedUnits: ["spearman", "archer"],
       smithyUpgrades: {
         inf: { attack: 0, defense: 0 },
         cav: { attack: 0, defense: 0 },
         ranged: { attack: 0, defense: 0 },
-        siege: { attack: 0, defense: 0 }
-      }
+        siege: { attack: 0, defense: 0 },
+      },
     });
   }
 
@@ -486,13 +494,16 @@ class LocalStorageTechTreeRepository implements ITechTreeRepository {
     await this.updateTechTree(updated);
   }
 
-  async upgradeSmithyLine(line: 'inf' | 'cav' | 'ranged' | 'siege', stat: 'attack' | 'defense'): Promise<void> {
+  async upgradeSmithyLine(
+    line: "inf" | "cav" | "ranged" | "siege",
+    stat: "attack" | "defense",
+  ): Promise<void> {
     const techTree = await this.getTechTree();
     techTree.smithyUpgrades[line][stat]++;
     await this.updateTechTree(techTree);
   }
 
-  async advanceEra(era: TechTree['era']): Promise<void> {
+  async advanceEra(era: TechTree["era"]): Promise<void> {
     const techTree = await this.getTechTree();
     techTree.era = era;
     await this.updateTechTree(techTree);
@@ -531,7 +542,7 @@ class LocalStorageProvinceRepository implements IProvinceRepository {
 
   async getProvincesInArea(x: number, y: number, radius: number): Promise<Province[]> {
     const provinces = await this.getAllProvinces();
-    return provinces.filter(p => {
+    return provinces.filter((p) => {
       const distance = Math.sqrt(Math.pow(p.x - x, 2) + Math.pow(p.y - y, 2));
       return distance <= radius;
     });

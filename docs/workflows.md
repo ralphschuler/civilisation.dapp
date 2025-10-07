@@ -4,17 +4,17 @@ GitHub Actions automate quality checks, deployments, and documentation updates f
 
 ## Workflow overview
 
-| Workflow | File | Trigger | Purpose |
-| -------- | ---- | ------- | ------- |
-| Lint | `.github/workflows/lint.yml` | Push / PR | Run ESLint, TypeScript checks, and Vitest to guarantee code quality. |
-| Deploy App | `.github/workflows/deploy-app.yml` | Manual / Release | Builds the frontend and deploys static assets. |
-| Deploy Contracts | `.github/workflows/deploy-contracts.yml` | Manual | Broadcasts Foundry deployment scripts to Worldchain. |
-| Create Pre-release | `.github/workflows/create-prerelease.yml` | Manual | Generates tagged pre-releases for testers. |
-| Codex Auto-Fix | `.github/workflows/codex-autofix.yml` | On failed workflows | Invokes Codex to propose fixes when CI breaks. |
-| Codex Review | `.github/workflows/codex-review.yml` | Pull requests | Uses Codex to provide automated review feedback. |
-| Codex Triage | `.github/workflows/codex-triage.yml` | New issues | Drafts issue summaries and labels via Codex. |
-| Codex Document | `.github/workflows/codex-document.yml` | Manual / PR label | Generates or updates missing docs with Codex assistance. |
-| Wiki Deploy | `.github/workflows/wiki-deploy.yml` | Push to `main` / Manual | Syncs the `docs/` directory to the GitHub wiki repository. |
+| Workflow           | File                                      | Trigger                 | Purpose                                                              |
+| ------------------ | ----------------------------------------- | ----------------------- | -------------------------------------------------------------------- |
+| Lint               | `.github/workflows/lint.yml`              | Push / PR               | Run ESLint, TypeScript checks, and Vitest to guarantee code quality. |
+| Deploy App         | `.github/workflows/deploy-app.yml`        | Manual / Release        | Builds the frontend and deploys static assets.                       |
+| Deploy Contracts   | `.github/workflows/deploy-contracts.yml`  | Manual                  | Broadcasts Foundry deployment scripts to Worldchain.                 |
+| Create Pre-release | `.github/workflows/create-prerelease.yml` | Manual                  | Generates tagged pre-releases for testers.                           |
+| Codex Auto-Fix     | `.github/workflows/codex-autofix.yml`     | On failed workflows     | Invokes Codex to propose fixes when CI breaks.                       |
+| Codex Review       | `.github/workflows/codex-review.yml`      | Pull requests           | Uses Codex to provide automated review feedback.                     |
+| Codex Triage       | `.github/workflows/codex-triage.yml`      | New issues              | Drafts issue summaries and labels via Codex.                         |
+| Codex Document     | `.github/workflows/codex-document.yml`    | Manual / PR label       | Generates or updates missing docs with Codex assistance.             |
+| Wiki Deploy        | `.github/workflows/wiki-deploy.yml`       | Push to `main` / Manual | Syncs the `docs/` directory to the GitHub wiki repository.           |
 
 ## Operating guidelines
 

@@ -34,7 +34,11 @@ export const Short: Story = {
     const targetTime = useMemo(() => Date.now() + args.seconds * 1000, [args.seconds]);
     return (
       <div className="p-4">
-        <CountdownTimer targetTime={targetTime} showProgress={args.showProgress} variant={args.variant} />
+        <CountdownTimer
+          targetTime={targetTime}
+          showProgress={args.showProgress}
+          variant={args.variant}
+        />
       </div>
     );
   },
@@ -46,7 +50,11 @@ export const Long: Story = {
     const targetTime = useMemo(() => Date.now() + args.seconds * 1000, [args.seconds]);
     return (
       <div className="p-4">
-        <CountdownTimer targetTime={targetTime} showProgress={args.showProgress} variant={args.variant} />
+        <CountdownTimer
+          targetTime={targetTime}
+          showProgress={args.showProgress}
+          variant={args.variant}
+        />
       </div>
     );
   },
@@ -66,7 +74,11 @@ export const DestructiveVariant: Story = {
     const targetTime = useMemo(() => Date.now() + args.seconds * 1000, [args.seconds]);
     return (
       <div className="p-4">
-        <CountdownTimer targetTime={targetTime} showProgress={args.showProgress} variant={args.variant} />
+        <CountdownTimer
+          targetTime={targetTime}
+          showProgress={args.showProgress}
+          variant={args.variant}
+        />
       </div>
     );
   },

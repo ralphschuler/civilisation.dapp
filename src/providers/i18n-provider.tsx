@@ -1,8 +1,8 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
-import { en } from '@/i18n/locales/en';
-import { de } from '@/i18n/locales/de';
+import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { en } from "@/i18n/locales/en";
+import { de } from "@/i18n/locales/de";
 
-type Locale = 'en' | 'de';
+type Locale = "en" | "de";
 type Messages = typeof en;
 
 const messagesByLocale: Record<Locale, Messages> = { en, de };
@@ -24,7 +24,7 @@ type DeepPartial<T> = {
 };
 
 const isMergeableObject = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
+  typeof value === "object" && value !== null && !Array.isArray(value);
 
 function deepMerge<T extends Record<string, unknown>>(base: T, extra?: DeepPartial<T>): T {
   if (!extra) {
@@ -62,22 +62,21 @@ export function I18nProvider({
   overrides?: DeepPartial<Messages>;
 }) {
   const initial =
-    (typeof window !== 'undefined' && (localStorage.getItem('lang') as Locale)) ||
-    'de';
+    (typeof window !== "undefined" && (localStorage.getItem("lang") as Locale)) || "de";
   const [lang, setLangState] = useState<Locale>(initial);
 
   const setLang = (l: Locale) => {
     setLangState(l);
-    if (typeof window !== 'undefined') localStorage.setItem('lang', l);
+    if (typeof window !== "undefined") localStorage.setItem("lang", l);
     // Toggle html lang and dark variant compatibility
-    if (typeof document !== 'undefined') document.documentElement.lang = l;
+    if (typeof document !== "undefined") document.documentElement.lang = l;
   };
 
   const dict = useMemo(() => deepMerge(messagesByLocale[lang], overrides), [lang, overrides]);
 
   const t = useMemo(() => {
     const resolve = (path: string, obj: unknown): unknown =>
-      path.split('.').reduce<unknown>((acc, segment) => {
+      path.split(".").reduce<unknown>((acc, segment) => {
         if (isMergeableObject(acc) && segment in acc) {
           return acc[segment];
         }
@@ -86,7 +85,7 @@ export function I18nProvider({
 
     return (key: string, fallback?: string) => {
       const v = resolve(key, dict);
-      if (typeof v === 'string') return v;
+      if (typeof v === "string") return v;
       return fallback ?? key;
     };
   }, [dict]);
@@ -98,7 +97,7 @@ export function I18nProvider({
 
 export function useI18n() {
   const ctx = useContext(I18nContext);
-  if (!ctx) throw new Error('useI18n must be used within I18nProvider');
+  if (!ctx) throw new Error("useI18n must be used within I18nProvider");
   return ctx;
 }
 

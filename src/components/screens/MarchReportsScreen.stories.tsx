@@ -34,8 +34,18 @@ const battleReports: BattleReport[] = [
     factors: { counter: 10, wall: 0, moral: 5, tech: 10, terrain: 10, variance: 5 },
     suggestions: ["Mehr Reiter für schnelle Raids"],
     replay: [
-      { phase: "ranged", attackerUnits: makeArmy({ archer: 15 }), defenderUnits: makeArmy({ spearman: 20 }), damage: { attacker: 2, defender: 10 } },
-      { phase: "charge", attackerUnits: makeArmy({ lightcav: 30 }), defenderUnits: makeArmy({ swordsman: 10 }), damage: { attacker: 3, defender: 12 } },
+      {
+        phase: "ranged",
+        attackerUnits: makeArmy({ archer: 15 }),
+        defenderUnits: makeArmy({ spearman: 20 }),
+        damage: { attacker: 2, defender: 10 },
+      },
+      {
+        phase: "charge",
+        attackerUnits: makeArmy({ lightcav: 30 }),
+        defenderUnits: makeArmy({ swordsman: 10 }),
+        damage: { attacker: 3, defender: 12 },
+      },
     ],
   },
   {
@@ -52,8 +62,18 @@ const battleReports: BattleReport[] = [
     factors: { counter: 25, wall: 20, moral: 0, tech: 5, terrain: 10, variance: 5 },
     suggestions: ["Mehr Rammböcke mitnehmen", "Bogenschützen gegen Piken"],
     replay: [
-      { phase: "siege", attackerUnits: makeArmy({ ram: 5 }), defenderUnits: makeArmy({}), damage: { attacker: 0, defender: 0 } },
-      { phase: "melee", attackerUnits: makeArmy({ swordsman: 40 }), defenderUnits: makeArmy({ spearman: 30, pikeman: 25 }), damage: { attacker: 20, defender: 25 } },
+      {
+        phase: "siege",
+        attackerUnits: makeArmy({ ram: 5 }),
+        defenderUnits: makeArmy({}),
+        damage: { attacker: 0, defender: 0 },
+      },
+      {
+        phase: "melee",
+        attackerUnits: makeArmy({ swordsman: 40 }),
+        defenderUnits: makeArmy({ spearman: 30, pikeman: 25 }),
+        damage: { attacker: 20, defender: 25 },
+      },
     ],
   },
 ];

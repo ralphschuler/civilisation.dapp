@@ -1,26 +1,11 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "../ui/Dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/Dialog";
 import { Button } from "../ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/Card";
 import { Badge } from "../ui/Badge";
 import { Progress } from "../ui/Progress";
 import { Separator } from "../ui/Separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/Tabs";
-import {
-  Shield,
-  Swords,
-  Users,
-  TrendingUp,
-  MapPin,
-  Clock,
-  Star,
-  Crown,
-} from "lucide-react";
+import { Shield, Swords, Users, TrendingUp, MapPin, Clock, Star, Crown } from "lucide-react";
 import { useI18n, T } from "@/providers/i18n-provider";
 import type { VillageInfo } from "@/types/game";
 
@@ -46,22 +31,12 @@ export function VillageInfoModal({
   const { t } = useI18n();
   if (!villageInfo) return null;
 
-  const calculateDistance = (
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
-  ) => {
+  const calculateDistance = (x1: number, y1: number, x2: number, y2: number) => {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
   };
 
   const distance = Math.round(
-    calculateDistance(
-      myVillageCoords.x,
-      myVillageCoords.y,
-      villageInfo.x,
-      villageInfo.y,
-    ),
+    calculateDistance(myVillageCoords.x, myVillageCoords.y, villageInfo.x, villageInfo.y),
   );
 
   const formatNumber = (num: number) => {
@@ -134,9 +109,7 @@ export function VillageInfoModal({
               )}
             </Badge>
           </DialogTitle>
-          <DialogDescription>
-            {t("villageInfo.title", "Village Info")}
-          </DialogDescription>
+          <DialogDescription>{t("villageInfo.title", "Village Info")}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -170,20 +143,18 @@ export function VillageInfoModal({
                   <span className="text-muted-foreground">
                     {t("villageInfo.distance", "Distance")}:
                   </span>
-                  <div className="font-medium">{distance} <T k="villageInfo.fields" f="tiles" /></div>
+                  <div className="font-medium">
+                    {distance} <T k="villageInfo.fields" f="tiles" />
+                  </div>
                 </div>
                 <div>
                   <span className="text-muted-foreground">
                     {t("villageInfo.points", "Points")}:
                   </span>
-                  <div className="font-medium">
-                    {formatNumber(villageInfo.points)}
-                  </div>
+                  <div className="font-medium">{formatNumber(villageInfo.points)}</div>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">
-                    {t("villageInfo.level", "Level")}:
-                  </span>
+                  <span className="text-muted-foreground">{t("villageInfo.level", "Level")}:</span>
                   <div className="font-medium">
                     {t("villageInfo.level", "Level")} {villageInfo.level}
                   </div>
@@ -199,9 +170,7 @@ export function VillageInfoModal({
                         <T k="villageInfo.player" f="Player" />:
                       </span>
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">
-                          {villageInfo.player}
-                        </span>
+                        <span className="font-medium">{villageInfo.player}</span>
                         {villageInfo.playerRank && (
                           <Badge variant="outline" className="text-xs">
                             #{villageInfo.playerRank}
@@ -215,9 +184,7 @@ export function VillageInfoModal({
                         <span className="text-muted-foreground text-sm">
                           <T k="villageInfo.alliance" f="Alliance" />:
                         </span>
-                        <span className="font-medium">
-                          {villageInfo.alliance}
-                        </span>
+                        <span className="font-medium">{villageInfo.alliance}</span>
                       </div>
                     )}
 
@@ -225,9 +192,7 @@ export function VillageInfoModal({
                       <span className="text-muted-foreground text-sm">
                         <T k="villageInfo.lastActivity" f="Last activity" />:
                       </span>
-                      <span className="font-medium text-sm">
-                        {villageInfo.lastActivity}
-                      </span>
+                      <span className="font-medium text-sm">{villageInfo.lastActivity}</span>
                     </div>
                   </div>
                 </>
@@ -246,16 +211,14 @@ export function VillageInfoModal({
             <CardContent className="space-y-4">
               <div>
                 <div className="flex justify-between text-sm mb-1">
-                  <span><T k="common.population" f="Population" /></span>
+                  <span>
+                    <T k="common.population" f="Population" />
+                  </span>
                   <span>
                     {villageInfo.population}/{villageInfo.maxPopulation}
                   </span>
                 </div>
-                <Progress
-                  value={
-                    (villageInfo.population / villageInfo.maxPopulation) * 100
-                  }
-                />
+                <Progress value={(villageInfo.population / villageInfo.maxPopulation) * 100} />
               </div>
 
               <div className="grid grid-cols-2 gap-4 text-sm">
@@ -272,9 +235,7 @@ export function VillageInfoModal({
                   <span className="text-muted-foreground">
                     {t("villageInfo.defenseBonus", "Defense bonus")}:
                   </span>
-                  <div className="font-medium">
-                    +{villageInfo.defenseBonus}%
-                  </div>
+                  <div className="font-medium">+{villageInfo.defenseBonus}%</div>
                 </div>
               </div>
 
@@ -284,9 +245,7 @@ export function VillageInfoModal({
                 </span>
                 <div className="flex items-center gap-2">
                   <span className="text-lg">{strength.icon}</span>
-                  <span className={`font-medium ${strength.color}`}>
-                    {strength.level}
-                  </span>
+                  <span className={`font-medium ${strength.color}`}>{strength.level}</span>
                 </div>
               </div>
             </CardContent>
@@ -316,39 +275,32 @@ export function VillageInfoModal({
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {villageInfo.army ? (
-                    Object.entries(villageInfo.army).map(
-                      ([unitType, count]) => {
-                        const unitNames: {
-                          [key: string]: { name: string; icon: string };
-                        } = {
-                          spearman: { name: "Speerträger", icon: "🛡️" },
-                          swordsman: { name: "Schwertkämpfer", icon: "⚔️" },
-                          archer: { name: "Bogenschütze", icon: "🏹" },
-                          knight: { name: "Schwere Kavallerie", icon: "🐎" },
-                          trebuchet: { name: "Trebuchet", icon: "🏗️" },
-                        };
+                    Object.entries(villageInfo.army).map(([unitType, count]) => {
+                      const unitNames: {
+                        [key: string]: { name: string; icon: string };
+                      } = {
+                        spearman: { name: "Speerträger", icon: "🛡️" },
+                        swordsman: { name: "Schwertkämpfer", icon: "⚔️" },
+                        archer: { name: "Bogenschütze", icon: "🏹" },
+                        knight: { name: "Schwere Kavallerie", icon: "🐎" },
+                        trebuchet: { name: "Trebuchet", icon: "🏗️" },
+                      };
 
-                        const unit = unitNames[unitType] || {
-                          name: unitType,
-                          icon: "⚔️",
-                        };
+                      const unit = unitNames[unitType] || {
+                        name: unitType,
+                        icon: "⚔️",
+                      };
 
-                        return (
-                          <div
-                            key={unitType}
-                            className="flex items-center justify-between text-sm"
-                          >
-                            <div className="flex items-center gap-2">
-                              <span>{unit.icon}</span>
-                              <span>{unit.name}</span>
-                            </div>
-                            <Badge variant="outline">
-                              {count > 0 ? formatNumber(count) : "?"}
-                            </Badge>
+                      return (
+                        <div key={unitType} className="flex items-center justify-between text-sm">
+                          <div className="flex items-center gap-2">
+                            <span>{unit.icon}</span>
+                            <span>{unit.name}</span>
                           </div>
-                        );
-                      },
-                    )
+                          <Badge variant="outline">{count > 0 ? formatNumber(count) : "?"}</Badge>
+                        </div>
+                      );
+                    })
                   ) : (
                     <div className="text-sm text-muted-foreground text-center py-4">
                       <T k="villageInfo.noArmy" f="No army data available" />
@@ -415,7 +367,8 @@ export function VillageInfoModal({
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-base">
                     <Clock className="h-4 w-4" />
-                    <T k="villageInfo.tabs.travel" f="Travel Time" /> ({distance} <T k="villageInfo.fields" f="tiles" />)
+                    <T k="villageInfo.tabs.travel" f="Travel Time" /> ({distance}{" "}
+                    <T k="villageInfo.fields" f="tiles" />)
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
@@ -441,17 +394,12 @@ export function VillageInfoModal({
                       icon: "🐎",
                     },
                   ].map((unit) => (
-                    <div
-                      key={unit.type}
-                      className="flex items-center justify-between text-sm"
-                    >
+                    <div key={unit.type} className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-2">
                         <span>{unit.icon}</span>
                         <span>{unit.name}</span>
                       </div>
-                      <Badge variant="outline">
-                        {getTravelTime(distance, unit.type)}
-                      </Badge>
+                      <Badge variant="outline">{getTravelTime(distance, unit.type)}</Badge>
                     </div>
                   ))}
                 </CardContent>
