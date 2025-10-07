@@ -13,8 +13,7 @@ extension automatically:
 - Exposes common ports (`5173` for Vite, `6006` for Storybook).
 - Adds editor extensions for Bun, Solidity, ESLint, and Prettier.
 
-Use this environment to avoid manual toolchain setup. The sections below outline the same steps for local machines without Co
-despaces support.
+Use this environment to avoid manual toolchain setup. The sections below outline the same steps for local machines without Codespaces support.
 
 ## Prerequisites
 
