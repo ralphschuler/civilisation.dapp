@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="bgCity" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0d1028" />
+      <stop offset="100%" stop-color="#2b2f77" />
+    </linearGradient>
+    <linearGradient id="sunrise" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#d8b36f" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="#0d1028" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="beamCity" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#00e0ff" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#00a6c6" stop-opacity="0.1" />
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bgCity)" />
+  <circle cx="320" cy="180" r="220" fill="url(#sunrise)" />
+  <g opacity="0.5" stroke="#00e0ff" stroke-width="2" stroke-dasharray="12 10">
+    <path d="M120 600h1040" />
+    <path d="M160 560h960" />
+    <path d="M200 520h880" />
+  </g>
+  <g transform="translate(160 240)" fill="#151830">
+    <rect x="0" y="180" width="160" height="240" rx="12" />
+    <rect x="160" y="140" width="180" height="280" rx="12" />
+    <rect x="360" y="100" width="220" height="320" rx="18" />
+    <rect x="620" y="180" width="160" height="240" rx="10" />
+    <rect x="780" y="220" width="120" height="200" rx="8" />
+    <rect x="930" y="160" width="140" height="260" rx="12" />
+  </g>
+  <g transform="translate(160 240)" fill="#1f234a">
+    <rect x="24" y="220" width="120" height="200" rx="10" />
+    <rect x="188" y="180" width="132" height="240" rx="12" />
+    <rect x="380" y="140" width="172" height="280" rx="14" />
+    <rect x="648" y="220" width="120" height="200" rx="10" />
+    <rect x="796" y="240" width="96" height="180" rx="8" />
+    <rect x="956" y="200" width="104" height="220" rx="10" />
+  </g>
+  <g transform="translate(240 220)" opacity="0.85">
+    <path d="M120 200l80-120 80 120z" fill="#d8b36f" />
+    <path d="M320 160l68-100 68 100z" fill="#f0d39d" opacity="0.7" />
+    <path d="M560 200l52-80 52 80z" fill="#d8b36f" />
+    <path d="M720 220l44-72 44 72z" fill="#c9a05c" />
+  </g>
+  <g transform="translate(200 160)" opacity="0.3" fill="#00e0ff">
+    <circle cx="120" cy="420" r="16" />
+    <circle cx="304" cy="380" r="18" />
+    <circle cx="540" cy="360" r="20" />
+    <circle cx="760" cy="420" r="14" />
+    <circle cx="920" cy="340" r="18" />
+  </g>
+  <g transform="translate(200 140)" font-family="'Orbitron', 'Montserrat', sans-serif" font-size="26" fill="#00e0ff">
+    <text x="112" y="424">Gold</text>
+    <text x="296" y="384">Iron</text>
+    <text x="532" y="364">Bread</text>
+    <text x="752" y="424">Stone</text>
+    <text x="912" y="344">Faith</text>
+  </g>
+  <path d="M140 480h1000" stroke="url(#beamCity)" stroke-width="12" opacity="0.6" />
+  <text x="1040" y="120" font-family="'Cinzel', serif" font-size="72" fill="#f0d39d" text-anchor="end">Civilisation</text>
+  <text x="1040" y="182" font-family="'Montserrat', sans-serif" font-size="32" fill="#00e0ff" text-anchor="end" letter-spacing="6">BUILD YOUR KINGDOM</text>
+  <text x="1040" y="228" font-family="'Montserrat', sans-serif" font-size="24" fill="#f0d39d" text-anchor="end">From humble village to mighty empire.</text>
+  <rect x="920" y="520" width="200" height="64" rx="32" fill="#d8b36f" opacity="0.85" />
+  <text x="1020" y="562" font-family="'Montserrat', sans-serif" font-size="24" fill="#232323" text-anchor="middle">Tap to Expand</text>
+</svg>

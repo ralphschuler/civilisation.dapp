@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#1d235c" />
+      <stop offset="100%" stop-color="#2b2f77" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.35" r="0.55">
+      <stop offset="0%" stop-color="#00e0ff" stop-opacity="0.75" />
+      <stop offset="100%" stop-color="#00e0ff" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="crownMetal" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f0d39d" />
+      <stop offset="50%" stop-color="#d8b36f" />
+      <stop offset="100%" stop-color="#b2853e" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f122d" flood-opacity="0.65" />
+    </filter>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#bg)" />
+  <rect width="256" height="256" rx="56" fill="url(#glow)" />
+  <g filter="url(#shadow)">
+    <path fill="url(#crownMetal)" stroke="#f3dcb0" stroke-width="4" d="M64 156l12-64 36 40 16-68 16 68 36-40 12 64z" />
+  </g>
+  <path d="M68 184h120" stroke="#00e0ff" stroke-width="4" stroke-linecap="round" opacity="0.5" />
+  <path d="M92 196h72" stroke="#00e0ff" stroke-width="3" stroke-linecap="round" opacity="0.35" />
+  <path d="M128 112l18-18 18 18-18 18z" fill="#00e0ff" opacity="0.9" transform="scale(0.9) translate(14,15)" />
+  <path d="M128 112l12-12 12 12-12 12z" fill="#182045" opacity="0.65" transform="scale(0.75) translate(43,47)" />
+  <path d="M40 232h176" stroke="#17192f" stroke-opacity="0.65" stroke-width="12" stroke-linecap="round" />
+  <path d="M40 224h176" stroke="#2f336c" stroke-width="8" stroke-linecap="round" opacity="0.7" />
+  <g opacity="0.4" stroke="#00e0ff" stroke-width="2" stroke-linecap="round">
+    <path d="M32 64h24" />
+    <path d="M200 48h24" />
+    <path d="M54 104h18" />
+    <path d="M184 92h18" />
+  </g>
+  <g opacity="0.25" stroke="#00e0ff" stroke-width="1.5">
+    <path d="M52 60l20 20" />
+    <path d="M188 60l20 20" />
+  </g>
+  <text x="128" y="226" text-anchor="middle" fill="#d8b36f" font-family="'Cinzel', serif" font-size="42">C</text>
+</svg>

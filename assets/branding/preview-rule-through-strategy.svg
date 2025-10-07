@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="bgBattle" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#161b3e" />
+      <stop offset="100%" stop-color="#232323" />
+    </linearGradient>
+    <linearGradient id="gridGlow" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#00e0ff" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#00e0ff" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bgBattle)" />
+  <g opacity="0.5" stroke="#00e0ff" stroke-width="1">
+    <path d="M0 440h1280" />
+    <path d="M0 500h1280" />
+    <path d="M0 560h1280" />
+    <path d="M0 620h1280" />
+    <path d="M120 360v360" />
+    <path d="M240 360v360" />
+    <path d="M360 360v360" />
+    <path d="M480 360v360" />
+    <path d="M600 360v360" />
+    <path d="M720 360v360" />
+    <path d="M840 360v360" />
+    <path d="M960 360v360" />
+    <path d="M1080 360v360" />
+  </g>
+  <rect x="0" y="360" width="1280" height="360" fill="url(#gridGlow)" />
+  <g transform="translate(120 200)">
+    <path d="M0 220l140-120 120 80 140-160 120 120 160-120 120 180 140-60" fill="none" stroke="#d8b36f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M0 220l140-120 120 80 140-160 120 120 160-120 120 180 140-60" fill="none" stroke="#00e0ff" stroke-width="2" stroke-dasharray="10 12" />
+    <g fill="#d8b36f">
+      <circle cx="0" cy="220" r="14" />
+      <circle cx="140" cy="100" r="12" />
+      <circle cx="260" cy="180" r="12" />
+      <circle cx="400" cy="20" r="12" />
+      <circle cx="520" cy="140" r="12" />
+      <circle cx="680" cy="20" r="12" />
+      <circle cx="800" cy="200" r="12" />
+      <circle cx="940" cy="140" r="12" />
+    </g>
+    <g fill="#00e0ff" opacity="0.5">
+      <circle cx="0" cy="220" r="26" />
+      <circle cx="140" cy="100" r="24" />
+      <circle cx="260" cy="180" r="24" />
+      <circle cx="400" cy="20" r="24" />
+      <circle cx="520" cy="140" r="24" />
+      <circle cx="680" cy="20" r="24" />
+      <circle cx="800" cy="200" r="24" />
+      <circle cx="940" cy="140" r="24" />
+    </g>
+  </g>
+  <g transform="translate(180 420)" font-family="'Montserrat', sans-serif" font-size="24" fill="#d8b36f">
+    <text x="-40" y="0">Infantry</text>
+    <text x="120" y="-60">Archers</text>
+    <text x="280" y="20">Cavalry</text>
+    <text x="440" y="-120">Siege</text>
+    <text x="560" y="0">Scout</text>
+    <text x="720" y="-120">Mage</text>
+    <text x="840" y="60">Allies</text>
+    <text x="980" y="-20">Warden</text>
+  </g>
+  <g transform="translate(160 160)">
+    <rect x="760" y="-40" width="280" height="160" rx="16" fill="#0f122c" stroke="#00e0ff" stroke-width="3" opacity="0.8" />
+    <text x="900" y="4" font-family="'Montserrat', sans-serif" font-size="28" fill="#00e0ff" text-anchor="middle">Battle Planner</text>
+    <text x="900" y="44" font-family="'Montserrat', sans-serif" font-size="20" fill="#f0d39d" text-anchor="middle">Deploy units with precision</text>
+    <text x="900" y="84" font-family="'Montserrat', sans-serif" font-size="18" fill="#f0d39d" text-anchor="middle">Plan. Conquer. Expand.</text>
+  </g>
+  <text x="1120" y="120" font-family="'Cinzel', serif" font-size="68" fill="#f0d39d" text-anchor="end">Rule Through Strategy</text>
+  <text x="1120" y="172" font-family="'Montserrat', sans-serif" font-size="30" fill="#00e0ff" text-anchor="end">Plan. Conquer. Expand.</text>
+</svg>

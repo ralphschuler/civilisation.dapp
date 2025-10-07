@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <radialGradient id="coinGlow" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0%" stop-color="#f5dfb5" />
+      <stop offset="60%" stop-color="#d8b36f" />
+      <stop offset="100%" stop-color="#8c6a2f" />
+    </radialGradient>
+    <radialGradient id="bgChain" cx="0.7" cy="0.3" r="1">
+      <stop offset="0%" stop-color="#1a1d3f" />
+      <stop offset="100%" stop-color="#05060f" />
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bgChain)" />
+  <g opacity="0.2" stroke="#00e0ff" stroke-width="2">
+    <path d="M200 80l880 560" />
+    <path d="M240 40l880 560" />
+    <path d="M160 120l880 560" />
+    <path d="M120 160l880 560" />
+  </g>
+  <g opacity="0.2" stroke="#00e0ff" stroke-width="1">
+    <path d="M120 80h1040" />
+    <path d="M120 160h1040" />
+    <path d="M120 240h1040" />
+    <path d="M120 320h1040" />
+    <path d="M120 400h1040" />
+    <path d="M120 480h1040" />
+    <path d="M120 560h1040" />
+    <path d="M120 640h1040" />
+  </g>
+  <g transform="translate(640 360)">
+    <circle cx="0" cy="0" r="220" fill="#0f1228" opacity="0.65" />
+    <circle cx="0" cy="0" r="200" fill="url(#coinGlow)" />
+    <circle cx="0" cy="0" r="152" fill="#f5dfb5" opacity="0.55" />
+    <circle cx="0" cy="0" r="144" fill="#101326" />
+    <circle cx="0" cy="0" r="120" fill="none" stroke="#d8b36f" stroke-width="12" />
+    <circle cx="0" cy="0" r="90" fill="none" stroke="#00e0ff" stroke-width="6" stroke-dasharray="20 16" />
+    <path d="M0-88c48 0 88 40 88 88s-40 88-88 88-88-40-88-88 40-88 88-88z" fill="#0f122c" />
+    <path d="M0-66c34 0 62 28 62 62s-28 62-62 62-62-28-62-62 28-62 62-62z" fill="#232649" />
+    <path d="M0-44c20 0 36 16 36 36s-16 36-36 36-36-16-36-36 16-36 36-36z" fill="#0f122c" />
+    <circle cx="0" cy="0" r="26" fill="#00e0ff" opacity="0.8" />
+    <circle cx="0" cy="0" r="10" fill="#0f122c" />
+    <g opacity="0.8" stroke="#d8b36f" stroke-width="6" stroke-linecap="round">
+      <path d="M-120 0h240" />
+      <path d="M0-120v240" />
+    </g>
+    <g opacity="0.5" stroke="#00e0ff" stroke-width="4">
+      <path d="M-120-120L120 120" />
+      <path d="M120-120L-120 120" />
+    </g>
+  </g>
+  <g opacity="0.35" stroke="#00e0ff" stroke-width="2">
+    <path d="M420 140l40 40" />
+    <path d="M820 540l40 40" />
+    <path d="M920 200l40 40" />
+    <path d="M320 520l40 40" />
+  </g>
+  <text x="940" y="140" font-family="'Cinzel', serif" font-size="70" fill="#f0d39d" text-anchor="end">On the World Chain</text>
+  <text x="940" y="192" font-family="'Montserrat', sans-serif" font-size="30" fill="#00e0ff" text-anchor="end">Own your progress, on-chain.</text>
+  <text x="940" y="240" font-family="'Montserrat', sans-serif" font-size="22" fill="#f0d39d" text-anchor="end">Civilisation x World App MiniKit</text>
+</svg>
