@@ -40,7 +40,9 @@ function AppContent() {
   const village = useVillageStore((state) => state.village);
   const upgradeBuilding = useVillageStore((state) => state.upgradeBuilding);
   const collectResources = useVillageStore((state) => state.collectResources);
-  const updateResources = useVillageStore((state) => state.updateResources);
+  const applyCollectedResources = useVillageStore(
+    (state) => state.applyCollectedResources,
+  );
 
   const selectedBuilding = useGameStore((state) => state.selectedBuilding);
   const setSelectedBuilding = useGameStore((state) => state.setSelectedBuilding);
@@ -160,37 +162,33 @@ function AppContent() {
 
             await collectResourceOnChain(resourceType);
 
-            if (village && collectedAmount > 0) {
-              await updateResources({
-                [resourceType]:
-                  village.resources[resourceType] + collectedAmount,
+            if (collectedAmount > 0) {
+              await applyCollectedResources({
+                [resourceType]: collectedAmount,
               });
             }
             return;
           }
 
-          const resourceUpdates: Partial<Village["resources"]> = {};
+          const collectedResources: Partial<Village["uncollectedResources"]> = {};
 
-          if (village) {
-            (Object.keys(onChainUncollected) as Array<
-              keyof Village["uncollectedResources"]
-            >).forEach((key) => {
-              if (!resolveOnChainResourceKey(key)) {
-                return;
-              }
+          (Object.keys(onChainUncollected) as Array<
+            keyof Village["uncollectedResources"]
+          >).forEach((key) => {
+            if (!resolveOnChainResourceKey(key)) {
+              return;
+            }
 
-              const resourceKey = key;
-              const amount = onChainUncollected[resourceKey] ?? 0;
-              if (amount > 0) {
-                resourceUpdates[resourceKey] = village.resources[resourceKey] + amount;
-              }
-            });
-          }
+            const amount = onChainUncollected[key] ?? 0;
+            if (amount > 0) {
+              collectedResources[key] = amount;
+            }
+          });
 
           await collectAllOnChain();
 
-          if (village && Object.keys(resourceUpdates).length > 0) {
-            await updateResources(resourceUpdates);
+          if (Object.keys(collectedResources).length > 0) {
+            await applyCollectedResources(collectedResources);
           }
         })();
 
@@ -206,8 +204,7 @@ function AppContent() {
       isResourceFacetEnabled,
       onChainUncollected,
       resolveOnChainResourceKey,
-      updateResources,
-      village,
+      applyCollectedResources,
     ],
   );
 
