@@ -3,14 +3,14 @@
  * Interacts with repositories for persistence
  */
 
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
-import { BuildingId, TechTree, UnitId } from '@/types/game';
-import { getRepository } from '@/lib/repositories/RepositoryFactory';
+import { BuildingId, TechTree, UnitId } from "@/types/game";
+import { getRepository } from "@/lib/repositories/RepositoryFactory";
 
-type SmithyLine = 'inf' | 'cav' | 'ranged' | 'siege';
-type SmithyStat = 'attack' | 'defense';
+type SmithyLine = "inf" | "cav" | "ranged" | "siege";
+type SmithyStat = "attack" | "defense";
 
 interface TechTreeState {
   techTree: TechTree | null;
@@ -21,7 +21,7 @@ interface TechTreeState {
   unlockBuilding: (buildingId: BuildingId) => Promise<void>;
   unlockUnit: (unitId: UnitId) => Promise<void>;
   upgradeSmithyLine: (line: SmithyLine, stat: SmithyStat) => Promise<void>;
-  advanceEra: (era: TechTree['era']) => Promise<void>;
+  advanceEra: (era: TechTree["era"]) => Promise<void>;
   isBuildingUnlocked: (buildingId: BuildingId) => boolean;
   isUnitUnlocked: (unitId: UnitId) => boolean;
   reset: () => void;
@@ -41,7 +41,7 @@ export const useTechTreeStore = create<TechTreeState>()(
           set({ techTree, isLoading: false });
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : 'Failed to load tech tree',
+            error: error instanceof Error ? error.message : "Failed to load tech tree",
             isLoading: false,
           });
         }
@@ -53,7 +53,7 @@ export const useTechTreeStore = create<TechTreeState>()(
           set({ techTree });
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : 'Failed to update tech tree',
+            error: error instanceof Error ? error.message : "Failed to update tech tree",
           });
         }
       },
@@ -65,7 +65,7 @@ export const useTechTreeStore = create<TechTreeState>()(
           set({ techTree });
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : 'Failed to unlock building',
+            error: error instanceof Error ? error.message : "Failed to unlock building",
           });
         }
       },
@@ -77,7 +77,7 @@ export const useTechTreeStore = create<TechTreeState>()(
           set({ techTree });
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : 'Failed to unlock unit',
+            error: error instanceof Error ? error.message : "Failed to unlock unit",
           });
         }
       },
@@ -89,11 +89,11 @@ export const useTechTreeStore = create<TechTreeState>()(
           set({ techTree });
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : 'Failed to upgrade smithy line',
+            error: error instanceof Error ? error.message : "Failed to upgrade smithy line",
           });
         }
       },
-      advanceEra: async (era: TechTree['era']) => {
+      advanceEra: async (era: TechTree["era"]) => {
         try {
           const repository = getRepository();
           await repository.techTree.advanceEra(era);
@@ -101,7 +101,7 @@ export const useTechTreeStore = create<TechTreeState>()(
           set({ techTree });
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : 'Failed to advance era',
+            error: error instanceof Error ? error.message : "Failed to advance era",
           });
         }
       },
@@ -117,6 +117,6 @@ export const useTechTreeStore = create<TechTreeState>()(
         set({ techTree: null, isLoading: false, error: null });
       },
     }),
-    { name: 'TechTreeStore' },
+    { name: "TechTreeStore" },
   ),
 );

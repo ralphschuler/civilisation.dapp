@@ -1,17 +1,17 @@
-export type ReportType = 'battle' | 'trade' | 'spy' | 'building' | 'event' | 'system';
+export type ReportType = "battle" | "trade" | "spy" | "building" | "event" | "system";
 
 export interface BattleResult {
   attacker: {
     village: string;
     player: string;
-    units: Record<string, { sent: number; lost: number; }>;
+    units: Record<string, { sent: number; lost: number }>;
   };
   defender: {
     village: string;
     player: string;
-    units: Record<string, { defending: number; lost: number; }>;
+    units: Record<string, { defending: number; lost: number }>;
   };
-  result: 'victory' | 'defeat' | 'draw';
+  result: "victory" | "defeat" | "draw";
   loot?: Record<string, number>;
   wallDamage?: number;
   reasons?: {
@@ -23,10 +23,10 @@ export interface BattleResult {
   };
   suggestions?: string[];
   phases: {
-    ranged: { attackerLosses: Record<string, number>; defenderLosses: Record<string, number>; };
-    charge: { attackerLosses: Record<string, number>; defenderLosses: Record<string, number>; };
-    melee: { attackerLosses: Record<string, number>; defenderLosses: Record<string, number>; };
-    siege: { wallDamage: number; };
+    ranged: { attackerLosses: Record<string, number>; defenderLosses: Record<string, number> };
+    charge: { attackerLosses: Record<string, number>; defenderLosses: Record<string, number> };
+    melee: { attackerLosses: Record<string, number>; defenderLosses: Record<string, number> };
+    siege: { wallDamage: number };
   };
 }
 
@@ -39,7 +39,7 @@ export interface Report {
   read: boolean;
   important?: boolean;
   archived?: boolean;
-  
+
   // Type-specific data
   battleData?: BattleResult;
   tradeData?: {

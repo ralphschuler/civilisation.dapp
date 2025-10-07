@@ -13,17 +13,7 @@ const meta: Meta<typeof ResourceCard> = {
   argTypes: {
     resource: {
       control: "select",
-      options: [
-        "wood",
-        "clay",
-        "iron",
-        "coal",
-        "wheat",
-        "bread",
-        "meat",
-        "gold",
-        "villager",
-      ],
+      options: ["wood", "clay", "iron", "coal", "wheat", "bread", "meat", "gold", "villager"],
     },
   },
 };
@@ -50,18 +40,14 @@ export const NoProduction: Story = {
 export const AllResourcesGrid: Story = {
   render: () => (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4">
-      {[
-        "wood",
-        "clay",
-        "iron",
-        "coal",
-        "wheat",
-        "bread",
-        "meat",
-        "gold",
-        "villager",
-      ].map((r) => (
-        <ResourceCard key={r} resource={r} amount={Math.floor(Math.random() * 5000)} production={Math.floor(Math.random() * 300)} capacity={5000} />
+      {["wood", "clay", "iron", "coal", "wheat", "bread", "meat", "gold", "villager"].map((r) => (
+        <ResourceCard
+          key={r}
+          resource={r}
+          amount={Math.floor(Math.random() * 5000)}
+          production={Math.floor(Math.random() * 300)}
+          capacity={5000}
+        />
       ))}
     </div>
   ),

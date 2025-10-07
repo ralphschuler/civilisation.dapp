@@ -1,8 +1,8 @@
-import { Card, CardContent } from '../ui/Card';
-import { Badge } from '../ui/Badge';
-import { Progress } from '../ui/Progress';
-import { getResourceIcon } from '../../data/gameData';
-import { useI18n } from '@/providers/i18n-provider';
+import { Card, CardContent } from "../ui/Card";
+import { Badge } from "../ui/Badge";
+import { Progress } from "../ui/Progress";
+import { getResourceIcon } from "../../data/gameData";
+import { useI18n } from "@/providers/i18n-provider";
 
 interface ResourceCardProps {
   resource: string;
@@ -12,12 +12,12 @@ interface ResourceCardProps {
   className?: string;
 }
 
-export function ResourceCard({ 
-  resource, 
-  amount, 
-  production, 
+export function ResourceCard({
+  resource,
+  amount,
+  production,
   capacity,
-  className = ""
+  className = "",
 }: ResourceCardProps) {
   const { t } = useI18n();
   const formatNumber = (num: number) => {
@@ -45,12 +45,10 @@ export function ResourceCard({
 
         {capacity && (
           <div className="space-y-2">
-            <Progress 
-              value={(amount / capacity) * 100} 
-              className="h-2"
-            />
+            <Progress value={(amount / capacity) * 100} className="h-2" />
             <div className="text-xs text-muted-foreground text-right">
-              {Math.round((amount / capacity) * 100)}% {t('screens.resources.of', 'von')} {formatNumber(capacity)}
+              {Math.round((amount / capacity) * 100)}% {t("screens.resources.of", "von")}{" "}
+              {formatNumber(capacity)}
             </div>
           </div>
         )}

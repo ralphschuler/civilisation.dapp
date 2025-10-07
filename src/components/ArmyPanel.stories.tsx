@@ -37,7 +37,10 @@ export const NoBarracks: Story = {};
 
 export const BarracksLevel1: Story = {
   args: {
-    buildings: { townhall: { type: "townhall", level: 2 }, barracks: { type: "barracks", level: 1 } } as any,
+    buildings: {
+      townhall: { type: "townhall", level: 2 },
+      barracks: { type: "barracks", level: 1 },
+    } as any,
     resources: {
       bread: 500,
       clay: 1500,
@@ -55,7 +58,10 @@ export const BarracksLevel1: Story = {
 
 export const BarracksLevel10Rich: Story = {
   args: {
-    buildings: { townhall: { type: "townhall", level: 10 }, barracks: { type: "barracks", level: 10 } } as any,
+    buildings: {
+      townhall: { type: "townhall", level: 10 },
+      barracks: { type: "barracks", level: 10 },
+    } as any,
     resources: {
       bread: 5000,
       clay: 12000,
@@ -79,7 +85,10 @@ export const WithArmyOverview: Story = {
 
 export const NotEnoughResources: Story = {
   args: {
-    buildings: { townhall: { type: "townhall", level: 3 }, barracks: { type: "barracks", level: 5 } } as any,
+    buildings: {
+      townhall: { type: "townhall", level: 3 },
+      barracks: { type: "barracks", level: 5 },
+    } as any,
     resources: {
       bread: 1,
       clay: 2,

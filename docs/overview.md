@@ -10,12 +10,12 @@ Civilisation DApp is a village-building strategy game that runs inside the World
 
 ## Key technologies
 
-| Area | Stack |
-| ---- | ----- |
-| Frontend | React, TypeScript, Vite, Zustand, wagmi, viem, Tailwind CSS |
-| Smart contracts | Solidity, OpenZeppelin, Foundry, Diamond pattern |
-| Tooling | Bun, Storybook, ESLint, Prettier, GitHub Actions |
-| Infrastructure | GitHub Pages for static hosting, Worldchain for on-chain state |
+| Area            | Stack                                                          |
+| --------------- | -------------------------------------------------------------- |
+| Frontend        | React, TypeScript, Vite, Zustand, wagmi, viem, Tailwind CSS    |
+| Smart contracts | Solidity, OpenZeppelin, Foundry, Diamond pattern               |
+| Tooling         | Bun, Storybook, ESLint, Prettier, GitHub Actions               |
+| Infrastructure  | GitHub Pages for static hosting, Worldchain for on-chain state |
 
 ## Repository structure
 
