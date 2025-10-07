@@ -16,6 +16,8 @@ on:
       - ".github/workflows/test-contracts.yml"
   workflow_dispatch:
 
+permissions:
+  contents: read
 jobs:
   test-contracts:
     runs-on: ubuntu-latest
