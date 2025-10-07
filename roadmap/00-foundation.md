@@ -10,7 +10,7 @@ Establish a shared understanding of the current implementation, surface missing 
 - Core resource, building, and unit definitions exist in TypeScript via `src/data/gameData.ts` and JSON configs under `configs/`.
 - On-chain resource collection bridge implemented through `useResourceGeneration`, integrating Worldchain wallet addresses and `resourceFacet` ABI calls.
 - Zustand stores manage village, marches, player stats, and tech progression, backed by repository abstractions for persistence.
-- Continuous integration now runs dedicated `test-app` and `test-contracts` workflows covering the Vitest and Foundry suites for the React app and smart contracts.
+
 
 ## Expected Outcomes
 
@@ -18,6 +18,7 @@ Establish a shared understanding of the current implementation, surface missing 
 2. Inventory of implemented screens, stores, and hooks mapped to the design pillars (One-Thumb flow, quick sessions, fairness, readability).
 3. Gap analysis outlining missing features, technical debt, and doc discrepancies surfaced as GitHub issues or Notion tasks.
 4. Decision log capturing technology or scope pivots agreed during the audit.
+5. Continuous integration runs dedicated `test-app` and `test-contracts` workflows covering the Vitest and Foundry suites for the React app and smart contracts.
 
 ## Definition of Done
 
