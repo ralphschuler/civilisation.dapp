@@ -1,0 +1,38 @@
+name: "Support question"
+description: "Ask for clarification about usage, docs, or contributing."
+labels:
+  - type:question
+  - status:needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Need a hand? Let us know what you're trying to accomplish so the community can point you in the right direction.
+  - type: input
+    id: topic
+    attributes:
+      label: Question topic
+      description: "Summarise your question in a sentence."
+      placeholder: "How do I deploy contracts to testnet?"
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: "Share what you've tried, relevant commands, and any error messages."
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: Related documentation or issues
+      description: "Link to any docs, issues, or PRs you've already reviewed."
+      render: markdown
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: "Screenshots, logs, or other context can be attached here."
+      render: markdown

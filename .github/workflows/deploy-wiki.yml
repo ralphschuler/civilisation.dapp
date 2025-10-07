@@ -1,12 +1,8 @@
-name: Wiki Deploy
+name: Deploy Wiki
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "docs/**"
-      - ".github/workflows/wiki-deploy.yml"
+  release:
+    types: [released, prereleased]
   workflow_dispatch:
 
 permissions:

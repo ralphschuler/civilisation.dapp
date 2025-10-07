@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import prettier from "eslint-config-prettier";
 import reactHooks from "eslint-plugin-react-hooks";
 import storybook from "eslint-plugin-storybook";
 import tseslint from "typescript-eslint";
@@ -44,5 +45,6 @@ export default tseslint.config(
       "@typescript-eslint/consistent-indexed-object-style": "off",
     },
   },
+  prettier,
   ...storybookFlatRecommended,
 );
