@@ -6,6 +6,7 @@ import { Bell, Settings, User } from "lucide-react";
 
 interface GameHeaderProps {
   village: Village;
+  username?: string | null;
   onSettingsClick?: () => void;
   onProfileClick?: () => void;
   onNotificationsClick?: () => void;
@@ -13,21 +14,34 @@ interface GameHeaderProps {
 
 export function GameHeader({
   village,
+  username,
   onSettingsClick,
   onProfileClick,
   onNotificationsClick,
 }: GameHeaderProps) {
   const { t } = useI18n();
+  const displayName = username ? `@${username}` : t("app.guestPlayer", "Guest commander");
+
   return (
-    <header className="bg-card border-b px-4 py-3 flex-shrink-0">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="text-2xl">🏰</div>
-          <div>
-            <h1 className="font-bold text-lg">{t("app.title", "Tribal Wars")}</h1>
-            <Badge variant="secondary" className="text-xs">
-              {village.name}
-            </Badge>
+    <div className="border-b px-4 py-3">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-2xl">
+            🏰
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-caption uppercase tracking-wide text-muted-foreground">
+              {t("app.playerLabel", "Commander")}
+            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="font-semibold text-lg leading-tight">
+                {t("app.title", "Tribal Wars")}
+              </h1>
+              <Badge variant="secondary" className="text-xs font-medium">
+                {displayName}
+              </Badge>
+            </div>
+            <span className="text-caption text-muted-foreground">{village.name}</span>
           </div>
         </div>
 
@@ -47,6 +61,6 @@ export function GameHeader({
           </Button>
         </div>
       </div>
-    </header>
+    </div>
   );
 }

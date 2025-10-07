@@ -28,6 +28,8 @@ import { WalletConnectScreen } from "@/components/screens/WalletConnectScreen";
 import { NotFoundScreen } from "@/components/screens/NotFoundScreen";
 import type { March, MarchPreset, Village } from "@/types/game";
 import { useGameStore, useVillageStore, useMarchStore, usePlayerStatsStore } from "@/stores";
+import { ProfileScreen } from "@/components/screens/ProfileScreen";
+import { NotificationsScreen } from "@/components/screens/NotificationsScreen";
 
 function AppContent() {
   const navigate = useNavigate();
@@ -200,133 +202,137 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto">
-      <Routes>
-        <Route path="/" element={<Navigate to="/village" replace />} />
-        <Route path="/wallet-connect" element={<WalletConnectScreen />} />
+    <div className="flex min-h-[100dvh] w-full justify-center bg-background text-foreground">
+      <div className="flex w-full max-w-md flex-1 flex-col">
+        <Routes>
+          <Route path="/" element={<Navigate to="/village" replace />} />
+          <Route path="/wallet-connect" element={<WalletConnectScreen />} />
 
-        {/* Layout-based Routes */}
-        <Route element={<GameLayout />}>
-          <Route
-            element={<ProtectedRoute condition={authenticated} redirectTo="/wallet-connect" />}
-          >
+          {/* Layout-based Routes */}
+          <Route element={<GameLayout />}>
             <Route
-              path="/village"
-              element={
-                <VillageScreen
-                  village={village}
-                  selectedBuilding={selectedBuilding}
-                  onBuildingSelect={setSelectedBuilding}
-                  onUpgradeBuilding={handleUpgradeBuilding}
-                />
-              }
-            />
-            <Route
-              path="/world"
-              element={
-                <WorldMapScreen
-                  village={village}
-                  marches={marches}
-                  marchPresets={marchPresets}
-                  onVillageSelect={handleVillageSelect}
-                  onVillageInfo={setSelectedVillageInfo}
-                  onCreateMarch={handleCreateMarch}
-                  onCancelMarch={handleCancelMarch}
-                  onCreatePreset={handleCreatePreset}
-                  onDeletePreset={handleDeletePreset}
-                />
-              }
-            />
-            <Route
-              path="/units"
-              element={
-                <UnitsScreen
-                  village={village}
-                  resources={village.resources}
-                  onTrainUnit={handleTrainUnit}
-                />
-              }
-            />
-            <Route
-              path="/resources"
-              element={
-                <ResourcesScreen
-                  resources={village.resources}
-                  uncollectedResources={
-                    resolvedUncollectedResources ?? village.uncollectedResources
-                  }
-                  buildingLevels={village.buildings}
-                  storageCapacity={storageCapacity}
-                  onCollectResource={handleCollectResources}
-                  autoProductionPerHour={autoProductionPerHour}
-                  nextProductionInSeconds={secondsUntilNextUnit}
-                  isOnChainProductionActive={isResourceFacetEnabled}
-                />
-              }
-            />
-            <Route path="/reports" element={<ReportsScreen />} />
-            <Route path="/more" element={<MoreScreen />} />
-            <Route
-              path="/stats"
-              element={
-                <StatsScreen
-                  village={village}
-                  resources={village.resources}
-                  playerStats={playerStats}
-                />
-              }
-            />
-            <Route
-              path="/achievements"
-              element={<AchievementsScreen onBack={handleBackToMore} />}
-            />
-            <Route path="/settings" element={<SettingsScreen />} />
-            <Route path="/help" element={<HelpSupportScreen />} />
-            <Route path="/trade" element={<TradeScreen resources={village.resources} />} />
-            <Route
-              path="/march-planner"
-              element={
-                <MarchPlannerScreen
-                  village={village}
-                  marches={marches}
-                  marchPresets={marchPresets}
-                  onCreateMarch={handleCreateMarch}
-                  onCancelMarch={handleCancelMarch}
-                  onCreatePreset={handleCreatePreset}
-                  onDeletePreset={handleDeletePreset}
-                  selectedTarget={selectedVillageInfo}
-                />
-              }
-            />
-            <Route
-              path="/march-reports"
-              element={<MarchReportsScreen marches={marches} battleReports={battleReports} />}
-            />
+              element={<ProtectedRoute condition={authenticated} redirectTo="/wallet-connect" />}
+            >
+              <Route
+                path="/village"
+                element={
+                  <VillageScreen
+                    village={village}
+                    selectedBuilding={selectedBuilding}
+                    onBuildingSelect={setSelectedBuilding}
+                    onUpgradeBuilding={handleUpgradeBuilding}
+                  />
+                }
+              />
+              <Route
+                path="/world"
+                element={
+                  <WorldMapScreen
+                    village={village}
+                    marches={marches}
+                    marchPresets={marchPresets}
+                    onVillageSelect={handleVillageSelect}
+                    onVillageInfo={setSelectedVillageInfo}
+                    onCreateMarch={handleCreateMarch}
+                    onCancelMarch={handleCancelMarch}
+                    onCreatePreset={handleCreatePreset}
+                    onDeletePreset={handleDeletePreset}
+                  />
+                }
+              />
+              <Route
+                path="/units"
+                element={
+                  <UnitsScreen
+                    village={village}
+                    resources={village.resources}
+                    onTrainUnit={handleTrainUnit}
+                  />
+                }
+              />
+              <Route
+                path="/resources"
+                element={
+                  <ResourcesScreen
+                    resources={village.resources}
+                    uncollectedResources={
+                      resolvedUncollectedResources ?? village.uncollectedResources
+                    }
+                    buildingLevels={village.buildings}
+                    storageCapacity={storageCapacity}
+                    onCollectResource={handleCollectResources}
+                    autoProductionPerHour={autoProductionPerHour}
+                    nextProductionInSeconds={secondsUntilNextUnit}
+                    isOnChainProductionActive={isResourceFacetEnabled}
+                  />
+                }
+              />
+              <Route path="/reports" element={<ReportsScreen />} />
+              <Route path="/more" element={<MoreScreen />} />
+              <Route
+                path="/stats"
+                element={
+                  <StatsScreen
+                    village={village}
+                    resources={village.resources}
+                    playerStats={playerStats}
+                  />
+                }
+              />
+              <Route
+                path="/achievements"
+                element={<AchievementsScreen onBack={handleBackToMore} />}
+              />
+              <Route path="/settings" element={<SettingsScreen />} />
+              <Route path="/help" element={<HelpSupportScreen />} />
+              <Route path="/trade" element={<TradeScreen resources={village.resources} />} />
+              <Route
+                path="/march-planner"
+                element={
+                  <MarchPlannerScreen
+                    village={village}
+                    marches={marches}
+                    marchPresets={marchPresets}
+                    onCreateMarch={handleCreateMarch}
+                    onCancelMarch={handleCancelMarch}
+                    onCreatePreset={handleCreatePreset}
+                    onDeletePreset={handleDeletePreset}
+                    selectedTarget={selectedVillageInfo}
+                  />
+                }
+              />
+              <Route
+                path="/march-reports"
+                element={<MarchReportsScreen marches={marches} battleReports={battleReports} />}
+              />
+              <Route path="/profile" element={<ProfileScreen />} />
+              <Route path="/notifications" element={<NotificationsScreen />} />
+            </Route>
           </Route>
-        </Route>
 
-        <Route path="*" element={<NotFoundScreen />} />
-      </Routes>
+          <Route path="*" element={<NotFoundScreen />} />
+        </Routes>
 
-      {/* Village Info Modal */}
-      <VillageInfoModal
-        isOpen={!!selectedVillageInfo}
-        onClose={() => setSelectedVillageInfo(null)}
-        villageInfo={selectedVillageInfo}
-        myVillageCoords={{ x: 200, y: 200 }}
-        onAttack={(villageId) => {
-          console.log("Attack village:", villageId);
-          setSelectedVillageInfo(null);
-        }}
-        onSpy={(villageId) => {
-          console.log("Spy on village:", villageId);
-          setSelectedVillageInfo(null);
-        }}
-        onTrade={(villageId) => {
-          console.log("Trade with village:", villageId);
-          setSelectedVillageInfo(null);
-        }}
-      />
+        {/* Village Info Modal */}
+        <VillageInfoModal
+          isOpen={!!selectedVillageInfo}
+          onClose={() => setSelectedVillageInfo(null)}
+          villageInfo={selectedVillageInfo}
+          myVillageCoords={{ x: 200, y: 200 }}
+          onAttack={(villageId) => {
+            console.log("Attack village:", villageId);
+            setSelectedVillageInfo(null);
+          }}
+          onSpy={(villageId) => {
+            console.log("Spy on village:", villageId);
+            setSelectedVillageInfo(null);
+          }}
+          onTrade={(villageId) => {
+            console.log("Trade with village:", villageId);
+            setSelectedVillageInfo(null);
+          }}
+        />
+      </div>
     </div>
   );
 }
