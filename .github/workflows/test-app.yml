@@ -1,5 +1,7 @@
 name: Test Web App
 
+permissions:
+  contents: read
 on:
   push:
     branches: [main]
