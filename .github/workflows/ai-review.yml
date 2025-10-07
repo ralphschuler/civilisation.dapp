@@ -15,31 +15,15 @@ jobs:
     permissions:
       contents: read
     env:
-      COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     outputs:
-      final_message: ${{ steps.copilot.outputs.response || steps.run_ai.outputs.final-message }}
+      final_message: ${{ steps.run_ai.outputs.final-message }}
     steps:
-      - name: Record available AI backends
+      - name: Check OpenAI configuration
         id: ai-inputs
-        env:
-          COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          if [ -n "$COPILOT_TOKEN" ]; then
-            echo "copilot=available" >> "$GITHUB_OUTPUT"
-          else
-            echo "copilot=missing" >> "$GITHUB_OUTPUT"
-          fi
-
-          if [ -n "$OPENAI_API_KEY" ]; then
-            echo "openai=available" >> "$GITHUB_OUTPUT"
-          else
-            echo "openai=missing" >> "$GITHUB_OUTPUT"
-          fi
-
-          if [ -z "$COPILOT_TOKEN" ] && [ -z "$OPENAI_API_KEY" ]; then
-            echo "::warning::Neither COPILOT_TOKEN nor OPENAI_API_KEY secrets are configured. Skipping AI review." >&2
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::warning::OPENAI_API_KEY secret is not configured. Skipping AI review." >&2
             echo "enabled=false" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=true" >> "$GITHUB_OUTPUT"
@@ -85,28 +69,8 @@ jobs:
 
             return summary || 'No file changes reported.';
 
-      - name: Run GitHub Copilot reviewer
-        if: steps.ai-inputs.outputs.enabled == 'true' && steps.ai-inputs.outputs.copilot == 'available'
-        id: copilot
-        continue-on-error: true
-        uses: github/copilot-workflow@v1
-        with:
-          instructions: |
-            You are reviewing PR #${{ github.event.pull_request.number }} for ${{ github.repository }}.
-            Base SHA: ${{ github.event.pull_request.base.sha }}
-            Head SHA: ${{ github.event.pull_request.head.sha }}
-
-            Changed files:
-            ${{ steps.changed-files.outputs.result }}
-
-            Provide actionable review feedback that highlights bugs, risky changes, or follow-up work.
-            Only discuss code introduced in this PR and be concise.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
-
       - name: Run OpenAI reviewer
-        if: steps.ai-inputs.outputs.enabled == 'true' && steps.ai-inputs.outputs.openai == 'available' && steps.copilot.outcome != 'success'
+        if: steps.ai-inputs.outputs.enabled == 'true'
         id: run_ai
         uses: openai/codex-action@v1
         with:

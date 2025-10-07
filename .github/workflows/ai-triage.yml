@@ -21,29 +21,16 @@ permissions:
 
 jobs:
   triage_issue:
-    if: github.event_name == 'issues' && (secrets.COPILOT_TOKEN != '' || secrets.OPENAI_API_KEY != '')
+    if: github.event_name == 'issues' && secrets.OPENAI_API_KEY != ''
     runs-on: ubuntu-latest
     env:
-      COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
-      - name: Record available AI backends
+      - name: Check OpenAI configuration
         id: ai-inputs
         run: |
-          if [ -n "$COPILOT_TOKEN" ]; then
-            echo "copilot=available" >> "$GITHUB_OUTPUT"
-          else
-            echo "copilot=missing" >> "$GITHUB_OUTPUT"
-          fi
-
-          if [ -n "$OPENAI_API_KEY" ]; then
-            echo "openai=available" >> "$GITHUB_OUTPUT"
-          else
-            echo "openai=missing" >> "$GITHUB_OUTPUT"
-          fi
-
-          if [ -z "$COPILOT_TOKEN" ] && [ -z "$OPENAI_API_KEY" ]; then
-            echo "::warning::Neither COPILOT_TOKEN nor OPENAI_API_KEY secrets are configured. Skipping issue triage." >&2
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::warning::OPENAI_API_KEY secret is not configured. Skipping issue triage." >&2
             echo "enabled=false" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=true" >> "$GITHUB_OUTPUT"
@@ -61,52 +48,8 @@ jobs:
             core.setOutput('body', body);
             core.setOutput('labels', labels.length ? labels.join(', ') : 'none');
 
-      - name: Run GitHub Copilot triage for issue
-        if: steps.ai-inputs.outputs.enabled == 'true' && steps.ai-inputs.outputs.copilot == 'available'
-        id: copilot-issue
-        continue-on-error: true
-        uses: github/copilot-workflow@v1
-        with:
-          instructions: |
-            You are the autonomous triage bot for the repository ${{ github.repository }}.
-            Analyse the following GitHub issue and decide which of the predefined labels should be applied.
-            Respond with a compact JSON object that follows this exact TypeScript type without extra commentary:
-            {
-              "labels": string[],
-              "comment": string
-            }
-
-            Use only labels from this list:
-              - type:bug
-              - type:feature
-              - type:question
-              - type:maintenance
-              - area:frontend
-              - area:contracts
-              - area:automation
-              - priority:low
-              - priority:medium
-              - priority:high
-              - status:needs-info
-              - status:ready
-
-            Always include at most one label per namespace (e.g. only one priority:*).
-            Add "status:needs-info" and ask clarifying questions in the comment when the report is unclear or missing reproduction steps.
-            If no action is needed, return an empty array for labels and an empty string for comment.
-
-            Issue title: ${{ github.event.issue.title }}
-            Issue body:
-            ---
-            ${{ steps['issue-context'].outputs.body }}
-            ---
-
-            Existing labels on the issue: ${{ steps['issue-context'].outputs.labels }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
-
       - name: Run OpenAI triage for issue
-        if: steps.ai-inputs.outputs.enabled == 'true' && steps.ai-inputs.outputs.openai == 'available' && steps['copilot-issue'].outcome != 'success'
+        if: steps.ai-inputs.outputs.enabled == 'true'
         id: openai-issue
         uses: openai/codex-action@v1
         with:
@@ -150,12 +93,11 @@ jobs:
         if: steps.ai-inputs.outputs.enabled == 'true'
         uses: actions/github-script@v8
         env:
-          COPILOT_JSON: ${{ steps['copilot-issue'].outputs.response }}
           OPENAI_JSON: ${{ steps['openai-issue'].outputs['final-message'] }}
         with:
           github-token: ${{ github.token }}
           script: |
-            const payload = process.env.COPILOT_JSON || process.env.OPENAI_JSON;
+            const payload = process.env.OPENAI_JSON;
 
             if (!payload) {
               core.info('No AI decision to apply.');
@@ -195,29 +137,16 @@ jobs:
             }
 
   triage_pr:
-    if: github.event_name == 'pull_request' && (secrets.COPILOT_TOKEN != '' || secrets.OPENAI_API_KEY != '')
+    if: github.event_name == 'pull_request' && secrets.OPENAI_API_KEY != ''
     runs-on: ubuntu-latest
     env:
-      COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
-      - name: Record available AI backends
+      - name: Check OpenAI configuration
         id: ai-inputs
         run: |
-          if [ -n "$COPILOT_TOKEN" ]; then
-            echo "copilot=available" >> "$GITHUB_OUTPUT"
-          else
-            echo "copilot=missing" >> "$GITHUB_OUTPUT"
-          fi
-
-          if [ -n "$OPENAI_API_KEY" ]; then
-            echo "openai=available" >> "$GITHUB_OUTPUT"
-          else
-            echo "openai=missing" >> "$GITHUB_OUTPUT"
-          fi
-
-          if [ -z "$COPILOT_TOKEN" ] && [ -z "$OPENAI_API_KEY" ]; then
-            echo "::warning::Neither COPILOT_TOKEN nor OPENAI_API_KEY secrets are configured. Skipping PR triage." >&2
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::warning::OPENAI_API_KEY secret is not configured. Skipping PR triage." >&2
             echo "enabled=false" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=true" >> "$GITHUB_OUTPUT"
@@ -249,55 +178,8 @@ jobs:
               })
               .join('\n');
 
-      - name: Run GitHub Copilot triage for PR
-        if: steps.ai-inputs.outputs.enabled == 'true' && steps.ai-inputs.outputs.copilot == 'available'
-        id: copilot-pr
-        continue-on-error: true
-        uses: github/copilot-workflow@v1
-        with:
-          instructions: |
-            You are the autonomous PR triage bot for ${{ github.repository }}.
-            Based on the pull request description and changed files, decide which labels should be applied
-            and whether a maintainer-facing comment is needed.
-            Respond with JSON matching this type and do not include any other text:
-            {
-              "labels": string[],
-              "comment": string
-            }
-
-            Allowed labels:
-              - status:needs-review
-              - status:needs-info
-              - status:ready
-              - scope:frontend
-              - scope:contracts
-              - scope:tooling
-              - scope:automation
-              - priority:low
-              - priority:medium
-              - priority:high
-              - tests:missing
-              - tests:included
-
-            Apply exactly one status:* label.
-            If the PR does not touch test files and should include tests, add "tests:missing".
-            If it contains changes under contracts/ ensure you also set scope:contracts, etc.
-            Leave the comment empty when no additional guidance is necessary.
-
-            Pull request title: ${{ github.event.pull_request.title }}
-            Pull request body:
-            ---
-            ${{ github.event.pull_request.body }}
-            ---
-
-            Changed files:
-            ${{ steps['changed-files'].outputs.result || 'No files detected.' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
-
       - name: Run OpenAI triage for PR
-        if: steps.ai-inputs.outputs.enabled == 'true' && steps.ai-inputs.outputs.openai == 'available' && steps['copilot-pr'].outcome != 'success'
+        if: steps.ai-inputs.outputs.enabled == 'true'
         id: openai-pr
         uses: openai/codex-action@v1
         with:
@@ -344,12 +226,11 @@ jobs:
         if: steps.ai-inputs.outputs.enabled == 'true'
         uses: actions/github-script@v8
         env:
-          COPILOT_JSON: ${{ steps['copilot-pr'].outputs.response }}
           OPENAI_JSON: ${{ steps['openai-pr'].outputs['final-message'] }}
         with:
           github-token: ${{ github.token }}
           script: |
-            const payload = process.env.COPILOT_JSON || process.env.OPENAI_JSON;
+            const payload = process.env.OPENAI_JSON;
 
             if (!payload) {
               core.info('No AI decision to apply.');
