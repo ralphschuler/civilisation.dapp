@@ -23,32 +23,68 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
     env:
+      COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       FAILED_WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
       FAILED_RUN_URL: ${{ github.event.workflow_run.html_url }}
     steps:
-      - name: Check OpenAI API Key Set
+      - name: Record available AI backends
+        id: ai-inputs
         run: |
-          if [ -z "$OPENAI_API_KEY" ]; then
-            echo "OPENAI_API_KEY secret is not set. Skipping auto-fix." >&2
-            exit 1
+          if [ -n "$COPILOT_TOKEN" ]; then
+            echo "copilot=available" >> "$GITHUB_OUTPUT"
+          else
+            echo "copilot=missing" >> "$GITHUB_OUTPUT"
           fi
 
+          if [ -n "$OPENAI_API_KEY" ]; then
+            echo "openai=available" >> "$GITHUB_OUTPUT"
+          else
+            echo "openai=missing" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [ -z "$COPILOT_TOKEN" ] && [ -z "$OPENAI_API_KEY" ]; then
+            echo "::warning::Neither COPILOT_TOKEN nor OPENAI_API_KEY secrets are configured. Skipping auto-fix." >&2
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+
       - name: Checkout Failing Ref
+        if: steps.ai-inputs.outputs.enabled == 'true'
         uses: actions/checkout@v5
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
 
       - name: Setup Bun
+        if: steps.ai-inputs.outputs.enabled == 'true'
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
       - name: Install dependencies
+        if: steps.ai-inputs.outputs.enabled == 'true'
         run: bun install --frozen-lockfile
 
+      - name: Attempt GitHub Copilot autofix
+        id: copilot
+        if: steps.ai-inputs.outputs.copilot == 'available'
+        continue-on-error: true
+        uses: github/copilot-workflow@v1
+        with:
+          instructions: >-
+            You are working in a Bun + TypeScript monorepo with Foundry contracts and GitHub Actions.
+            Investigate the CI failure for workflow `${{ env.FAILED_WORKFLOW_NAME }}` at `${{ env.FAILED_RUN_URL }}`.
+            Apply the minimal set of code or configuration changes required to make the lint, build, and forge test commands pass.
+            Keep edits surgical, avoid refactors, and leave informative commit messages in the summary output.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
+
       - name: Run OpenAI Autofix
+        if: steps.ai-inputs.outputs.openai == 'available' && steps.copilot.outcome != 'success'
         uses: openai/codex-action@v1
         id: codex
         with:
@@ -61,12 +97,15 @@ jobs:
           codex_args: '["--config","sandbox_mode=\"workspace-write\"","--config","allow_network=\"false\""]'
 
       - name: Setup Foundry
+        if: steps.ai-inputs.outputs.enabled == 'true'
         uses: foundry-rs/foundry-toolchain@v1
 
       - name: Verify lint
+        if: steps.ai-inputs.outputs.enabled == 'true'
         run: bun run lint
 
       - name: Verify build
+        if: steps.ai-inputs.outputs.enabled == 'true'
         env:
           VITE_PUBLIC_APP_ID: test-app
           VITE_PUBLIC_CONTRACT_ADDRESS: 0x0000000000000000000000000000000000000000
@@ -74,22 +113,25 @@ jobs:
 
       - name: Install Foundry dependencies
         working-directory: contracts
+        if: steps.ai-inputs.outputs.enabled == 'true'
         run: forge install
 
       - name: Verify contracts
         working-directory: contracts
+        if: steps.ai-inputs.outputs.enabled == 'true'
         run: forge test --silent
 
       - name: Create pull request with fixes
-        if: success()
+        if: steps.ai-inputs.outputs.enabled == 'true' && success()
         uses: peter-evans/create-pull-request@v7
         with:
-          commit-message: "fix(ci): auto-fix failing tests via OpenAI"
+          commit-message: "fix(ci): auto-fix failing tests via AI assistant"
           branch: ai/autofix-${{ github.event.workflow_run.run_id }}
           base: ${{ github.event.workflow_run.head_branch }}
-          title: "Auto-fix failing CI via OpenAI"
+          title: "Auto-fix failing CI via AI assistant"
           body: |
             This pull request was generated automatically in response to a CI failure on workflow `${{ env.FAILED_WORKFLOW_NAME }}`.
             Failed run: ${{ env.FAILED_RUN_URL }}
             Head branch: `${{ github.event.workflow_run.head_branch }}`
             The changes aim to be the minimal set required to restore a green build.
+            GitHub Copilot was attempted first with an automatic fallback to OpenAI when required.

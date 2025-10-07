@@ -1,0 +1,65 @@
+name: "Bug report"
+description: "Report a defect or regression in the Civilisation DApp or smart contracts."
+labels:
+  - type:bug
+  - status:needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to help us improve Civilisation! Please share as much detail as possible so we can reproduce the problem quickly.
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Pre-flight checks
+      description: "Before submitting, please confirm the following statements."
+      options:
+        - label: I have searched open issues and pull requests for existing reports.
+          required: true
+        - label: I have reproduced the issue on the latest main branch or prerelease build.
+          required: true
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: "Provide a short description of the problem."
+      placeholder: "Buttons on the build screen stop responding after upgrading the barracks"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: "List each action in order."
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: "What should have happened?"
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: "What actually happened instead?"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment details
+      description: "Include browser/device, wallet, network, commit hash, or Foundry version as relevant."
+      render: markdown
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Logs, screenshots, or additional context
+      description: "Drag and drop any supporting material."
+      render: markdown

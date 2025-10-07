@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Civilisation DApp documentation
+    url: https://github.com/civilisationdao/civilisation.dapp/wiki
+    about: Review existing documentation for common questions, setup steps, and release notes.
+  - name: Security disclosures
+    url: mailto:security@civilisationdao.org
+    about: Please report security concerns privately so we can coordinate a fix before disclosure.
