@@ -1,15 +1,22 @@
-import { useId, useMemo, type PropsWithChildren, type SVGProps } from 'react';
+import { useId, useMemo, type PropsWithChildren, type SVGProps } from "react";
 
 type SvgCanvasProps = PropsWithChildren<SVGProps<SVGSVGElement>>;
 
-const DEFAULT_VIEWBOX = '-400 -300 800 600';
+const DEFAULT_VIEWBOX = "-400 -300 800 600";
 
 const SvgCanvas = (props: SvgCanvasProps) => {
-  const { children, viewBox: viewBoxProp, preserveAspectRatio = 'xMidYMid meet', role = 'img', 'aria-label': ariaLabelProp, ...rest } = props;
+  const {
+    children,
+    viewBox: viewBoxProp,
+    preserveAspectRatio = "xMidYMid meet",
+    role = "img",
+    "aria-label": ariaLabelProp,
+    ...rest
+  } = props;
   const id = useId();
 
   const computedViewBox = useMemo(() => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return DEFAULT_VIEWBOX;
     }
 
@@ -17,7 +24,7 @@ const SvgCanvas = (props: SvgCanvasProps) => {
     return `${innerWidth / -2} ${100 - innerHeight} ${innerWidth} ${innerHeight}`;
   }, []);
 
-  const ariaLabel = ariaLabelProp ?? 'SVG Canvas';
+  const ariaLabel = ariaLabelProp ?? "SVG Canvas";
   const viewBox = viewBoxProp ?? computedViewBox;
 
   return (

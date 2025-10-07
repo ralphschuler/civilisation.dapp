@@ -39,4 +39,3 @@ export const Default: Story = {};
 export const WithSelection: Story = {
   args: { selectedBuilding: "woodcutter" },
 };
-

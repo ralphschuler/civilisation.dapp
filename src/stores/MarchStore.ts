@@ -18,9 +18,7 @@ type MarchState = {
   createMarch: (march: Omit<March, "id">) => Promise<March | null>;
   cancelMarch: (marchId: string) => Promise<void>;
   updateMarch: (march: March) => Promise<void>;
-  createMarchPreset: (
-    preset: Omit<MarchPreset, "id">
-  ) => Promise<MarchPreset | null>;
+  createMarchPreset: (preset: Omit<MarchPreset, "id">) => Promise<MarchPreset | null>;
   updateMarchPreset: (preset: MarchPreset) => Promise<void>;
   deleteMarchPreset: (presetId: string) => Promise<void>;
   getActiveMarchesForVillage: (villageId: string) => March[];
@@ -42,8 +40,7 @@ export const useMarchStore = create<MarchState>()(
           set({ marches, isLoading: false });
         } catch (error) {
           set({
-            error:
-              error instanceof Error ? error.message : "Failed to load marches",
+            error: error instanceof Error ? error.message : "Failed to load marches",
             isLoading: false,
           });
         }
@@ -56,10 +53,7 @@ export const useMarchStore = create<MarchState>()(
           set({ marchPresets, isLoading: false });
         } catch (error) {
           set({
-            error:
-              error instanceof Error
-                ? error.message
-                : "Failed to load march presets",
+            error: error instanceof Error ? error.message : "Failed to load march presets",
             isLoading: false,
           });
         }
@@ -72,8 +66,7 @@ export const useMarchStore = create<MarchState>()(
           return march;
         } catch (error) {
           set({
-            error:
-              error instanceof Error ? error.message : "Failed to create march",
+            error: error instanceof Error ? error.message : "Failed to create march",
           });
           return null;
         }
@@ -87,8 +80,7 @@ export const useMarchStore = create<MarchState>()(
           }));
         } catch (error) {
           set({
-            error:
-              error instanceof Error ? error.message : "Failed to cancel march",
+            error: error instanceof Error ? error.message : "Failed to cancel march",
           });
         }
       },
@@ -97,14 +89,11 @@ export const useMarchStore = create<MarchState>()(
           const repository = getRepository();
           await repository.march.updateMarch(march);
           set((state) => ({
-            marches: state.marches.map((existing) =>
-              existing.id === march.id ? march : existing,
-            ),
+            marches: state.marches.map((existing) => (existing.id === march.id ? march : existing)),
           }));
         } catch (error) {
           set({
-            error:
-              error instanceof Error ? error.message : "Failed to update march",
+            error: error instanceof Error ? error.message : "Failed to update march",
           });
         }
       },
@@ -116,10 +105,7 @@ export const useMarchStore = create<MarchState>()(
           return preset;
         } catch (error) {
           set({
-            error:
-              error instanceof Error
-                ? error.message
-                : "Failed to create march preset",
+            error: error instanceof Error ? error.message : "Failed to create march preset",
           });
           return null;
         }
@@ -135,10 +121,7 @@ export const useMarchStore = create<MarchState>()(
           }));
         } catch (error) {
           set({
-            error:
-              error instanceof Error
-                ? error.message
-                : "Failed to update march preset",
+            error: error instanceof Error ? error.message : "Failed to update march preset",
           });
         }
       },
@@ -147,16 +130,11 @@ export const useMarchStore = create<MarchState>()(
           const repository = getRepository();
           await repository.marchPreset.deletePreset(presetId);
           set((state) => ({
-            marchPresets: state.marchPresets.filter(
-              (preset) => preset.id !== presetId,
-            ),
+            marchPresets: state.marchPresets.filter((preset) => preset.id !== presetId),
           }));
         } catch (error) {
           set({
-            error:
-              error instanceof Error
-                ? error.message
-                : "Failed to delete march preset",
+            error: error instanceof Error ? error.message : "Failed to delete march preset",
           });
         }
       },

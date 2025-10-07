@@ -1,7 +1,7 @@
-import { Card, CardContent } from '../ui/Card';
-import { Progress } from '../ui/Progress';
-import { Skeleton } from '../ui/Skeleton';
-import { useI18n } from '@/providers/i18n-provider';
+import { Card, CardContent } from "../ui/Card";
+import { Progress } from "../ui/Progress";
+import { Skeleton } from "../ui/Skeleton";
+import { useI18n } from "@/providers/i18n-provider";
 
 interface LoadingScreenProps {
   message?: string;
@@ -9,13 +9,9 @@ interface LoadingScreenProps {
   showSkeleton?: boolean;
 }
 
-export function LoadingScreen({ 
-  message, 
-  progress, 
-  showSkeleton = false 
-}: LoadingScreenProps) {
+export function LoadingScreen({ message, progress, showSkeleton = false }: LoadingScreenProps) {
   const { t } = useI18n();
-  const msg = message ?? t('loading.message', 'Loading game...');
+  const msg = message ?? t("loading.message", "Loading game...");
   if (showSkeleton) {
     return (
       <div className="space-y-4">
@@ -32,7 +28,7 @@ export function LoadingScreen({
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="space-y-3">
@@ -53,24 +49,33 @@ export function LoadingScreen({
       <div className="text-center space-y-4">
         <div className="text-6xl animate-pulse">🏰</div>
         <div className="space-y-2">
-          <h2 className="text-xl font-medium">{t('loading.title', 'Tribal Wars')}</h2>
+          <h2 className="text-xl font-medium">{t("loading.title", "Tribal Wars")}</h2>
           <p className="text-muted-foreground">{msg}</p>
         </div>
       </div>
-      
+
       {progress !== undefined && (
         <div className="w-full max-w-xs space-y-2">
           <Progress value={progress} className="h-2" />
           <p className="text-xs text-center text-muted-foreground">
-            {Math.round(progress)}% {t('loading.completed', 'completed')}
+            {Math.round(progress)}% {t("loading.completed", "completed")}
           </p>
         </div>
       )}
-      
+
       <div className="flex space-x-1">
-        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+        <div
+          className="w-2 h-2 bg-primary rounded-full animate-bounce"
+          style={{ animationDelay: "0ms" }}
+        />
+        <div
+          className="w-2 h-2 bg-primary rounded-full animate-bounce"
+          style={{ animationDelay: "150ms" }}
+        />
+        <div
+          className="w-2 h-2 bg-primary rounded-full animate-bounce"
+          style={{ animationDelay: "300ms" }}
+        />
       </div>
     </div>
   );

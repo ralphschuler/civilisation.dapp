@@ -9,92 +9,90 @@ import { type GameState, type ScreenType, type VillageInfo } from "@/types/game"
 import { getRepository } from "@/lib/repositories/RepositoryFactory";
 
 interface GameStoreState {
-	currentScreen: ScreenType;
-	selectedBuilding: string | null;
-		selectedVillageInfo: VillageInfo | null;
-	isInitialized: boolean;
-	isLoading: boolean;
-	error: string | null;
-	initialize: () => Promise<void>;
-	saveGameState: (state: GameState) => Promise<void>;
-	setCurrentScreen: (screen: ScreenType) => void;
-	setSelectedBuilding: (buildingId: string | null) => void;
-		setSelectedVillageInfo: (villageInfo: VillageInfo | null) => void;
-	reset: () => void;
+  currentScreen: ScreenType;
+  selectedBuilding: string | null;
+  selectedVillageInfo: VillageInfo | null;
+  isInitialized: boolean;
+  isLoading: boolean;
+  error: string | null;
+  initialize: () => Promise<void>;
+  saveGameState: (state: GameState) => Promise<void>;
+  setCurrentScreen: (screen: ScreenType) => void;
+  setSelectedBuilding: (buildingId: string | null) => void;
+  setSelectedVillageInfo: (villageInfo: VillageInfo | null) => void;
+  reset: () => void;
 }
 
 export const useGameStore = create<GameStoreState>()(
-	devtools(
-		persist(
-			(set, get) => ({
-				currentScreen: "city",
-				selectedBuilding: null,
-				selectedVillageInfo: null,
-				isInitialized: false,
-				isLoading: false,
-				error: null,
-				initialize: async () => {
-					if (get().isInitialized) return;
+  devtools(
+    persist(
+      (set, get) => ({
+        currentScreen: "city",
+        selectedBuilding: null,
+        selectedVillageInfo: null,
+        isInitialized: false,
+        isLoading: false,
+        error: null,
+        initialize: async () => {
+          if (get().isInitialized) return;
 
-					set({ isLoading: true, error: null });
-					try {
-						const repository = getRepository();
-						const gameState = await repository.gameState.getGameState();
+          set({ isLoading: true, error: null });
+          try {
+            const repository = getRepository();
+            const gameState = await repository.gameState.getGameState();
 
-						set({
-							currentScreen: gameState.currentScreen || "city",
-							selectedBuilding: gameState.selectedBuilding || null,
-							selectedVillageInfo: gameState.selectedVillageInfo || null,
-							isInitialized: true,
-							isLoading: false,
-						});
-					} catch (error) {
-						set({
-							error:
-								error instanceof Error ? error.message : "Failed to initialize game",
-							isLoading: false,
-						});
-					}
-				},
-				saveGameState: async (state: GameState) => {
-					try {
-						const repository = getRepository();
-						await repository.gameState.saveGameState(state);
-					} catch (error) {
-						set({
-							error:
-								error instanceof Error ? error.message : "Failed to save game state",
-						});
-					}
-				},
-				setCurrentScreen: (screen: ScreenType) => {
-					set({ currentScreen: screen });
-				},
-				setSelectedBuilding: (buildingId: string | null) => {
-					set({ selectedBuilding: buildingId });
-				},
-			setSelectedVillageInfo: (villageInfo: VillageInfo | null) => {
-					set({ selectedVillageInfo: villageInfo });
-				},
-				reset: () => {
-					set({
-						currentScreen: "city",
-						selectedBuilding: null,
-						selectedVillageInfo: null,
-						isInitialized: false,
-						isLoading: false,
-						error: null,
-					});
-				},
-			}),
-			{
-				name: "game-storage",
-				partialize: (state) => ({
-					currentScreen: state.currentScreen,
-					selectedBuilding: state.selectedBuilding,
-				}),
-			},
-		),
-		{ name: "GameStore" },
-	),
+            set({
+              currentScreen: gameState.currentScreen || "city",
+              selectedBuilding: gameState.selectedBuilding || null,
+              selectedVillageInfo: gameState.selectedVillageInfo || null,
+              isInitialized: true,
+              isLoading: false,
+            });
+          } catch (error) {
+            set({
+              error: error instanceof Error ? error.message : "Failed to initialize game",
+              isLoading: false,
+            });
+          }
+        },
+        saveGameState: async (state: GameState) => {
+          try {
+            const repository = getRepository();
+            await repository.gameState.saveGameState(state);
+          } catch (error) {
+            set({
+              error: error instanceof Error ? error.message : "Failed to save game state",
+            });
+          }
+        },
+        setCurrentScreen: (screen: ScreenType) => {
+          set({ currentScreen: screen });
+        },
+        setSelectedBuilding: (buildingId: string | null) => {
+          set({ selectedBuilding: buildingId });
+        },
+        setSelectedVillageInfo: (villageInfo: VillageInfo | null) => {
+          set({ selectedVillageInfo: villageInfo });
+        },
+        reset: () => {
+          set({
+            currentScreen: "city",
+            selectedBuilding: null,
+            selectedVillageInfo: null,
+            isInitialized: false,
+            isLoading: false,
+            error: null,
+          });
+        },
+      }),
+      {
+        name: "game-storage",
+        partialize: (state) => ({
+          currentScreen: state.currentScreen,
+          selectedBuilding: state.selectedBuilding,
+        }),
+      },
+    ),
+    { name: "GameStore" },
+  ),
 );

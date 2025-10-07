@@ -5,9 +5,9 @@
 
 export function storageAvailable(): boolean {
   try {
-    if (typeof window === 'undefined') return false;
-    const testKey = '__storage_test__';
-    window.localStorage.setItem(testKey, '1');
+    if (typeof window === "undefined") return false;
+    const testKey = "__storage_test__";
+    window.localStorage.setItem(testKey, "1");
     window.localStorage.removeItem(testKey);
     return true;
   } catch {
@@ -34,4 +34,3 @@ export function saveJSON<T>(key: string, value: T): void {
     console.warn(`localStorage save failed for key: ${key}`, err);
   }
 }
-

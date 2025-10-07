@@ -14,7 +14,9 @@ function Bomb({ shouldThrow }: { shouldThrow: boolean }) {
         <CardTitle>Alles gut ✅</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground">Klicke auf "Fehler auslösen" um den Fallback zu testen.</p>
+        <p className="text-muted-foreground">
+          Klicke auf "Fehler auslösen" um den Fallback zu testen.
+        </p>
       </CardContent>
     </Card>
   );
@@ -56,9 +58,11 @@ export const DefaultFallbackImmediate: Story = {
   render: (args) => (
     <div className="p-4">
       <ErrorBoundary {...args}>
-        {(() => {
-          throw new Error("Sofortiger Fehler – Demo");
-        })() as unknown as JSX.Element}
+        {
+          (() => {
+            throw new Error("Sofortiger Fehler – Demo");
+          })() as unknown as JSX.Element
+        }
       </ErrorBoundary>
     </div>
   ),
@@ -91,4 +95,3 @@ export const WithCustomFallback: Story = {
     return <Demo />;
   },
 };
-

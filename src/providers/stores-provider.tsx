@@ -1,5 +1,5 @@
-import { ReactNode, useEffect } from 'react';
-import { initializeStores, useGameStore, useVillageStore, usePlayerStatsStore } from '@/stores';
+import { ReactNode, useEffect } from "react";
+import { initializeStores, useGameStore, useVillageStore, usePlayerStatsStore } from "@/stores";
 
 export function StoresProvider({ children }: { children: ReactNode }) {
   const isInitialized = useGameStore((s) => s.isInitialized);
@@ -8,7 +8,7 @@ export function StoresProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     initializeStores().catch((err) => {
-      console.warn('Store initialization failed', err);
+      console.warn("Store initialization failed", err);
     });
   }, []);
 

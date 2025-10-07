@@ -1,5 +1,9 @@
 import { MiniKit } from "@worldcoin/minikit-js";
-import { useReadContract, type UseReadContractParameters, type UseReadContractReturnType } from "wagmi";
+import {
+  useReadContract,
+  type UseReadContractParameters,
+  type UseReadContractReturnType,
+} from "wagmi";
 import type { Abi } from "viem";
 
 export type UseContractReadParameters<

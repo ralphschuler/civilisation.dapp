@@ -39,8 +39,7 @@ export const usePlayerStatsStore = create<PlayerStatsState>()(
           set({ stats, isLoading: false });
         } catch (error) {
           set({
-            error:
-              error instanceof Error ? error.message : "Failed to load stats",
+            error: error instanceof Error ? error.message : "Failed to load stats",
             isLoading: false,
           });
         }
@@ -52,8 +51,7 @@ export const usePlayerStatsStore = create<PlayerStatsState>()(
           set({ stats });
         } catch (error) {
           set({
-            error:
-              error instanceof Error ? error.message : "Failed to update stats",
+            error: error instanceof Error ? error.message : "Failed to update stats",
           });
         }
       },
@@ -65,10 +63,7 @@ export const usePlayerStatsStore = create<PlayerStatsState>()(
           set({ stats });
         } catch (error) {
           set({
-            error:
-              error instanceof Error
-                ? error.message
-                : "Failed to increment battles won",
+            error: error instanceof Error ? error.message : "Failed to increment battles won",
           });
         }
       },
@@ -80,10 +75,7 @@ export const usePlayerStatsStore = create<PlayerStatsState>()(
           set({ stats });
         } catch (error) {
           set({
-            error:
-              error instanceof Error
-                ? error.message
-                : "Failed to increment battles lost",
+            error: error instanceof Error ? error.message : "Failed to increment battles lost",
           });
         }
       },
@@ -96,9 +88,7 @@ export const usePlayerStatsStore = create<PlayerStatsState>()(
         } catch (error) {
           set({
             error:
-              error instanceof Error
-                ? error.message
-                : "Failed to increment buildings upgraded",
+              error instanceof Error ? error.message : "Failed to increment buildings upgraded",
           });
         }
       },
@@ -110,16 +100,11 @@ export const usePlayerStatsStore = create<PlayerStatsState>()(
           set({ stats });
         } catch (error) {
           set({
-            error:
-              error instanceof Error
-                ? error.message
-                : "Failed to increment units trained",
+            error: error instanceof Error ? error.message : "Failed to increment units trained",
           });
         }
       },
-      addResourcesGathered: async (
-        resources: Partial<PlayerStats["totalResourcesGathered"]>,
-      ) => {
+      addResourcesGathered: async (resources: Partial<PlayerStats["totalResourcesGathered"]>) => {
         try {
           const repository = getRepository();
           await repository.playerStats.addResourcesGathered(resources);
@@ -127,10 +112,7 @@ export const usePlayerStatsStore = create<PlayerStatsState>()(
           set({ stats });
         } catch (error) {
           set({
-            error:
-              error instanceof Error
-                ? error.message
-                : "Failed to add resources gathered",
+            error: error instanceof Error ? error.message : "Failed to add resources gathered",
           });
         }
       },

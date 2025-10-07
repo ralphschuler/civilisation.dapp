@@ -2,14 +2,14 @@
  * Central export point for all Zustand stores
  */
 
-export { useGameStore } from './gameStore';
-export { useVillageStore } from './VillageStore';
-export { useMarchStore } from './MarchStore';
-export { useReportStore } from './ReportStore';
-export { usePlayerStatsStore } from './PlayerStatsStore';
-export { useTechTreeStore } from './TechTreeStore';
-export { useAuthStore } from './authStore';
-export { useUXStore } from './uxStore';
+export { useGameStore } from "./gameStore";
+export { useVillageStore } from "./VillageStore";
+export { useMarchStore } from "./MarchStore";
+export { useReportStore } from "./ReportStore";
+export { usePlayerStatsStore } from "./PlayerStatsStore";
+export { useTechTreeStore } from "./TechTreeStore";
+export { useAuthStore } from "./authStore";
+export { useUXStore } from "./uxStore";
 
 async function loadStores() {
   const [
@@ -20,12 +20,12 @@ async function loadStores() {
     { usePlayerStatsStore },
     { useTechTreeStore },
   ] = await Promise.all([
-    import('./gameStore'),
-    import('./VillageStore'),
-    import('./MarchStore'),
-    import('./ReportStore'),
-    import('./PlayerStatsStore'),
-    import('./TechTreeStore'),
+    import("./gameStore"),
+    import("./VillageStore"),
+    import("./MarchStore"),
+    import("./ReportStore"),
+    import("./PlayerStatsStore"),
+    import("./TechTreeStore"),
   ]);
 
   return {
@@ -48,7 +48,7 @@ export async function initializeStores(): Promise<void> {
   await stores.useGameStore.getState().initialize();
 
   await Promise.all([
-    stores.useVillageStore.getState().loadVillage('village1'),
+    stores.useVillageStore.getState().loadVillage("village1"),
     stores.useMarchStore.getState().loadMarches(),
     stores.useMarchStore.getState().loadMarchPresets(),
     stores.useReportStore.getState().loadReports(),
@@ -56,7 +56,7 @@ export async function initializeStores(): Promise<void> {
     stores.useTechTreeStore.getState().loadTechTree(),
   ]);
 
-  console.info('✅ All stores initialized');
+  console.info("✅ All stores initialized");
 }
 
 /**
@@ -73,5 +73,5 @@ export async function resetAllStores(): Promise<void> {
   stores.usePlayerStatsStore.getState().reset();
   stores.useTechTreeStore.getState().reset();
 
-  console.info('🔄 All stores reset');
+  console.info("🔄 All stores reset");
 }

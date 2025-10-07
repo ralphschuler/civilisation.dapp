@@ -4,24 +4,24 @@ on:
   push:
     branches: [main]
     paths:
-      - 'src/**'
-      - 'vite.config.*'
-      - 'eslint.config.*'
-      - 'package.json'
-      - 'bun.lockb'
-      - 'contracts/**'
-      - '.solhint.json'
-      - '.prettierrc*'
+      - "src/**"
+      - "vite.config.*"
+      - "eslint.config.*"
+      - "package.json"
+      - "bun.lockb"
+      - "contracts/**"
+      - ".solhint.json"
+      - ".prettierrc*"
   pull_request:
     paths:
-      - 'src/**'
-      - 'vite.config.*'
-      - 'eslint.config.*'
-      - 'package.json'
-      - 'bun.lockb'
-      - 'contracts/**'
-      - '.solhint.json'
-      - '.prettierrc*'
+      - "src/**"
+      - "vite.config.*"
+      - "eslint.config.*"
+      - "package.json"
+      - "bun.lockb"
+      - "contracts/**"
+      - ".solhint.json"
+      - ".prettierrc*"
   workflow_dispatch:
 
 jobs:

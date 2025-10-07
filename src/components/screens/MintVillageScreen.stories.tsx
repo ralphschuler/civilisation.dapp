@@ -32,4 +32,3 @@ export const Minting: Story = {
 export const Success: Story = {
   args: { hasFreeMint: false, worldBalance: 12, txHash: "0x1234567890abcdef" },
 };
-

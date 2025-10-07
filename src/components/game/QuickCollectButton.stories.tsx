@@ -69,4 +69,3 @@ export const InGrid: Story = {
     </div>
   ),
 };
-
