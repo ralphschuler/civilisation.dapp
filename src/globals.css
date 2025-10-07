@@ -80,6 +80,10 @@
 
   /* Touch Target Minimum */
   --min-touch-target: 2.75rem; /* 44px */
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
 }
 
 .dark {
@@ -322,4 +326,53 @@
 
 html {
   font-size: var(--font-size);
+}
+
+html,
+body {
+  width: 100vw;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overscroll-behavior: none;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  touch-action: manipulation;
+}
+
+#root {
+  flex: 1;
+  display: flex;
+  min-height: 100dvh;
+}
+
+.safe-area-pt {
+  padding-top: max(var(--safe-area-top), var(--space-2));
+}
+
+.safe-area-pb {
+  padding-bottom: max(var(--safe-area-bottom), var(--space-2));
+}
+
+.safe-area-px {
+  padding-left: max(var(--safe-area-left), var(--space-2));
+  padding-right: max(var(--safe-area-right), var(--space-2));
+}
+
+.safe-area-inset-bottom {
+  padding-bottom: var(--safe-area-bottom);
+}
+
+input,
+textarea,
+select {
+  scroll-margin: var(--space-8);
 }

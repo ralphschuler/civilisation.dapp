@@ -18,14 +18,20 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useI18n } from "@/providers/i18n-provider";
+import { useAuthStore } from "@/stores/authStore";
 
 interface MoreScreenProps {}
 
 export function MoreScreen({}: MoreScreenProps) {
   const navigate = useNavigate();
   const { t } = useI18n();
+  const { user, authenticated } = useAuthStore();
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
+
+  const displayName = user?.username
+    ? `@${user.username}`
+    : t("screens.profile.guestName", "Guest commander");
 
   const quickActions = [
     {
@@ -72,6 +78,38 @@ export function MoreScreen({}: MoreScreenProps) {
 
   return (
     <div className="space-y-6">
+      <Card className="bg-gradient-to-br from-primary/15 via-secondary/60 to-background border-none shadow-sm">
+        <CardContent className="flex items-center justify-between gap-4 py-4">
+          <div className="space-y-1">
+            <p className="text-caption text-muted-foreground">
+              {t("screens.more.identityLabel", "World App identity")}
+            </p>
+            <div className="text-section font-semibold">{displayName}</div>
+            <p className="text-caption text-muted-foreground">
+              {authenticated
+                ? t(
+                    "screens.more.identityConnected",
+                    "Account verified and ready to sync across devices.",
+                  )
+                : t(
+                    "screens.more.identityDisconnected",
+                    "Sign in with World App to back up your settlement progress.",
+                  )}
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="min-touch"
+            onClick={() => navigate(authenticated ? "/profile" : "/wallet-connect")}
+          >
+            {authenticated
+              ? t("screens.more.manageProfile", "Profile")
+              : t("screens.wallet.authenticate", "Authenticate")}
+          </Button>
+        </CardContent>
+      </Card>
+
       {/* Quick Settings */}
       <Card>
         <CardHeader className="pb-3">

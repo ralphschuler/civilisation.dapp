@@ -20,23 +20,35 @@ export function MobileNavigation() {
   const { t } = useI18n();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-card border-t z-50 safe-area-pb">
-      <div className="grid grid-cols-4 gap-1 p-2">
-        {NAVIGATION_ITEMS.map((item) => (
-          <Button
-            key={item.id}
-            variant={location.pathname === item.id ? "default" : "ghost"}
-            size="sm"
-            className="flex flex-col items-center gap-1 min-h-[44px] min-w-[44px] h-auto py-2 px-1 text-caption"
-            onClick={() => navigate(item.id)}
-          >
-            <span className="text-lg">{item.icon}</span>
-            <span className="text-micro leading-tight">
-              {t(item.key as string, item.fallback as string)}
-            </span>
-          </Button>
-        ))}
+    <nav
+      aria-label={t("navigation.primary", "Primary navigation")}
+      className="fixed inset-x-0 bottom-0 z-50 flex justify-center bg-card/95 backdrop-blur"
+    >
+      <div className="safe-area-pb safe-area-px w-full max-w-md border-t border-border/80 bg-transparent">
+        <div className="grid grid-cols-4 gap-1 p-2">
+          {NAVIGATION_ITEMS.map((item) => {
+            const isActive = location.pathname === item.id;
+            return (
+              <Button
+                key={item.id}
+                variant={isActive ? "default" : "ghost"}
+                size="sm"
+                className="flex h-auto min-h-[44px] min-w-[44px] flex-col items-center gap-1 px-1 py-2 text-caption"
+                onClick={() => navigate(item.id)}
+                aria-label={t(item.key as string, item.fallback as string)}
+                aria-current={isActive ? "page" : undefined}
+              >
+                <span className="text-lg" aria-hidden>
+                  {item.icon}
+                </span>
+                <span className="text-micro leading-tight">
+                  {t(item.key as string, item.fallback as string)}
+                </span>
+              </Button>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </nav>
   );
 }
