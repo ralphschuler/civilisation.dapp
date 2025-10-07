@@ -48,8 +48,7 @@ describe("ErrorBoundary", () => {
       </I18nProvider>,
     );
 
-    const errorMessages = screen.getAllByText(/Game error occurred/i);
-    expect(errorMessages.length).toBeGreaterThan(0);
+    expect(screen.getByText(/Game error occurred/i)).toBeInTheDocument();
 
     rerender(
       <I18nProvider overrides={{}}>
