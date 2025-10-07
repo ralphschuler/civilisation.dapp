@@ -4,8 +4,8 @@ This guide explains how to install dependencies, run the app locally, execute co
 
 ## Dev container (recommended)
 
-The repository ships with a [Development Container](https://containers.dev/) configuration under `.devcontainer/` that provi
-des Bun, Node.js 20, and Foundry pre-installed. Launching the project in GitHub Codespaces or VS Code with the Dev Container
+The repository ships with a [Development Container](https://containers.dev/) configuration under `.devcontainer/` that provides Bun, Node.js 20, and Foundry pre-installed. Launching the project in GitHub Codespaces or VS Code with the Dev Container
+extension automatically:
 extension automatically:
 
 - Installs frontend dependencies via `bun install`.
