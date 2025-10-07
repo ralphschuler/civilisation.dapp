@@ -48,8 +48,7 @@ describe("ErrorBoundary", () => {
       </I18nProvider>,
     );
 
-    const errorMessages = screen.getAllByText(/Game error occurred/i);
-    expect(errorMessages.length).toBeGreaterThan(0);
+    expect(screen.getByText(/Game error occurred/i)).toBeInTheDocument();
 
     rerender(
       <I18nProvider overrides={{}}>
@@ -59,7 +58,7 @@ describe("ErrorBoundary", () => {
       </I18nProvider>,
     );
 
-    const resetButton = screen.getByRole("button", { name: /Reload Game|Spiel neu laden/i });
+    const resetButton = screen.getByTestId("reset-button");
     await userEvent.click(resetButton);
 
     expect(screen.getByText("resilient child")).toBeInTheDocument();
