@@ -1,0 +1,49 @@
+{
+  "name": "Civilisation DApp",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/bun:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/foundry:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "oven-sh.bun-vscode",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "tintinweb.solidity-visual-auditor",
+        "JuanBlanco.solidity"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "solidity.compileUsingRemoteVersion": "v0.8.23",
+        "eslint.workingDirectories": [
+          {
+            "mode": "auto"
+          }
+        ]
+      }
+    }
+  },
+  "remoteUser": "vscode",
+  "postCreateCommand": "bun install && (cd contracts && forge install)",
+  "updateContentCommand": "bun install",
+  "forwardPorts": [5173, 6006],
+  "portsAttributes": {
+    "5173": {
+      "label": "Vite Dev Server"
+    },
+    "6006": {
+      "label": "Storybook"
+    }
+  },
+  "mounts": ["source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"]
+}
