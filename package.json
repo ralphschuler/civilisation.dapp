@@ -16,8 +16,8 @@
     "lint:fix": "bun run lint:sol:fix && bun run lint:ts:fix && bun run format:fix",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "format": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format": "prettier --log-level warn --check .",
+    "format:fix": "prettier --log-level warn --write ."
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",

@@ -4,3 +4,5 @@ coverage
 dist
 storybook-static
 contracts
+assets
+public

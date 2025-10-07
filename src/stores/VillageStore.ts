@@ -18,7 +18,12 @@ type VillageState = {
   addToTrainingQueue: (training: TrainingQueue) => Promise<void>;
   removeFromTrainingQueue: (index: number) => Promise<void>;
   updateResources: (resources: Partial<Village["resources"]>) => Promise<void>;
-  collectResources: (resourceType?: keyof Village["uncollectedResources"]) => Promise<void>;
+  applyCollectedResources: (
+    collected: Partial<Village["uncollectedResources"]>,
+  ) => Promise<void>;
+  collectResources: (
+    resourceType?: keyof Village["uncollectedResources"],
+  ) => Promise<void>;
   reset: () => void;
 };
 
@@ -102,7 +107,43 @@ export const useVillageStore = create<VillageState>()(
 
         await get().updateVillage(updatedVillage);
       },
-      collectResources: async (resourceType?: keyof Village["uncollectedResources"]) => {
+      applyCollectedResources: async (
+        collected: Partial<Village["uncollectedResources"]>,
+      ) => {
+        const { village } = get();
+        if (!village) return;
+
+        const updatedVillage: Village = {
+          ...village,
+          resources: { ...village.resources },
+          uncollectedResources: { ...village.uncollectedResources },
+        };
+
+        (Object.entries(collected) as Array<
+          [keyof Village["uncollectedResources"], number | undefined]
+        >).forEach(([resourceKey, amount]) => {
+          if (!amount || amount <= 0) {
+            return;
+          }
+
+          if (resourceKey in updatedVillage.resources) {
+            const key = resourceKey as keyof Village["resources"];
+            updatedVillage.resources[key] += amount;
+          }
+
+          if (resourceKey in updatedVillage.uncollectedResources) {
+            updatedVillage.uncollectedResources[resourceKey] = Math.max(
+              updatedVillage.uncollectedResources[resourceKey] - amount,
+              0,
+            );
+          }
+        });
+
+        await get().updateVillage(updatedVillage);
+      },
+      collectResources: async (
+        resourceType?: keyof Village["uncollectedResources"],
+      ) => {
         const { village } = get();
         if (!village) return;
 

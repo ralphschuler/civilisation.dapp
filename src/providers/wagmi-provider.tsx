@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { type ReactNode } from 'react';
 import { WagmiProvider as Wagmi, createConfig, http } from "wagmi";
 import { defineChain } from "viem";
 import { WORLDCHAIN_CHAIN_ID, WORLDCHAIN_RPC_URL } from "@/config/worldchain";
