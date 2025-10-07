@@ -88,13 +88,13 @@ jobs:
         uses: openai/codex-action@v1
         id: codex
         with:
-          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           prompt: >-
             You are working in a Bun + TypeScript monorepo with Foundry contracts and GitHub Actions.
             Read the repository, run the Bun lint and build scripts as well as `forge test`,
             identify the minimal change needed to make these commands succeed, implement only that change, and stop.
             Do not refactor unrelated code or files. Keep changes small and surgical.
-          codex_args: '["--config","sandbox_mode=\"workspace-write\"","--config","allow_network=\"false\""]'
+          codex-args: '["--config","sandbox_mode=\"workspace-write\"","--config","allow_network=\"false\""]'
 
       - name: Setup Foundry
         if: steps.ai-inputs.outputs.enabled == 'true'

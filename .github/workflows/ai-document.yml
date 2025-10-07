@@ -75,14 +75,14 @@ jobs:
         id: codex
         uses: openai/codex-action@v1
         with:
-          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           prompt: >-
             You are the documentation maintainer for the Civilisation DApp repository.
             Review the existing content under the docs/ directory and the README.
             Identify missing or unclear documentation topics related to the latest changes in this branch and add or improve Markdown files under docs/ to cover them.
             Keep all documentation in English, focus on accuracy, and do not modify source code outside of docs/ or README.md.
             When updating files, include navigation links where helpful.
-          codex_args: '["--config","sandbox_mode=\"workspace-write\"","--config","allow_network=\"false\""]'
+          codex-args: '["--config","sandbox_mode=\"workspace-write\"","--config","allow_network=\"false\""]'
 
       - name: Detect changes
         id: changes
