@@ -1,0 +1,39 @@
+name: Lint App
+
+on:
+  push:
+    paths:
+      - "src/**"
+      - "package.json"
+      - "bun.lock"
+      - "eslint.config.*"
+      - "tsconfig*.json"
+      - "vite.config.*"
+  pull_request:
+    paths:
+      - "src/**"
+      - "package.json"
+      - "bun.lock"
+      - "eslint.config.*"
+      - "tsconfig*.json"
+      - "vite.config.*"
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      - name: Setup Bun.js
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run ESLint
+        run: bun run lint:ts

@@ -1,4 +1,4 @@
-name: Codex Auto Triage
+name: AI Triage
 
 on:
   issues:
@@ -34,8 +34,9 @@ jobs:
             const labels = (context.payload.issue.labels || []).map((label) => label.name);
             core.setOutput('body', body);
             core.setOutput('labels', labels.length ? labels.join(', ') : 'none');
-      - name: Run Codex triage
-        id: codex
+
+      - name: Run AI triage for issue
+        id: ai
         uses: openai/codex-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
@@ -69,31 +70,33 @@ jobs:
             Issue title: ${{ github.event.issue.title }}
             Issue body:
             ---
-            ${{ steps.issue-context.outputs.body }}
+            ${{ steps['issue-context'].outputs.body }}
             ---
 
-            Existing labels on the issue: ${{ steps.issue-context.outputs.labels }}
+            Existing labels on the issue: ${{ steps['issue-context'].outputs.labels }}
+
       - name: Apply triage decisions
-        if: steps.codex.outputs.final-message != ''
+        if: steps.ai.outputs['final-message'] != ''
         uses: actions/github-script@v8
         env:
-          CODEX_JSON: ${{ steps.codex.outputs.final-message }}
+          AI_JSON: ${{ steps.ai.outputs['final-message'] }}
         with:
           github-token: ${{ github.token }}
           script: |
-            if (!process.env.CODEX_JSON) {
-              core.info('No Codex decision to apply.');
+            if (!process.env.AI_JSON) {
+              core.info('No AI decision to apply.');
               return;
             }
 
             let parsed;
             try {
-              parsed = JSON.parse(process.env.CODEX_JSON);
+              parsed = JSON.parse(process.env.AI_JSON);
             } catch (error) {
-              core.warning(`Could not parse Codex response: ${error}`);
-              core.debug(process.env.CODEX_JSON);
+              core.warning(`Could not parse AI response: ${error}`);
+              core.debug(process.env.AI_JSON);
               return;
             }
+
             const labels = Array.isArray(parsed.labels)
               ? parsed.labels.filter(Boolean)
               : [];
@@ -145,8 +148,9 @@ jobs:
                 return `${file.filename} (${file.status}${changeCount})`;
               })
               .join('\n');
-      - name: Run Codex triage
-        id: codex
+
+      - name: Run AI triage for PR
+        id: ai
         uses: openai/codex-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
@@ -186,26 +190,27 @@ jobs:
             ---
 
             Changed files:
-            ${{ steps.changed-files.outputs.result || 'No files detected.' }}
+            ${{ steps['changed-files'].outputs.result || 'No files detected.' }}
+
       - name: Apply PR triage decisions
-        if: steps.codex.outputs.final-message != ''
+        if: steps.ai.outputs['final-message'] != ''
         uses: actions/github-script@v8
         env:
-          CODEX_JSON: ${{ steps.codex.outputs.final-message }}
+          AI_JSON: ${{ steps.ai.outputs['final-message'] }}
         with:
           github-token: ${{ github.token }}
           script: |
-            if (!process.env.CODEX_JSON) {
-              core.info('No Codex decision to apply.');
+            if (!process.env.AI_JSON) {
+              core.info('No AI decision to apply.');
               return;
             }
 
             let parsed;
             try {
-              parsed = JSON.parse(process.env.CODEX_JSON);
+              parsed = JSON.parse(process.env.AI_JSON);
             } catch (error) {
-              core.warning(`Could not parse Codex response: ${error}`);
-              core.debug(process.env.CODEX_JSON);
+              core.warning(`Could not parse AI response: ${error}`);
+              core.debug(process.env.AI_JSON);
               return;
             }
             const labels = Array.isArray(parsed.labels)
