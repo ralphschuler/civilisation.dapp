@@ -1,0 +1,50 @@
+name: "Feature request"
+description: "Propose a new experience, automation, or capability for the Civilisation project."
+labels:
+  - type:feature
+  - status:needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We love hearing your ideas! Tell us what you want to build, why it matters, and how you'd measure success.
+  - type: input
+    id: summary
+    attributes:
+      label: Idea summary
+      description: "What is the high-level goal?"
+      placeholder: "Add a barracks upgrade queue"
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: "Describe the user problem or workflow improvement."
+      placeholder: "Players need a way to queue unit upgrades while waiting on resource generation."
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: "Outline how you imagine this working in the app or contracts."
+      render: markdown
+      placeholder: |
+        * Add ...
+        * Update ...
+        * Consider ...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: "List any other options you've explored."
+      render: markdown
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: "Wireframes, diagrams, or references welcome."
+      render: markdown

@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+bun run lint:ts
+bun run lint:sol

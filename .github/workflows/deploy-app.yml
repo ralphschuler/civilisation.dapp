@@ -2,7 +2,7 @@ name: Deploy App
 
 on:
   release:
-    types: [published, released]
+    types: [released, prereleased]
   workflow_dispatch:
     inputs:
       environment:

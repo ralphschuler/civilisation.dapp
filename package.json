@@ -21,6 +21,7 @@
     "test:web": "vitest run --passWithNoTests",
     "test:contracts": "cd contracts && forge test",
     "test": "bun run test:web && bun run test:contracts"
+    "prepare": "husky"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
@@ -89,10 +90,12 @@
     "@vitejs/plugin-react-swc": "^4.1.0",
     "eruda": "^3.4.3",
     "eslint": "^9.37.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^6.1.1",
     "eslint-plugin-storybook": "^9.1.10",
     "globals": "^16.3.0",
     "happy-dom": "^19.0.2",
+    "husky": "^9.1.7",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
     "solhint": "^6.0.1",
