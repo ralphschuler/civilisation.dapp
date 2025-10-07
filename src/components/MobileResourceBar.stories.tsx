@@ -58,4 +58,3 @@ export const Default: Story = {};
 export const WithCollect: Story = {
   args: { onCollectResources: () => {} },
 };
-

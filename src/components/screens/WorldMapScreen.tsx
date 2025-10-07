@@ -1,12 +1,21 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { Village, VillageInfo, March, MarchPreset } from '../../types/game';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/Tabs';
-import { Badge } from '../ui/Badge';
-import { MarchPlannerScreen } from './MarchPlannerScreen';
-import { Route, MapPin, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
-import { useI18n } from '@/providers/i18n-provider';
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { Village, VillageInfo, March, MarchPreset } from "../../types/game";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/Card";
+import { Button } from "../ui/Button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/Tabs";
+import { Badge } from "../ui/Badge";
+import { MarchPlannerScreen } from "./MarchPlannerScreen";
+import {
+  Route,
+  MapPin,
+  ChevronUp,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
+import { useI18n } from "@/providers/i18n-provider";
 
 interface WorldMapScreenProps {
   village: Village;
@@ -14,9 +23,9 @@ interface WorldMapScreenProps {
   marchPresets: MarchPreset[];
   onVillageSelect: (villageId: string) => void;
   onVillageInfo: (villageInfo: VillageInfo) => void;
-  onCreateMarch: (march: Omit<March, 'id'>) => void;
+  onCreateMarch: (march: Omit<March, "id">) => void;
   onCancelMarch: (marchId: string) => void;
-  onCreatePreset: (preset: Omit<MarchPreset, 'id'>) => void;
+  onCreatePreset: (preset: Omit<MarchPreset, "id">) => void;
   onDeletePreset: (presetId: string) => void;
 }
 
@@ -32,22 +41,82 @@ const CHUNK_LOAD_RADIUS = 3; // Load chunks in a 3-chunk radius around viewport
 
 // Village names and player names for generation
 const VILLAGE_NAMES = [
-  'Barbarendorf', 'Nordlicht', 'Südwind', 'Ostwall', 'Westgrund', 'Bergfeste',
-  'Nordgrenze', 'Südhafen', 'Ostwacht', 'Westfeste', 'Zentrum', 'Räuberlager',
-  'Steinburg', 'Waldheim', 'Eisenstadt', 'Felsenburg', 'Talheim', 'Seeburg',
-  'Wüstenlager', 'Schneefeste', 'Drachenhort', 'Adlernest', 'Wolfsrudel', 'Bärenhöhle',
-  'Silberturm', 'Goldgrube', 'Kupfertal', 'Bronzeburg', 'Stahlstadt', 'Eisenfeste',
-  'Rabenhorst', 'Falkenruh', 'Adlerstein', 'Wolfstal', 'Bärengrund', 'Löwenburg',
-  'Rosenfeld', 'Lilienau', 'Veilchental', 'Nelkenheim', 'Orchideenstadt', 'Tulpenfeld',
-  'Eichenhain', 'Buchental', 'Ahorngrund', 'Birkenfeld', 'Kastanienstadt', 'Lindenhof'
+  "Barbarendorf",
+  "Nordlicht",
+  "Südwind",
+  "Ostwall",
+  "Westgrund",
+  "Bergfeste",
+  "Nordgrenze",
+  "Südhafen",
+  "Ostwacht",
+  "Westfeste",
+  "Zentrum",
+  "Räuberlager",
+  "Steinburg",
+  "Waldheim",
+  "Eisenstadt",
+  "Felsenburg",
+  "Talheim",
+  "Seeburg",
+  "Wüstenlager",
+  "Schneefeste",
+  "Drachenhort",
+  "Adlernest",
+  "Wolfsrudel",
+  "Bärenhöhle",
+  "Silberturm",
+  "Goldgrube",
+  "Kupfertal",
+  "Bronzeburg",
+  "Stahlstadt",
+  "Eisenfeste",
+  "Rabenhorst",
+  "Falkenruh",
+  "Adlerstein",
+  "Wolfstal",
+  "Bärengrund",
+  "Löwenburg",
+  "Rosenfeld",
+  "Lilienau",
+  "Veilchental",
+  "Nelkenheim",
+  "Orchideenstadt",
+  "Tulpenfeld",
+  "Eichenhain",
+  "Buchental",
+  "Ahorngrund",
+  "Birkenfeld",
+  "Kastanienstadt",
+  "Lindenhof",
 ];
 
 const PLAYER_NAMES = [
-  'Viking_King', 'Desert_Lord', 'Iron_Fist', 'Mountain_King', 'Sea_Lord',
-  'Dawn_Rider', 'Sunset_King', 'Heart_Emperor', 'Rock_Hammer', 'Steel_Baron',
-  'Fire_Lord', 'Ice_Queen', 'Storm_Bringer', 'Shadow_Master', 'Light_Keeper',
-  'Night_Blade', 'Sun_Warrior', 'Moon_Knight', 'Star_Ranger', 'Sky_Guardian',
-  'Earth_Shaker', 'Wind_Runner', 'Water_Bearer', 'Thunder_God', 'Lightning_Strike'
+  "Viking_King",
+  "Desert_Lord",
+  "Iron_Fist",
+  "Mountain_King",
+  "Sea_Lord",
+  "Dawn_Rider",
+  "Sunset_King",
+  "Heart_Emperor",
+  "Rock_Hammer",
+  "Steel_Baron",
+  "Fire_Lord",
+  "Ice_Queen",
+  "Storm_Bringer",
+  "Shadow_Master",
+  "Light_Keeper",
+  "Night_Blade",
+  "Sun_Warrior",
+  "Moon_Knight",
+  "Star_Ranger",
+  "Sky_Guardian",
+  "Earth_Shaker",
+  "Wind_Runner",
+  "Water_Bearer",
+  "Thunder_God",
+  "Lightning_Strike",
 ];
 
 // Seeded random number generator for consistent chunk generation
@@ -62,7 +131,10 @@ function getChunkKey(chunkX: number, chunkY: number): string {
 }
 
 // Generate villages for a specific chunk
-function generateVillagesForChunk(chunkX: number, chunkY: number): Array<{
+function generateVillagesForChunk(
+  chunkX: number,
+  chunkY: number,
+): Array<{
   id: string;
   name: string;
   x: number;
@@ -72,58 +144,60 @@ function generateVillagesForChunk(chunkX: number, chunkY: number): Array<{
 }> {
   const villages = [];
   const chunkSeed = chunkX * 1000000 + chunkY;
-  
+
   // Determine number of villages in this chunk (5-10)
   const seed1 = seededRandom(chunkSeed);
-  const numVillages = Math.floor(seed1 * (MAX_VILLAGES_PER_CHUNK - MIN_VILLAGES_PER_CHUNK + 1)) + MIN_VILLAGES_PER_CHUNK;
-  
+  const numVillages =
+    Math.floor(seed1 * (MAX_VILLAGES_PER_CHUNK - MIN_VILLAGES_PER_CHUNK + 1)) +
+    MIN_VILLAGES_PER_CHUNK;
+
   for (let i = 0; i < numVillages; i++) {
     const villageSeed = chunkSeed + i * 100;
-    
+
     // Position within chunk (with some padding from edges)
     const xOffset = seededRandom(villageSeed * 2) * (CHUNK_SIZE - 20) + 10;
     const yOffset = seededRandom(villageSeed * 3) * (CHUNK_SIZE - 20) + 10;
-    
+
     const x = chunkX * CHUNK_SIZE + xOffset;
     const y = chunkY * CHUNK_SIZE + yOffset;
-    
+
     // Random attributes
     const nameIndex = Math.floor(seededRandom(villageSeed * 5) * VILLAGE_NAMES.length);
     const level = Math.floor(seededRandom(villageSeed * 7) * 25) + 1;
     const hasPlayer = seededRandom(villageSeed * 11) > 0.3; // 70% have players
     const playerIndex = Math.floor(seededRandom(villageSeed * 13) * PLAYER_NAMES.length);
-    
+
     villages.push({
       id: `chunk_${chunkX}_${chunkY}_v${i}`,
       name: VILLAGE_NAMES[nameIndex],
       x,
       y,
       level,
-      player: hasPlayer ? PLAYER_NAMES[playerIndex] : null
+      player: hasPlayer ? PLAYER_NAMES[playerIndex] : null,
     });
   }
-  
+
   return villages;
 }
 
-export function WorldMapScreen({ 
-  village, 
+export function WorldMapScreen({
+  village,
   marches,
   marchPresets,
-  onVillageSelect, 
+  onVillageSelect,
   onVillageInfo,
   onCreateMarch,
   onCancelMarch,
   onCreatePreset,
-  onDeletePreset
+  onDeletePreset,
 }: WorldMapScreenProps) {
   const { t } = useI18n();
-  const [activeTab, setActiveTab] = useState('map');
+  const [activeTab, setActiveTab] = useState("map");
   const [selectedTarget, setSelectedTarget] = useState<VillageInfo | null>(null);
   const [viewBox, setViewBox] = useState({ x: 0, y: 0, width: 400, height: 384 });
   const [loadedChunks, setLoadedChunks] = useState<Set<string>>(new Set());
   const [generatedVillages, setGeneratedVillages] = useState<Map<string, any[]>>(new Map());
-  
+
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const myVillagePosition = { x: village.x || MAP_WIDTH / 2, y: village.y || MAP_HEIGHT / 2 };
@@ -134,8 +208,8 @@ export function WorldMapScreen({
   const lastTouchDistanceRef = useRef<number | null>(null);
   const lastViewBoxRef = useRef(viewBox);
 
-  const MIN_ZOOM = 0.3;   // More zoomed out (larger viewBox)
-  const MAX_ZOOM = 20;    // More zoomed in (smaller viewBox) - allows reading village names
+  const MIN_ZOOM = 0.3; // More zoomed out (larger viewBox)
+  const MAX_ZOOM = 20; // More zoomed in (smaller viewBox) - allows reading village names
 
   // Get all villages from all loaded chunks
   const allVillages = useMemo(() => {
@@ -150,9 +224,15 @@ export function WorldMapScreen({
   const loadVisibleChunks = useCallback(() => {
     // Calculate which chunks are visible in current viewBox
     const startChunkX = Math.max(0, Math.floor(viewBox.x / CHUNK_SIZE) - CHUNK_LOAD_RADIUS);
-    const endChunkX = Math.min(CHUNKS_WIDTH - 1, Math.floor((viewBox.x + viewBox.width) / CHUNK_SIZE) + CHUNK_LOAD_RADIUS);
+    const endChunkX = Math.min(
+      CHUNKS_WIDTH - 1,
+      Math.floor((viewBox.x + viewBox.width) / CHUNK_SIZE) + CHUNK_LOAD_RADIUS,
+    );
     const startChunkY = Math.max(0, Math.floor(viewBox.y / CHUNK_SIZE) - CHUNK_LOAD_RADIUS);
-    const endChunkY = Math.min(CHUNKS_HEIGHT - 1, Math.floor((viewBox.y + viewBox.height) / CHUNK_SIZE) + CHUNK_LOAD_RADIUS);
+    const endChunkY = Math.min(
+      CHUNKS_HEIGHT - 1,
+      Math.floor((viewBox.y + viewBox.height) / CHUNK_SIZE) + CHUNK_LOAD_RADIUS,
+    );
 
     const newLoadedChunks = new Set<string>(loadedChunks);
     const newGeneratedVillages = new Map(generatedVillages);
@@ -162,7 +242,7 @@ export function WorldMapScreen({
     for (let chunkX = startChunkX; chunkX <= endChunkX; chunkX++) {
       for (let chunkY = startChunkY; chunkY <= endChunkY; chunkY++) {
         const chunkKey = getChunkKey(chunkX, chunkY);
-        
+
         if (!newLoadedChunks.has(chunkKey)) {
           // Generate villages for this chunk
           const villages = generateVillagesForChunk(chunkX, chunkY);
@@ -191,12 +271,12 @@ export function WorldMapScreen({
 
     const initialViewBoxWidth = container.clientWidth;
     const initialViewBoxHeight = container.clientHeight;
-    
+
     setViewBox({
       x: myVillagePosition.x - initialViewBoxWidth / 2,
       y: myVillagePosition.y - initialViewBoxHeight / 2,
       width: initialViewBoxWidth,
-      height: initialViewBoxHeight
+      height: initialViewBoxHeight,
     });
   }, []);
 
@@ -218,7 +298,7 @@ export function WorldMapScreen({
       // Zoom towards specific point
       const relativeX = (centerX - viewBox.x) / viewBox.width;
       const relativeY = (centerY - viewBox.y) / viewBox.height;
-      
+
       newX = centerX - newWidth * relativeX;
       newY = centerY - newHeight * relativeY;
     } else {
@@ -238,22 +318,22 @@ export function WorldMapScreen({
   const zoomOut = () => handleZoom(-0.2);
 
   // Scroll/Pan map
-  const scrollMap = (direction: 'up' | 'down' | 'left' | 'right') => {
+  const scrollMap = (direction: "up" | "down" | "left" | "right") => {
     const panDistance = viewBox.width * 0.8;
     let newX = viewBox.x;
     let newY = viewBox.y;
 
     switch (direction) {
-      case 'up':
+      case "up":
         newY -= panDistance;
         break;
-      case 'down':
+      case "down":
         newY += panDistance;
         break;
-      case 'left':
+      case "left":
         newX -= panDistance;
         break;
-      case 'right':
+      case "right":
         newX += panDistance;
         break;
     }
@@ -301,18 +381,18 @@ export function WorldMapScreen({
   const handleWheel = (e: React.WheelEvent<SVGSVGElement>) => {
     e.preventDefault();
     const delta = e.deltaY > 0 ? -0.1 : 0.1;
-    
+
     // Get mouse position in SVG coordinates
     const svg = svgRef.current;
     if (!svg) return;
-    
+
     const rect = svg.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
-    
+
     const svgX = viewBox.x + (mouseX / rect.width) * viewBox.width;
     const svgY = viewBox.y + (mouseY / rect.height) * viewBox.height;
-    
+
     handleZoom(delta, svgX, svgY);
   };
 
@@ -325,10 +405,7 @@ export function WorldMapScreen({
       isPanningRef.current = false;
       const touch1 = e.touches[0];
       const touch2 = e.touches[1];
-      const distance = Math.hypot(
-        touch2.clientX - touch1.clientX,
-        touch2.clientY - touch1.clientY
-      );
+      const distance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
       lastTouchDistanceRef.current = distance;
       lastViewBoxRef.current = { ...viewBox };
     }
@@ -336,7 +413,7 @@ export function WorldMapScreen({
 
   const handleTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
     e.preventDefault();
-    
+
     if (e.touches.length === 1 && isPanningRef.current) {
       // Pan
       const dx = e.touches[0].clientX - lastPanPointRef.current.x;
@@ -356,10 +433,7 @@ export function WorldMapScreen({
       // Pinch zoom
       const touch1 = e.touches[0];
       const touch2 = e.touches[1];
-      const distance = Math.hypot(
-        touch2.clientX - touch1.clientX,
-        touch2.clientY - touch1.clientY
-      );
+      const distance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
 
       const scale = distance / lastTouchDistanceRef.current;
       const newWidth = lastViewBoxRef.current.width / scale;
@@ -373,12 +447,16 @@ export function WorldMapScreen({
       // Center of pinch
       const svg = svgRef.current;
       if (!svg) return;
-      
+
       const rect = svg.getBoundingClientRect();
       const centerClientX = (touch1.clientX + touch2.clientX) / 2;
       const centerClientY = (touch1.clientY + touch2.clientY) / 2;
-      const centerX = lastViewBoxRef.current.x + ((centerClientX - rect.left) / rect.width) * lastViewBoxRef.current.width;
-      const centerY = lastViewBoxRef.current.y + ((centerClientY - rect.top) / rect.height) * lastViewBoxRef.current.height;
+      const centerX =
+        lastViewBoxRef.current.x +
+        ((centerClientX - rect.left) / rect.width) * lastViewBoxRef.current.width;
+      const centerY =
+        lastViewBoxRef.current.y +
+        ((centerClientY - rect.top) / rect.height) * lastViewBoxRef.current.height;
 
       const relativeX = (centerX - lastViewBoxRef.current.x) / lastViewBoxRef.current.width;
       const relativeY = (centerY - lastViewBoxRef.current.y) / lastViewBoxRef.current.height;
@@ -408,16 +486,18 @@ export function WorldMapScreen({
   };
 
   const getVillageIcon = (villageData: any) => {
-    if (!villageData.player) return '🏴‍☠️'; // Barbarendorf
-    if (villageData.level < 10) return '🏘️';
-    if (villageData.level < 20) return '🏰';
-    return '👑'; // Große Festung
+    if (!villageData.player) return "🏴‍☠️"; // Barbarendorf
+    if (villageData.level < 10) return "🏘️";
+    if (villageData.level < 20) return "🏰";
+    return "👑"; // Große Festung
   };
 
   const generateVillageInfo = (villageData: any): VillageInfo => {
     const basePopulation = villageData.level * 240;
-    const armySize = villageData.player ? Math.floor(Math.random() * 500) + 100 : Math.floor(Math.random() * 200) + 50;
-    
+    const armySize = villageData.player
+      ? Math.floor(Math.random() * 500) + 100
+      : Math.floor(Math.random() * 200) + 50;
+
     return {
       id: villageData.id,
       name: villageData.name,
@@ -430,30 +510,39 @@ export function WorldMapScreen({
       maxPopulation: basePopulation,
       buildings: {
         townhall: Math.min(villageData.level, 30),
-        barracks: villageData.player ? Math.floor(villageData.level * 0.8) : Math.floor(villageData.level * 0.5),
-        wall: villageData.player ? Math.floor(villageData.level * 0.9) : Math.floor(villageData.level * 0.3),
+        barracks: villageData.player
+          ? Math.floor(villageData.level * 0.8)
+          : Math.floor(villageData.level * 0.5),
+        wall: villageData.player
+          ? Math.floor(villageData.level * 0.9)
+          : Math.floor(villageData.level * 0.3),
         storage: Math.floor(villageData.level * 0.7),
         market: villageData.player ? Math.floor(villageData.level * 0.6) : 0,
-        farm: Math.floor(villageData.level * 0.8)
+        farm: Math.floor(villageData.level * 0.8),
       },
       army: {
         spearman: Math.floor(armySize * 0.4),
         swordsman: Math.floor(armySize * 0.3),
         archer: Math.floor(armySize * 0.2),
         knight: Math.floor(armySize * 0.08),
-        trebuchet: Math.floor(armySize * 0.02)
+        trebuchet: Math.floor(armySize * 0.02),
       },
-      wall: villageData.player ? Math.floor(villageData.level * 0.9) : Math.floor(villageData.level * 0.3),
-      lastActivity: villageData.player ? 
-        ['vor 5min', 'vor 2h', 'vor 1d', 'vor 3d'][Math.floor(Math.random() * 4)] : 
-        'Barbarendorf',
-      alliance: villageData.player && Math.random() > 0.5 ? 
-        ['Die Krieger', 'Nordwind', 'Eisenfaust', 'Goldene Horde'][Math.floor(Math.random() * 4)] : 
-        undefined,
+      wall: villageData.player
+        ? Math.floor(villageData.level * 0.9)
+        : Math.floor(villageData.level * 0.3),
+      lastActivity: villageData.player
+        ? ["vor 5min", "vor 2h", "vor 1d", "vor 3d"][Math.floor(Math.random() * 4)]
+        : "Barbarendorf",
+      alliance:
+        villageData.player && Math.random() > 0.5
+          ? ["Die Krieger", "Nordwind", "Eisenfaust", "Goldene Horde"][
+              Math.floor(Math.random() * 4)
+            ]
+          : undefined,
       playerRank: villageData.player ? Math.floor(Math.random() * 1000) + 1 : undefined,
-      defenseBonus: villageData.player ? 
-        Math.floor(villageData.level * 2) + Math.floor(Math.random() * 50) : 
-        Math.floor(villageData.level * 1)
+      defenseBonus: villageData.player
+        ? Math.floor(villageData.level * 2) + Math.floor(Math.random() * 50)
+        : Math.floor(villageData.level * 1),
     };
   };
 
@@ -462,7 +551,7 @@ export function WorldMapScreen({
       onVillageSelect(villageData.id);
     } else {
       const villageInfo = generateVillageInfo(villageData);
-      if (activeTab === 'march-planner') {
+      if (activeTab === "march-planner") {
         setSelectedTarget(villageInfo);
       } else {
         onVillageInfo(villageInfo);
@@ -474,10 +563,12 @@ export function WorldMapScreen({
     e.stopPropagation();
     const villageInfo = generateVillageInfo(villageData);
     setSelectedTarget(villageInfo);
-    setActiveTab('march-planner');
+    setActiveTab("march-planner");
   };
 
-  const activeMarchesCount = marches.filter(m => ['planning', 'marching', 'arrived'].includes(m.status)).length;
+  const activeMarchesCount = marches.filter((m) =>
+    ["planning", "marching", "arrived"].includes(m.status),
+  ).length;
   const currentZoom = 400 / viewBox.width;
 
   return (
@@ -488,10 +579,12 @@ export function WorldMapScreen({
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <MapPin className="h-5 w-5" />
-              {t('screens.world.title', 'Welt & Märsche')}
+              {t("screens.world.title", "Welt & Märsche")}
             </div>
             <span className="text-sm text-muted-foreground">
-              {t('screens.world.coords', 'Koordinaten')}: ({Math.floor(myVillagePosition.x / CHUNK_SIZE)}|{Math.floor(myVillagePosition.y / CHUNK_SIZE)})
+              {t("screens.world.coords", "Koordinaten")}: (
+              {Math.floor(myVillagePosition.x / CHUNK_SIZE)}|
+              {Math.floor(myVillagePosition.y / CHUNK_SIZE)})
             </span>
           </CardTitle>
         </CardHeader>
@@ -501,11 +594,11 @@ export function WorldMapScreen({
         <TabsList className="grid grid-cols-2 w-full">
           <TabsTrigger value="map">
             <MapPin className="h-4 w-4 mr-2" />
-            {t('screens.world.tabs.map', 'Karte')}
+            {t("screens.world.tabs.map", "Karte")}
           </TabsTrigger>
           <TabsTrigger value="march-planner">
             <Route className="h-4 w-4 mr-2" />
-            {t('screens.world.tabs.planner', 'Marschplaner')}
+            {t("screens.world.tabs.planner", "Marschplaner")}
             {activeMarchesCount > 0 && (
               <Badge variant="secondary" className="ml-2 text-xs">
                 {activeMarchesCount}
@@ -525,8 +618,8 @@ export function WorldMapScreen({
                     variant="ghost"
                     size="icon"
                     className="absolute top-2 left-1/2 -translate-x-1/2 z-10 min-touch hover:bg-background/50"
-                    onClick={() => scrollMap('up')}
-                    aria-label={t('screens.world.scroll.up', 'Nach oben scrollen')}
+                    onClick={() => scrollMap("up")}
+                    aria-label={t("screens.world.scroll.up", "Nach oben scrollen")}
                   >
                     <ChevronUp className="h-6 w-6" />
                   </Button>
@@ -535,8 +628,8 @@ export function WorldMapScreen({
                     variant="ghost"
                     size="icon"
                     className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 min-touch hover:bg-background/50"
-                    onClick={() => scrollMap('down')}
-                    aria-label={t('screens.world.scroll.down', 'Nach unten scrollen')}
+                    onClick={() => scrollMap("down")}
+                    aria-label={t("screens.world.scroll.down", "Nach unten scrollen")}
                   >
                     <ChevronDown className="h-6 w-6" />
                   </Button>
@@ -545,8 +638,8 @@ export function WorldMapScreen({
                     variant="ghost"
                     size="icon"
                     className="absolute top-1/2 left-2 -translate-y-1/2 z-10 min-touch hover:bg-background/50"
-                    onClick={() => scrollMap('left')}
-                    aria-label={t('screens.world.scroll.left', 'Nach links scrollen')}
+                    onClick={() => scrollMap("left")}
+                    aria-label={t("screens.world.scroll.left", "Nach links scrollen")}
                   >
                     <ChevronLeft className="h-6 w-6" />
                   </Button>
@@ -555,8 +648,8 @@ export function WorldMapScreen({
                     variant="ghost"
                     size="icon"
                     className="absolute top-1/2 right-2 -translate-y-1/2 z-10 min-touch hover:bg-background/50"
-                    onClick={() => scrollMap('right')}
-                    aria-label={t('screens.world.scroll.right', 'Nach rechts scrollen')}
+                    onClick={() => scrollMap("right")}
+                    aria-label={t("screens.world.scroll.right", "Nach rechts scrollen")}
                   >
                     <ChevronRight className="h-6 w-6" />
                   </Button>
@@ -569,7 +662,7 @@ export function WorldMapScreen({
                       className="min-touch hover:bg-background/50"
                       onClick={zoomIn}
                       disabled={currentZoom >= MAX_ZOOM}
-                      aria-label={t('screens.world.zoom.in', 'Hineinzoomen')}
+                      aria-label={t("screens.world.zoom.in", "Hineinzoomen")}
                     >
                       <ZoomIn className="h-6 w-6" />
                     </Button>
@@ -579,7 +672,7 @@ export function WorldMapScreen({
                       className="min-touch hover:bg-background/50"
                       onClick={zoomOut}
                       disabled={currentZoom <= MIN_ZOOM}
-                      aria-label={t('screens.world.zoom.out', 'Herauszoomen')}
+                      aria-label={t("screens.world.zoom.out", "Herauszoomen")}
                     >
                       <ZoomOut className="h-6 w-6" />
                     </Button>
@@ -596,7 +689,7 @@ export function WorldMapScreen({
                   </div>
 
                   {/* SVG Map Container */}
-                  <div 
+                  <div
                     ref={containerRef}
                     className="w-full h-96 overflow-hidden rounded-lg border border-border bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800"
                   >
@@ -633,37 +726,40 @@ export function WorldMapScreen({
 
                       {/* Grid lines - render only visible ones */}
                       <g opacity="0.2" stroke="#666" strokeWidth={viewBox.width / 400}>
-                        {Array.from({ length: Math.ceil(viewBox.width / CHUNK_SIZE) + 1 }).map((_, i) => {
-                          const x = Math.floor(viewBox.x / CHUNK_SIZE) * CHUNK_SIZE + i * CHUNK_SIZE;
-                          return (
-                            <line
-                              key={`v-${i}`}
-                              x1={x}
-                              y1={viewBox.y}
-                              x2={x}
-                              y2={viewBox.y + viewBox.height}
-                            />
-                          );
-                        })}
-                        {Array.from({ length: Math.ceil(viewBox.height / CHUNK_SIZE) + 1 }).map((_, i) => {
-                          const y = Math.floor(viewBox.y / CHUNK_SIZE) * CHUNK_SIZE + i * CHUNK_SIZE;
-                          return (
-                            <line
-                              key={`h-${i}`}
-                              x1={viewBox.x}
-                              y1={y}
-                              x2={viewBox.x + viewBox.width}
-                              y2={y}
-                            />
-                          );
-                        })}
+                        {Array.from({ length: Math.ceil(viewBox.width / CHUNK_SIZE) + 1 }).map(
+                          (_, i) => {
+                            const x =
+                              Math.floor(viewBox.x / CHUNK_SIZE) * CHUNK_SIZE + i * CHUNK_SIZE;
+                            return (
+                              <line
+                                key={`v-${i}`}
+                                x1={x}
+                                y1={viewBox.y}
+                                x2={x}
+                                y2={viewBox.y + viewBox.height}
+                              />
+                            );
+                          },
+                        )}
+                        {Array.from({ length: Math.ceil(viewBox.height / CHUNK_SIZE) + 1 }).map(
+                          (_, i) => {
+                            const y =
+                              Math.floor(viewBox.y / CHUNK_SIZE) * CHUNK_SIZE + i * CHUNK_SIZE;
+                            return (
+                              <line
+                                key={`h-${i}`}
+                                x1={viewBox.x}
+                                y1={y}
+                                x2={viewBox.x + viewBox.width}
+                                y2={y}
+                              />
+                            );
+                          },
+                        )}
                       </g>
 
                       {/* My Village */}
-                      <g
-                        onClick={() => onVillageSelect(village.id)}
-                        style={{ cursor: 'pointer' }}
-                      >
+                      <g onClick={() => onVillageSelect(village.id)} style={{ cursor: "pointer" }}>
                         <circle
                           cx={myVillagePosition.x}
                           cy={myVillagePosition.y}
@@ -703,14 +799,14 @@ export function WorldMapScreen({
                         <g
                           key={otherVillage.id}
                           onClick={() => handleVillageClick(otherVillage)}
-                          style={{ cursor: 'pointer' }}
+                          style={{ cursor: "pointer" }}
                         >
                           <circle
                             cx={otherVillage.x}
                             cy={otherVillage.y}
                             r={Math.max(viewBox.width / 60, 6)}
-                            fill={otherVillage.player ? '#ef4444' : '#6b7280'}
-                            stroke={otherVillage.player ? '#fca5a5' : '#9ca3af'}
+                            fill={otherVillage.player ? "#ef4444" : "#6b7280"}
+                            stroke={otherVillage.player ? "#fca5a5" : "#9ca3af"}
                             strokeWidth={Math.max(viewBox.width / 300, 0.8)}
                           />
                           <text
@@ -728,7 +824,7 @@ export function WorldMapScreen({
                               x={otherVillage.x}
                               y={otherVillage.y - viewBox.width / 60}
                               textAnchor="middle"
-                              fill={otherVillage.player ? '#ef4444' : '#6b7280'}
+                              fill={otherVillage.player ? "#ef4444" : "#6b7280"}
                               fontSize={Math.max(viewBox.width / 50, 10)}
                               fontWeight="500"
                               pointerEvents="none"
@@ -752,22 +848,34 @@ export function WorldMapScreen({
               <CardContent className="space-y-2">
                 {allVillages
                   .sort((a, b) => {
-                    const distA = calculateDistance(myVillagePosition.x, myVillagePosition.y, a.x, a.y);
-                    const distB = calculateDistance(myVillagePosition.x, myVillagePosition.y, b.x, b.y);
+                    const distA = calculateDistance(
+                      myVillagePosition.x,
+                      myVillagePosition.y,
+                      a.x,
+                      a.y,
+                    );
+                    const distB = calculateDistance(
+                      myVillagePosition.x,
+                      myVillagePosition.y,
+                      b.x,
+                      b.y,
+                    );
                     return distA - distB;
                   })
                   .slice(0, 5)
                   .map((otherVillage) => {
-                    const distance = Math.round(calculateDistance(
-                      myVillagePosition.x, 
-                      myVillagePosition.y, 
-                      otherVillage.x, 
-                      otherVillage.y
-                    ) / CHUNK_SIZE);
-                    
+                    const distance = Math.round(
+                      calculateDistance(
+                        myVillagePosition.x,
+                        myVillagePosition.y,
+                        otherVillage.x,
+                        otherVillage.y,
+                      ) / CHUNK_SIZE,
+                    );
+
                     return (
-                      <div 
-                        key={otherVillage.id} 
+                      <div
+                        key={otherVillage.id}
                         className="flex items-center justify-between p-2 bg-muted rounded-lg cursor-pointer hover:bg-muted/80 transition-colors"
                         onClick={() => handleVillageClick(otherVillage)}
                       >
@@ -776,16 +884,17 @@ export function WorldMapScreen({
                           <div>
                             <div className="font-medium text-sm">{otherVillage.name}</div>
                             <div className="text-xs text-muted-foreground">
-                              {otherVillage.player ? `Spieler: ${otherVillage.player}` : 'Barbarendorf'} • 
-                              Stufe {otherVillage.level} • 
-                              ~{distance} Chunks
+                              {otherVillage.player
+                                ? `Spieler: ${otherVillage.player}`
+                                : "Barbarendorf"}{" "}
+                              • Stufe {otherVillage.level} • ~{distance} Chunks
                             </div>
                           </div>
                         </div>
                         <div className="flex gap-1">
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
+                          <Button
+                            size="sm"
+                            variant="outline"
                             className="text-xs px-2 py-1 h-6 min-touch"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -795,9 +904,9 @@ export function WorldMapScreen({
                           >
                             👁️
                           </Button>
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
+                          <Button
+                            size="sm"
+                            variant="outline"
                             className="text-xs px-2 py-1 h-6 min-touch"
                             onClick={(e) => handleAttackClick(otherVillage, e)}
                           >

@@ -1,8 +1,8 @@
-import { Village } from '../../types/game';
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
-import { useI18n } from '@/providers/i18n-provider';
-import { Bell, Settings, User } from 'lucide-react';
+import { Village } from "../../types/game";
+import { Button } from "../ui/Button";
+import { Badge } from "../ui/Badge";
+import { useI18n } from "@/providers/i18n-provider";
+import { Bell, Settings, User } from "lucide-react";
 
 interface GameHeaderProps {
   village: Village;
@@ -11,11 +11,11 @@ interface GameHeaderProps {
   onNotificationsClick?: () => void;
 }
 
-export function GameHeader({ 
-  village, 
-  onSettingsClick, 
-  onProfileClick, 
-  onNotificationsClick 
+export function GameHeader({
+  village,
+  onSettingsClick,
+  onProfileClick,
+  onNotificationsClick,
 }: GameHeaderProps) {
   const { t } = useI18n();
   return (
@@ -24,38 +24,25 @@ export function GameHeader({
         <div className="flex items-center space-x-3">
           <div className="text-2xl">🏰</div>
           <div>
-            <h1 className="font-bold text-lg">{t('app.title', 'Tribal Wars')}</h1>
+            <h1 className="font-bold text-lg">{t("app.title", "Tribal Wars")}</h1>
             <Badge variant="secondary" className="text-xs">
               {village.name}
             </Badge>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-2">
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={onNotificationsClick}
-            className="relative"
-          >
+          <Button variant="ghost" size="sm" onClick={onNotificationsClick} className="relative">
             <Bell className="h-4 w-4" />
             {/* Notification badge */}
             <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
           </Button>
-          
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={onProfileClick}
-          >
+
+          <Button variant="ghost" size="sm" onClick={onProfileClick}>
             <User className="h-4 w-4" />
           </Button>
-          
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={onSettingsClick}
-          >
+
+          <Button variant="ghost" size="sm" onClick={onSettingsClick}>
             <Settings className="h-4 w-4" />
           </Button>
         </div>

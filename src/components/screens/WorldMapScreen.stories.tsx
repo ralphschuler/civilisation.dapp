@@ -20,7 +20,15 @@ const village: Village = {
     maxPopulation: 0,
   },
   uncollectedResources: {
-    bread: 0, clay: 0, coal: 0, gold: 0, iron: 0, meat: 0, villager: 0, wheat: 0, wood: 0,
+    bread: 0,
+    clay: 0,
+    coal: 0,
+    gold: 0,
+    iron: 0,
+    meat: 0,
+    villager: 0,
+    wheat: 0,
+    wood: 0,
   },
   buildings: {},
   army: {},
@@ -53,4 +61,3 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
-

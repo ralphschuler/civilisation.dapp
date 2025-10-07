@@ -1,10 +1,10 @@
-import { Building } from '../types/game';
-import { BUILDING_TYPES, getBuildingIcon } from '../data/gameData';
-import { Button } from './ui/Button';
-import { Card } from './ui/Card';
-import { Badge } from './ui/Badge';
-import { Progress } from './ui/Progress';
-import { useI18n } from '@/providers/i18n-provider';
+import { Building } from "../types/game";
+import { BUILDING_TYPES, getBuildingIcon } from "../data/gameData";
+import { Button } from "./ui/Button";
+import { Card } from "./ui/Card";
+import { Badge } from "./ui/Badge";
+import { Progress } from "./ui/Progress";
+import { useI18n } from "@/providers/i18n-provider";
 
 interface VillageGridProps {
   buildings: { [key: string]: Building };
@@ -14,29 +14,29 @@ interface VillageGridProps {
 }
 
 const BUILDING_GRID_LAYOUT = [
-  ['townhall', 'barracks', 'storage'],
-  ['woodcutter', 'claypit', 'ironmine'],
-  ['farm', 'bakery', 'huntershut'],
-  ['house', 'market', 'wall'],
-  ['coalpit', 'fisher', null]
+  ["townhall", "barracks", "storage"],
+  ["woodcutter", "claypit", "ironmine"],
+  ["farm", "bakery", "huntershut"],
+  ["house", "market", "wall"],
+  ["coalpit", "fisher", null],
 ];
 
-export function VillageGrid({ 
-  buildings, 
-  selectedBuilding, 
-  onBuildingSelect, 
-  onUpgradeBuilding 
+export function VillageGrid({
+  buildings,
+  selectedBuilding,
+  onBuildingSelect,
+  onUpgradeBuilding,
 }: VillageGridProps) {
   const { t } = useI18n();
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    
+
     if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
     }
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    return `${minutes}:${secs.toString().padStart(2, "0")}`;
   };
 
   const getTimeRemaining = (completionTime: number) => {
@@ -59,7 +59,7 @@ export function VillageGrid({
 
           const building = buildings[buildingId];
           const buildingType = BUILDING_TYPES[buildingId as keyof typeof BUILDING_TYPES];
-          
+
           // Skip building if type definition is not found
           if (!buildingType) {
             return (
@@ -67,11 +67,13 @@ export function VillageGrid({
                 key={`${rowIndex}-${colIndex}-unknown`}
                 className="aspect-square bg-muted/30 border-2 border-dashed border-muted rounded-xl flex items-center justify-center"
               >
-                <span className="text-micro text-muted-foreground">{t('screens.village.unknown', 'Unknown')}</span>
+                <span className="text-micro text-muted-foreground">
+                  {t("screens.village.unknown", "Unknown")}
+                </span>
               </div>
             );
           }
-          
+
           const isSelected = selectedBuilding === buildingId;
           const isUpgrading = building?.upgrading;
           const buildingLevel = building?.level || 0;
@@ -80,8 +82,8 @@ export function VillageGrid({
             <Card
               key={buildingId}
               className={`aspect-square p-3 cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-105 rounded-xl min-touch ${
-                isSelected ? 'ring-2 ring-primary shadow-lg' : ''
-              } ${buildingLevel === 0 ? 'opacity-60 bg-muted/20' : 'bg-card'}`}
+                isSelected ? "ring-2 ring-primary shadow-lg" : ""
+              } ${buildingLevel === 0 ? "opacity-60 bg-muted/20" : "bg-card"}`}
               onClick={() => onBuildingSelect(buildingId)}
             >
               <div className="h-full flex flex-col items-center justify-between">
@@ -92,27 +94,36 @@ export function VillageGrid({
                   <h3 className="text-micro font-medium truncate leading-tight">
                     {buildingType.name}
                   </h3>
-                  <Badge 
-                    variant={buildingLevel === 0 ? "outline" : "secondary"} 
+                  <Badge
+                    variant={buildingLevel === 0 ? "outline" : "secondary"}
                     className="text-micro mt-1"
                   >
-                    {t('screens.units.common.level', 'Level')} {buildingLevel}
+                    {t("screens.units.common.level", "Level")} {buildingLevel}
                   </Badge>
                 </div>
 
                 {isUpgrading && (
                   <div className="w-full mt-2">
                     <div className="text-micro text-center text-info mb-1">
-                      → {t('screens.units.common.level', 'Level')} {building.upgrading!.targetLevel}
+                      → {t("screens.units.common.level", "Level")} {building.upgrading!.targetLevel}
                     </div>
                     <div className="text-micro text-center text-muted-foreground mb-2">
                       {formatTime(getTimeRemaining(building.upgrading!.completionTime))}
                     </div>
-                    <Progress 
-                      value={Math.max(0, Math.min(100, 
-                        (1 - getTimeRemaining(building.upgrading!.completionTime) / 
-                        ((building.upgrading!.completionTime - Date.now() + getTimeRemaining(building.upgrading!.completionTime) * 1000) / 1000)) * 100
-                      ))}
+                    <Progress
+                      value={Math.max(
+                        0,
+                        Math.min(
+                          100,
+                          (1 -
+                            getTimeRemaining(building.upgrading!.completionTime) /
+                              ((building.upgrading!.completionTime -
+                                Date.now() +
+                                getTimeRemaining(building.upgrading!.completionTime) * 1000) /
+                                1000)) *
+                            100,
+                        ),
+                      )}
                       className="h-2"
                     />
                   </div>
@@ -127,13 +138,13 @@ export function VillageGrid({
                       onUpgradeBuilding(buildingId);
                     }}
                   >
-                    {t('screens.village.build', 'Bauen')}
+                    {t("screens.village.build", "Bauen")}
                   </Button>
                 )}
               </div>
             </Card>
           );
-        })
+        }),
       )}
     </div>
   );

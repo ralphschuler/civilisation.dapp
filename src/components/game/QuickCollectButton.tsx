@@ -1,8 +1,8 @@
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
-import { getResourceIcon } from '../../data/gameData';
-import { UncollectedResources } from '../../types/game';
-import { Package } from 'lucide-react';
+import { Button } from "../ui/Button";
+import { Badge } from "../ui/Badge";
+import { getResourceIcon } from "../../data/gameData";
+import { UncollectedResources } from "../../types/game";
+import { Package } from "lucide-react";
 
 interface QuickCollectButtonProps {
   resourceType: keyof UncollectedResources;
@@ -11,11 +11,11 @@ interface QuickCollectButtonProps {
   className?: string;
 }
 
-export function QuickCollectButton({ 
-  resourceType, 
-  uncollectedAmount, 
+export function QuickCollectButton({
+  resourceType,
+  uncollectedAmount,
   onCollect,
-  className = ""
+  className = "",
 }: QuickCollectButtonProps) {
   const formatNumber = (num: number) => {
     if (num >= 1000) return `${Math.floor(num / 1000)}k`;
