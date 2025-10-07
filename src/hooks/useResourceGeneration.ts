@@ -1,7 +1,10 @@
 import { useCallback, useMemo } from "react";
 import { useAccount, useReadContract } from "wagmi";
 import { resourceFacetAbi } from "@/lib/abi/resourceFacet";
-import { WORLDCHAIN_WALLET_ADDRESS, isUsingPlaceholderWalletAddress } from "@/config/worldchain";
+import {
+  WORLDCHAIN_WALLET_ADDRESS,
+  isUsingPlaceholderWalletAddress,
+} from "@/config/worldchain";
 import { sendContractTransaction } from "@/lib/useContract";
 import type { UncollectedResources } from "@/types/game";
 import {
@@ -40,7 +43,8 @@ function mapUncollected(values: bigint[] | undefined) {
 
 export function useResourceGeneration() {
   const { address } = useAccount();
-  const isOnChainEnabled = !isUsingPlaceholderWalletAddress && address != null && address !== "";
+  const isOnChainEnabled =
+    !isUsingPlaceholderWalletAddress && address != null && address !== "";
 
   const { data: uncollectedData, refetch: refetchUncollected } = useReadContract({
     address: isOnChainEnabled ? WORLDCHAIN_WALLET_ADDRESS : undefined,

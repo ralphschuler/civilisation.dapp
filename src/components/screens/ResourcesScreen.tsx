@@ -88,7 +88,7 @@ export function ResourcesScreen({
       amount: resources.wood,
       uncollected: uncollectedResources.wood,
       production: (totalProduction.wood || 0) + (autoProduction.wood || 0),
-      color: "bg-amber-600",
+      color: 'bg-amber-600'
     },
     {
       key: "clay",
@@ -97,7 +97,7 @@ export function ResourcesScreen({
       amount: resources.clay,
       uncollected: uncollectedResources.clay,
       production: (totalProduction.clay || 0) + (autoProduction.clay || 0),
-      color: "bg-orange-700",
+      color: 'bg-orange-700'
     },
     {
       key: "iron",
@@ -106,7 +106,7 @@ export function ResourcesScreen({
       amount: resources.iron,
       uncollected: uncollectedResources.iron,
       production: (totalProduction.iron || 0) + (autoProduction.iron || 0),
-      color: "bg-gray-600",
+      color: 'bg-gray-600'
     },
     {
       key: "coal",
@@ -115,7 +115,7 @@ export function ResourcesScreen({
       amount: resources.coal,
       uncollected: uncollectedResources.coal,
       production: (totalProduction.coal || 0) + (autoProduction.coal || 0),
-      color: "bg-slate-800",
+      color: 'bg-slate-800'
     },
     {
       key: "wheat",
@@ -124,7 +124,7 @@ export function ResourcesScreen({
       amount: resources.wheat,
       uncollected: uncollectedResources.wheat,
       production: (totalProduction.wheat || 0) + (autoProduction.wheat || 0),
-      color: "bg-yellow-600",
+      color: 'bg-yellow-600'
     },
     {
       key: "bread",
@@ -133,7 +133,7 @@ export function ResourcesScreen({
       amount: resources.bread,
       uncollected: uncollectedResources.bread,
       production: (totalProduction.bread || 0) + (autoProduction.bread || 0),
-      color: "bg-yellow-500",
+      color: 'bg-yellow-500'
     },
     {
       key: "meat",
@@ -142,7 +142,7 @@ export function ResourcesScreen({
       amount: resources.meat,
       uncollected: uncollectedResources.meat,
       production: (totalProduction.meat || 0) + (autoProduction.meat || 0),
-      color: "bg-red-600",
+      color: 'bg-red-600'
     },
     {
       key: "gold",
@@ -151,8 +151,8 @@ export function ResourcesScreen({
       amount: resources.gold,
       uncollected: uncollectedResources.gold,
       production: (totalProduction.gold || 0) + (autoProduction.gold || 0),
-      color: "bg-yellow-500",
-    },
+      color: 'bg-yellow-500'
+    }
   ];
 
   return (
@@ -163,17 +163,22 @@ export function ResourcesScreen({
             <Clock className="h-4 w-4 text-primary" />
             <div>
               <p className="text-caption font-medium">
-                {t("screens.resources.autoProduction.active", "Automatische Produktion aktiv")}
+                {t(
+                  'screens.resources.autoProduction.active',
+                  'Automatische Produktion aktiv',
+                )}
               </p>
               <p className="text-micro text-muted-foreground">
-                {t("screens.resources.autoProduction.rate", "+{{amount}} pro Stunde je Ressource", {
-                  amount: onChainRate,
-                })}
+                {t(
+                  'screens.resources.autoProduction.rate',
+                  '+{{amount}} pro Stunde je Ressource',
+                  { amount: onChainRate },
+                )}
                 {nextProductionInSeconds != null && nextProductionInSeconds > 0 && (
                   <span>
                     {` • ${t(
-                      "screens.resources.autoProduction.next",
-                      "Nächste Einheit in {{time}}",
+                      'screens.resources.autoProduction.next',
+                      'Nächste Einheit in {{time}}',
                       { time: formatDuration(nextProductionInSeconds) },
                     )}`}
                   </span>
@@ -183,7 +188,7 @@ export function ResourcesScreen({
           </div>
           {hasUncollectedResources && onCollectResource && (
             <Button size="sm" onClick={() => onCollectResource()} className="h-8">
-              {t("screens.resources.collectAll", "Alle einsammeln")}
+              {t('screens.resources.collectAll', 'Alle einsammeln')}
             </Button>
           )}
         </div>
