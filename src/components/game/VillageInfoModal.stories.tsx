@@ -119,4 +119,3 @@ export const Barbarian: Story = {
 export const StrongPlayerVillage: Story = {
   args: { villageInfo: strongVillage },
 };
-

@@ -46,12 +46,8 @@ function AppContent() {
 
   const selectedBuilding = useGameStore((state) => state.selectedBuilding);
   const setSelectedBuilding = useGameStore((state) => state.setSelectedBuilding);
-  const selectedVillageInfo = useGameStore(
-    (state) => state.selectedVillageInfo,
-  );
-  const setSelectedVillageInfo = useGameStore(
-    (state) => state.setSelectedVillageInfo,
-  );
+  const selectedVillageInfo = useGameStore((state) => state.selectedVillageInfo);
+  const setSelectedVillageInfo = useGameStore((state) => state.setSelectedVillageInfo);
 
   const marches = useMarchStore((state) => state.marches);
   const marchPresets = useMarchStore((state) => state.marchPresets);
@@ -253,12 +249,7 @@ function AppContent() {
         {/* Layout-based Routes */}
         <Route element={<GameLayout />}>
           <Route
-            element={
-              <ProtectedRoute
-                condition={authenticated}
-                redirectTo="/wallet-connect"
-              />
-            }
+            element={<ProtectedRoute condition={authenticated} redirectTo="/wallet-connect" />}
           >
             <Route
               path="/village"
@@ -332,10 +323,7 @@ function AppContent() {
             />
             <Route path="/settings" element={<SettingsScreen />} />
             <Route path="/help" element={<HelpSupportScreen />} />
-            <Route
-              path="/trade"
-              element={<TradeScreen resources={village.resources} />}
-            />
+            <Route path="/trade" element={<TradeScreen resources={village.resources} />} />
             <Route
               path="/march-planner"
               element={
@@ -353,12 +341,7 @@ function AppContent() {
             />
             <Route
               path="/march-reports"
-              element={
-                <MarchReportsScreen
-                  marches={marches}
-                  battleReports={battleReports}
-                />
-              }
+              element={<MarchReportsScreen marches={marches} battleReports={battleReports} />}
             />
           </Route>
         </Route>

@@ -13,8 +13,8 @@ import {
   IPlayerStatsRepository,
   ITechTreeRepository,
   IProvinceRepository,
-  INeutralCampRepository
-} from './IRepository';
+  INeutralCampRepository,
+} from "./IRepository";
 import {
   Village,
   GameState,
@@ -27,13 +27,13 @@ import {
   VillageInfo,
   BuildingId,
   UnitId,
-} from '@/types/game';
-import { Report } from '@/types/reports';
+} from "@/types/game";
+import { Report } from "@/types/reports";
 
 // Initial mock data
 const INITIAL_VILLAGE: Village = {
-  id: 'village1',
-  name: 'Mein Dorf',
+  id: "village1",
+  name: "Mein Dorf",
   x: 200,
   y: 200,
   resources: {
@@ -46,7 +46,7 @@ const INITIAL_VILLAGE: Village = {
     villager: 30,
     wheat: 500,
     wood: 1200,
-    maxPopulation: 240
+    maxPopulation: 240,
   },
   uncollectedResources: {
     bread: 0,
@@ -57,33 +57,33 @@ const INITIAL_VILLAGE: Village = {
     meat: 0,
     villager: 0,
     wheat: 0,
-    wood: 0
+    wood: 0,
   },
   buildings: {
-    townhall: { type: 'townhall', level: 1 },
-    bakery: { type: 'bakery', level: 1 },
-    barracks: { type: 'barracks', level: 0 },
-    claypit: { type: 'claypit', level: 1 },
-    coalpit: { type: 'coalpit', level: 0 },
-    fisher: { type: 'fisher', level: 1 },
-    ironmine: { type: 'ironmine', level: 1 },
-    farm: { type: 'farm', level: 1 },
-    house: { type: 'house', level: 1 },
-    huntershut: { type: 'huntershut', level: 1 },
-    market: { type: 'market', level: 1 },
-    storage: { type: 'storage', level: 1 },
-    wall: { type: 'wall', level: 0 },
-    woodcutter: { type: 'woodcutter', level: 1 }
+    townhall: { type: "townhall", level: 1 },
+    bakery: { type: "bakery", level: 1 },
+    barracks: { type: "barracks", level: 0 },
+    claypit: { type: "claypit", level: 1 },
+    coalpit: { type: "coalpit", level: 0 },
+    fisher: { type: "fisher", level: 1 },
+    ironmine: { type: "ironmine", level: 1 },
+    farm: { type: "farm", level: 1 },
+    house: { type: "house", level: 1 },
+    huntershut: { type: "huntershut", level: 1 },
+    market: { type: "market", level: 1 },
+    storage: { type: "storage", level: 1 },
+    wall: { type: "wall", level: 0 },
+    woodcutter: { type: "woodcutter", level: 1 },
   },
   army: {
     spearman: 0,
     swordsman: 0,
     archer: 0,
     knight: 0,
-    trebuchet: 0
+    trebuchet: 0,
   },
   trainingQueue: [],
-  lastUpdate: Date.now()
+  lastUpdate: Date.now(),
 };
 
 const INITIAL_STATS: PlayerStats = {
@@ -96,31 +96,31 @@ const INITIAL_STATS: PlayerStats = {
     meat: 0,
     villager: 0,
     wheat: 0,
-    wood: 0
+    wood: 0,
   },
   totalUnitsTrained: 0,
   totalBuildingsUpgraded: 0,
   battlesWon: 0,
   battlesLost: 0,
-  playtime: 0
+  playtime: 0,
 };
 
 const INITIAL_TECH_TREE: TechTree = {
-  era: 'village',
-  unlockedBuildings: ['townhall', 'house', 'farm', 'woodcutter', 'claypit'],
-  unlockedUnits: ['spearman', 'archer'],
+  era: "village",
+  unlockedBuildings: ["townhall", "house", "farm", "woodcutter", "claypit"],
+  unlockedUnits: ["spearman", "archer"],
   smithyUpgrades: {
     inf: { attack: 0, defense: 0 },
     cav: { attack: 0, defense: 0 },
     ranged: { attack: 0, defense: 0 },
-    siege: { attack: 0, defense: 0 }
-  }
+    siege: { attack: 0, defense: 0 },
+  },
 };
 
 const DEFAULT_PRESET: MarchPreset = {
-  id: 'default-raid',
-  name: 'Schneller Raid',
-  description: 'Optimiert für schnelle Plünderungen',
+  id: "default-raid",
+  name: "Schneller Raid",
+  description: "Optimiert für schnelle Plünderungen",
   army: {
     spearman: 50,
     swordsman: 30,
@@ -131,10 +131,10 @@ const DEFAULT_PRESET: MarchPreset = {
     knight: 0,
     pikeman: 0,
     ram: 0,
-    trebuchet: 0
+    trebuchet: 0,
   },
-  attackType: 'raid',
-  isDefault: true
+  attackType: "raid",
+  isDefault: true,
 };
 
 /**
@@ -154,7 +154,7 @@ class MockVillageRepository implements IVillageRepository {
   }
 
   async getAllVillages(): Promise<Village[]> {
-    return Array.from(this.villages.values()).map(v => ({ ...v }));
+    return Array.from(this.villages.values()).map((v) => ({ ...v }));
   }
 
   async createVillage(village: Village): Promise<void> {
@@ -175,17 +175,17 @@ class MockVillageRepository implements IVillageRepository {
       x: village.x || 0,
       y: village.y || 0,
       level: village.buildings.townhall?.level || 1,
-      player: 'Player Name',
+      player: "Player Name",
       points: 1000,
       population: village.resources.villager,
       maxPopulation: village.resources.maxPopulation,
       buildings: Object.fromEntries(
-        Object.entries(village.buildings).map(([key, building]) => [key, building.level])
+        Object.entries(village.buildings).map(([key, building]) => [key, building.level]),
       ),
       army: village.army,
       wall: village.buildings.wall?.level || 0,
       lastActivity: new Date().toISOString(),
-      defenseBonus: 0
+      defenseBonus: 0,
     };
   }
 }
@@ -202,11 +202,11 @@ class MockGameStateRepository implements IGameStateRepository {
         village: INITIAL_VILLAGE,
         selectedBuilding: null,
         selectedVillageInfo: null,
-        currentScreen: 'city',
+        currentScreen: "city",
         playerStats: INITIAL_STATS,
         techTree: INITIAL_TECH_TREE,
         marches: [],
-        marchPresets: [DEFAULT_PRESET]
+        marchPresets: [DEFAULT_PRESET],
       };
     }
     return { ...this.gameState };
@@ -233,7 +233,7 @@ class MockMarchRepository implements IMarchRepository {
   private marches: Map<string, March> = new Map();
 
   async getMarches(): Promise<March[]> {
-    return Array.from(this.marches.values()).map(m => ({ ...m }));
+    return Array.from(this.marches.values()).map((m) => ({ ...m }));
   }
 
   async getMarch(marchId: string): Promise<March | null> {
@@ -241,7 +241,7 @@ class MockMarchRepository implements IMarchRepository {
     return march ? { ...march } : null;
   }
 
-  async createMarch(march: Omit<March, 'id'>): Promise<March> {
+  async createMarch(march: Omit<March, "id">): Promise<March> {
     const id = `march_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const newMarch = { ...march, id };
     this.marches.set(id, newMarch);
@@ -258,8 +258,11 @@ class MockMarchRepository implements IMarchRepository {
 
   async getActiveMarchesForVillage(villageId: string): Promise<March[]> {
     return Array.from(this.marches.values())
-      .filter(m => m.fromVillage.id === villageId && m.status !== 'completed' && m.status !== 'cancelled')
-      .map(m => ({ ...m }));
+      .filter(
+        (m) =>
+          m.fromVillage.id === villageId && m.status !== "completed" && m.status !== "cancelled",
+      )
+      .map((m) => ({ ...m }));
   }
 }
 
@@ -270,7 +273,7 @@ class MockMarchPresetRepository implements IMarchPresetRepository {
   private presets: Map<string, MarchPreset> = new Map([[DEFAULT_PRESET.id, DEFAULT_PRESET]]);
 
   async getPresets(): Promise<MarchPreset[]> {
-    return Array.from(this.presets.values()).map(p => ({ ...p }));
+    return Array.from(this.presets.values()).map((p) => ({ ...p }));
   }
 
   async getPreset(presetId: string): Promise<MarchPreset | null> {
@@ -278,7 +281,7 @@ class MockMarchPresetRepository implements IMarchPresetRepository {
     return preset ? { ...preset } : null;
   }
 
-  async createPreset(preset: Omit<MarchPreset, 'id'>): Promise<MarchPreset> {
+  async createPreset(preset: Omit<MarchPreset, "id">): Promise<MarchPreset> {
     const id = `preset_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const newPreset = { ...preset, id };
     this.presets.set(id, newPreset);
@@ -292,7 +295,7 @@ class MockMarchPresetRepository implements IMarchPresetRepository {
   async deletePreset(presetId: string): Promise<void> {
     const preset = this.presets.get(presetId);
     if (preset?.isDefault) {
-      throw new Error('Cannot delete default preset');
+      throw new Error("Cannot delete default preset");
     }
     this.presets.delete(presetId);
   }
@@ -307,7 +310,7 @@ class MockReportRepository implements IReportRepository {
   async getReports(): Promise<Report[]> {
     return Array.from(this.reports.values())
       .sort((a, b) => b.timestamp - a.timestamp)
-      .map(r => ({ ...r }));
+      .map((r) => ({ ...r }));
   }
 
   async getReport(reportId: string): Promise<Report | null> {
@@ -315,7 +318,7 @@ class MockReportRepository implements IReportRepository {
     return report ? { ...report } : null;
   }
 
-  async createReport(report: Omit<Report, 'id'>): Promise<Report> {
+  async createReport(report: Omit<Report, "id">): Promise<Report> {
     const id = `report_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const newReport = { ...report, id } as Report;
     this.reports.set(id, newReport);
@@ -335,7 +338,7 @@ class MockReportRepository implements IReportRepository {
   }
 
   async getUnreadCount(): Promise<number> {
-    return Array.from(this.reports.values()).filter(r => !r.read).length;
+    return Array.from(this.reports.values()).filter((r) => !r.read).length;
   }
 }
 
@@ -369,9 +372,12 @@ class MockPlayerStatsRepository implements IPlayerStatsRepository {
     this.stats.totalUnitsTrained += count;
   }
 
-  async addResourcesGathered(resources: Partial<PlayerStats['totalResourcesGathered']>): Promise<void> {
+  async addResourcesGathered(
+    resources: Partial<PlayerStats["totalResourcesGathered"]>,
+  ): Promise<void> {
     Object.entries(resources).forEach(([key, value]) => {
-      this.stats.totalResourcesGathered[key as keyof PlayerStats['totalResourcesGathered']] += value || 0;
+      this.stats.totalResourcesGathered[key as keyof PlayerStats["totalResourcesGathered"]] +=
+        value || 0;
     });
   }
 }
@@ -412,11 +418,14 @@ class MockTechTreeRepository implements ITechTreeRepository {
     };
   }
 
-  async upgradeSmithyLine(line: 'inf' | 'cav' | 'ranged' | 'siege', stat: 'attack' | 'defense'): Promise<void> {
+  async upgradeSmithyLine(
+    line: "inf" | "cav" | "ranged" | "siege",
+    stat: "attack" | "defense",
+  ): Promise<void> {
     this.techTree.smithyUpgrades[line][stat]++;
   }
 
-  async advanceEra(era: TechTree['era']): Promise<void> {
+  async advanceEra(era: TechTree["era"]): Promise<void> {
     this.techTree.era = era;
   }
 }
@@ -433,7 +442,7 @@ class MockProvinceRepository implements IProvinceRepository {
   }
 
   async getAllProvinces(): Promise<Province[]> {
-    return Array.from(this.provinces.values()).map(p => ({ ...p }));
+    return Array.from(this.provinces.values()).map((p) => ({ ...p }));
   }
 
   async updateProvince(province: Province): Promise<void> {
@@ -442,11 +451,11 @@ class MockProvinceRepository implements IProvinceRepository {
 
   async getProvincesInArea(x: number, y: number, radius: number): Promise<Province[]> {
     return Array.from(this.provinces.values())
-      .filter(p => {
+      .filter((p) => {
         const distance = Math.sqrt(Math.pow(p.x - x, 2) + Math.pow(p.y - y, 2));
         return distance <= radius;
       })
-      .map(p => ({ ...p }));
+      .map((p) => ({ ...p }));
   }
 }
 
@@ -462,7 +471,7 @@ class MockNeutralCampRepository implements INeutralCampRepository {
   }
 
   async getAllCamps(): Promise<NeutralCamp[]> {
-    return Array.from(this.camps.values()).map(c => ({ ...c }));
+    return Array.from(this.camps.values()).map((c) => ({ ...c }));
   }
 
   async defeatCamp(campId: string): Promise<void> {

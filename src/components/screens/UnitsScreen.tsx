@@ -1,5 +1,5 @@
-import { Village, Resources } from '../../types/game';
-import { ArmyPanel } from '../ArmyPanel';
+import { Village, Resources } from "../../types/game";
+import { ArmyPanel } from "../ArmyPanel";
 
 interface UnitsScreenProps {
   village: Village;

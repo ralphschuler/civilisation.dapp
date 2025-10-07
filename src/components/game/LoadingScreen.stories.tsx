@@ -32,4 +32,3 @@ export const CustomMessage: Story = {
     progress: 73,
   },
 };
-

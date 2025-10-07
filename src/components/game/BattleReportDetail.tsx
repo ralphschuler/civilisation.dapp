@@ -21,20 +21,8 @@ interface BattleReportDetailProps {
   onClose: () => void;
 }
 
-export function BattleReportDetail({
-  battleData,
-  onClose,
-}: BattleReportDetailProps) {
-  const {
-    attacker,
-    defender,
-    result,
-    loot,
-    wallDamage,
-    reasons,
-    suggestions,
-    phases,
-  } = battleData;
+export function BattleReportDetail({ battleData, onClose }: BattleReportDetailProps) {
+  const { attacker, defender, result, loot, wallDamage, reasons, suggestions, phases } = battleData;
 
   const getResultIcon = () => {
     switch (result) {
@@ -63,10 +51,7 @@ export function BattleReportDetail({
   ) => (
     <div className="grid grid-cols-2 gap-2">
       {Object.entries(units).map(([unit, data]) => (
-        <div
-          key={unit}
-          className="flex justify-between items-center p-2 bg-muted/30 rounded-md"
-        >
+        <div key={unit} className="flex justify-between items-center p-2 bg-muted/30 rounded-md">
           <span className="text-caption">{unit}</span>
           <div className="text-caption text-right">
             {data.sent && (
@@ -168,7 +153,9 @@ export function BattleReportDetail({
 
           {loot && Object.keys(loot).length > 0 && (
             <div className="mt-4 p-3 bg-success/10 rounded-md">
-              <h4 className="font-medium mb-2"><T k="battle.loot" f="Loot" /></h4>
+              <h4 className="font-medium mb-2">
+                <T k="battle.loot" f="Loot" />
+              </h4>
               <div className="grid grid-cols-3 gap-2 text-caption">
                 {Object.entries(loot).map(([resource, amount]) => (
                   <div key={resource} className="flex justify-between">
@@ -194,10 +181,18 @@ export function BattleReportDetail({
       {/* Detailed Analysis */}
       <Tabs defaultValue="units" className="space-y-4">
         <TabsList className="grid grid-cols-4 w-full">
-          <TabsTrigger value="units"><T k="battle.tabs.units" f="Units" /></TabsTrigger>
-          <TabsTrigger value="phases"><T k="battle.tabs.phases" f="Phases" /></TabsTrigger>
-          <TabsTrigger value="analysis"><T k="battle.tabs.analysis" f="Analysis" /></TabsTrigger>
-          <TabsTrigger value="tips"><T k="battle.tabs.tips" f="Tips" /></TabsTrigger>
+          <TabsTrigger value="units">
+            <T k="battle.tabs.units" f="Units" />
+          </TabsTrigger>
+          <TabsTrigger value="phases">
+            <T k="battle.tabs.phases" f="Phases" />
+          </TabsTrigger>
+          <TabsTrigger value="analysis">
+            <T k="battle.tabs.analysis" f="Analysis" />
+          </TabsTrigger>
+          <TabsTrigger value="tips">
+            <T k="battle.tabs.tips" f="Tips" />
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="units" className="space-y-4">
@@ -225,7 +220,9 @@ export function BattleReportDetail({
         <TabsContent value="phases" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle><T k="battle.progress" f="Battle Flow" /></CardTitle>
+              <CardTitle>
+                <T k="battle.progress" f="Battle Flow" />
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {renderPhaseStep(<T k="battle.phases.ranged" f="Ranged" />, phases.ranged, 0)}
@@ -255,7 +252,9 @@ export function BattleReportDetail({
               <CardContent className="space-y-4">
                 {reasons.counter.length > 0 && (
                   <div>
-                    <h4 className="font-medium mb-2"><T k="battle.why.counter" f="Counter Effects" /></h4>
+                    <h4 className="font-medium mb-2">
+                      <T k="battle.why.counter" f="Counter Effects" />
+                    </h4>
                     <ul className="space-y-1 text-caption">
                       {reasons.counter.map((reason, index) => (
                         <li key={index} className="flex items-start gap-2">
@@ -269,7 +268,9 @@ export function BattleReportDetail({
 
                 {reasons.wall.length > 0 && (
                   <div>
-                    <h4 className="font-medium mb-2"><T k="battle.why.wall" f="Wall Effects" /></h4>
+                    <h4 className="font-medium mb-2">
+                      <T k="battle.why.wall" f="Wall Effects" />
+                    </h4>
                     <ul className="space-y-1 text-caption">
                       {reasons.wall.map((reason, index) => (
                         <li key={index} className="flex items-start gap-2">
@@ -283,7 +284,9 @@ export function BattleReportDetail({
 
                 {reasons.tech.length > 0 && (
                   <div>
-                    <h4 className="font-medium mb-2"><T k="battle.why.tech" f="Technology" /></h4>
+                    <h4 className="font-medium mb-2">
+                      <T k="battle.why.tech" f="Technology" />
+                    </h4>
                     <ul className="space-y-1 text-caption">
                       {reasons.tech.map((reason, index) => (
                         <li key={index} className="flex items-start gap-2">
@@ -311,10 +314,7 @@ export function BattleReportDetail({
               <CardContent>
                 <ul className="space-y-3">
                   {suggestions.map((suggestion, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-3 p-3 bg-muted/30 rounded-md"
-                    >
+                    <li key={index} className="flex items-start gap-3 p-3 bg-muted/30 rounded-md">
                       <Lightbulb className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
                       <span className="text-caption">{suggestion}</span>
                     </li>

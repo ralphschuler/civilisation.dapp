@@ -1,22 +1,22 @@
-import { useState, useEffect } from 'react';
-import { Badge } from '../ui/Badge';
-import { Progress } from '../ui/Progress';
-import { useI18n } from '@/providers/i18n-provider';
+import { useState, useEffect } from "react";
+import { Badge } from "../ui/Badge";
+import { Progress } from "../ui/Progress";
+import { useI18n } from "@/providers/i18n-provider";
 
 interface CountdownTimerProps {
   targetTime: number;
   onComplete?: () => void;
   showProgress?: boolean;
-  variant?: 'default' | 'outline' | 'secondary' | 'destructive';
+  variant?: "default" | "outline" | "secondary" | "destructive";
   className?: string;
 }
 
-export function CountdownTimer({ 
-  targetTime, 
-  onComplete, 
+export function CountdownTimer({
+  targetTime,
+  onComplete,
   showProgress = false,
-  variant = 'default',
-  className = ""
+  variant = "default",
+  className = "",
 }: CountdownTimerProps) {
   const { t } = useI18n();
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -26,7 +26,7 @@ export function CountdownTimer({
     const updateTimer = () => {
       const remaining = Math.max(0, targetTime - Date.now());
       setTimeRemaining(remaining);
-      
+
       if (remaining === 0 && onComplete) {
         onComplete();
       }
@@ -61,26 +61,23 @@ export function CountdownTimer({
     return `${seconds}s`;
   };
 
-  const progress = totalDuration > 0 
-    ? Math.max(0, Math.min(100, ((totalDuration - timeRemaining) / totalDuration) * 100))
-    : 100;
+  const progress =
+    totalDuration > 0
+      ? Math.max(0, Math.min(100, ((totalDuration - timeRemaining) / totalDuration) * 100))
+      : 100;
 
   if (timeRemaining === 0) {
     return (
       <Badge variant="outline" className={`text-green-600 ${className}`}>
-        {t('common.completed', 'Abgeschlossen')}
+        {t("common.completed", "Abgeschlossen")}
       </Badge>
     );
   }
 
   return (
     <div className={`space-y-1 ${className}`}>
-      <Badge variant={variant}>
-        {formatTime(timeRemaining)}
-      </Badge>
-      {showProgress && (
-        <Progress value={progress} className="h-1" />
-      )}
+      <Badge variant={variant}>{formatTime(timeRemaining)}</Badge>
+      {showProgress && <Progress value={progress} className="h-1" />}
     </div>
   );
 }

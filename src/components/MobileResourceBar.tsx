@@ -1,9 +1,9 @@
-import { Resources, UncollectedResources } from '../types/game';
-import { calculateResourceProduction } from '../data/gameData';
-import { Button } from './ui/Button';
-import { Badge } from './ui/Badge';
-import { Package } from 'lucide-react';
-import { useI18n } from '@/providers/i18n-provider';
+import { Resources, UncollectedResources } from "../types/game";
+import { calculateResourceProduction } from "../data/gameData";
+import { Button } from "./ui/Button";
+import { Badge } from "./ui/Badge";
+import { Package } from "lucide-react";
+import { useI18n } from "@/providers/i18n-provider";
 
 interface MobileResourceBarProps {
   resources: Resources;
@@ -15,12 +15,12 @@ interface MobileResourceBarProps {
   onCollectResources?: () => void;
 }
 
-export function MobileResourceBar({ 
-  resources, 
+export function MobileResourceBar({
+  resources,
   uncollectedResources,
   buildingLevels,
   storageCapacity,
-  onCollectResources
+  onCollectResources,
 }: MobileResourceBarProps) {
   const { t } = useI18n();
   const formatNumber = (num: number) => {
@@ -48,69 +48,69 @@ export function MobileResourceBar({
 
   const resourceData = [
     {
-      key: 'wood',
-      icon: '🪵',
+      key: "wood",
+      icon: "🪵",
       amount: resources.wood,
       uncollected: uncollectedResources.wood,
       production: totalProduction.wood || 0,
-      color: 'bg-amber-600'
+      color: "bg-amber-600",
     },
     {
-      key: 'clay',
-      icon: '🧱',
+      key: "clay",
+      icon: "🧱",
       amount: resources.clay,
       uncollected: uncollectedResources.clay,
       production: totalProduction.clay || 0,
-      color: 'bg-orange-700'
+      color: "bg-orange-700",
     },
     {
-      key: 'iron',
-      icon: '⚔️',
+      key: "iron",
+      icon: "⚔️",
       amount: resources.iron,
       uncollected: uncollectedResources.iron,
       production: totalProduction.iron || 0,
-      color: 'bg-gray-600'
+      color: "bg-gray-600",
     },
     {
-      key: 'coal',
-      icon: '⚫',
+      key: "coal",
+      icon: "⚫",
       amount: resources.coal,
       uncollected: uncollectedResources.coal,
       production: totalProduction.coal || 0,
-      color: 'bg-slate-800'
+      color: "bg-slate-800",
     },
     {
-      key: 'wheat',
-      icon: '🌾',
+      key: "wheat",
+      icon: "🌾",
       amount: resources.wheat,
       uncollected: uncollectedResources.wheat,
       production: totalProduction.wheat || 0,
-      color: 'bg-yellow-600'
+      color: "bg-yellow-600",
     },
     {
-      key: 'bread',
-      icon: '🍞',
+      key: "bread",
+      icon: "🍞",
       amount: resources.bread,
       uncollected: uncollectedResources.bread,
       production: totalProduction.bread || 0,
-      color: 'bg-yellow-500'
+      color: "bg-yellow-500",
     },
     {
-      key: 'meat',
-      icon: '🥩',
+      key: "meat",
+      icon: "🥩",
       amount: resources.meat,
       uncollected: uncollectedResources.meat,
       production: totalProduction.meat || 0,
-      color: 'bg-red-600'
+      color: "bg-red-600",
     },
     {
-      key: 'gold',
-      icon: '🪙',
+      key: "gold",
+      icon: "🪙",
       amount: resources.gold,
       uncollected: uncollectedResources.gold,
       production: totalProduction.gold || 0,
-      color: 'bg-yellow-500'
-    }
+      color: "bg-yellow-500",
+    },
   ];
 
   // Split resources into two rows for better visibility and center alignment
@@ -126,24 +126,20 @@ export function MobileResourceBar({
           {firstRowResources.map((resource) => (
             <div key={resource.key} className="flex items-center gap-1 min-w-0 flex-shrink-0">
               <span className="text-base">{resource.icon}</span>
-              <span className="text-caption font-medium">
-                {formatNumber(resource.amount)}
-              </span>
+              <span className="text-caption font-medium">{formatNumber(resource.amount)}</span>
               {resource.uncollected > 0 && (
                 <div className="w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
               )}
             </div>
           ))}
         </div>
-        
+
         {/* Second Row: Processed Resources + Gold */}
         <div className="flex items-center gap-4">
           {secondRowResources.map((resource) => (
             <div key={resource.key} className="flex items-center gap-1 min-w-0 flex-shrink-0">
               <span className="text-base">{resource.icon}</span>
-              <span className="text-caption font-medium">
-                {formatNumber(resource.amount)}
-              </span>
+              <span className="text-caption font-medium">{formatNumber(resource.amount)}</span>
               {resource.uncollected > 0 && (
                 <div className="w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
               )}
@@ -162,13 +158,13 @@ export function MobileResourceBar({
       {/* Collect Resources Button - Below resources, centered */}
       {hasUncollectedResources && onCollectResources && (
         <div className="mt-3 flex justify-center">
-          <Button 
-            size="sm" 
+          <Button
+            size="sm"
             onClick={onCollectResources}
             className="min-touch px-4 text-caption animate-pulse"
           >
             <Package className="h-4 w-4 mr-2" />
-            {t('resources.collect', 'Collect resources')}
+            {t("resources.collect", "Collect resources")}
             <Badge variant="destructive" className="ml-2 text-micro">
               {Math.floor(getTotalUncollected())}
             </Badge>

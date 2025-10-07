@@ -41,8 +41,7 @@ export const useVillageStore = create<VillageState>()(
           set({ village, isLoading: false });
         } catch (error) {
           set({
-            error:
-              error instanceof Error ? error.message : "Failed to load village",
+            error: error instanceof Error ? error.message : "Failed to load village",
             isLoading: false,
           });
         }
@@ -54,8 +53,7 @@ export const useVillageStore = create<VillageState>()(
           set({ village });
         } catch (error) {
           set({
-            error:
-              error instanceof Error ? error.message : "Failed to update village",
+            error: error instanceof Error ? error.message : "Failed to update village",
           });
         }
       },
@@ -157,9 +155,9 @@ export const useVillageStore = create<VillageState>()(
           newResources[resourceType] += amount;
           newUncollectedResources[resourceType] = 0;
         } else {
-          (Object.keys(newUncollectedResources) as Array<
-            keyof Village["uncollectedResources"]
-          >).forEach((key) => {
+          (
+            Object.keys(newUncollectedResources) as Array<keyof Village["uncollectedResources"]>
+          ).forEach((key) => {
             newResources[key] += newUncollectedResources[key];
             newUncollectedResources[key] = 0;
           });

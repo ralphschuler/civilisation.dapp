@@ -1,7 +1,14 @@
 // Resource types following guidelines: Bread, Clay, Coal, Gold, Iron, Meat, Villager, Wheat, Wood
-export type ResourceType = 
-  | 'bread' | 'clay' | 'coal' | 'gold' | 'iron' 
-  | 'meat' | 'villager' | 'wheat' | 'wood';
+export type ResourceType =
+  | "bread"
+  | "clay"
+  | "coal"
+  | "gold"
+  | "iron"
+  | "meat"
+  | "villager"
+  | "wheat"
+  | "wood";
 
 export type Amounts = Partial<Record<ResourceType, number>>;
 
@@ -31,10 +38,21 @@ export interface UncollectedResources {
 }
 
 // Building types following guidelines (14 buildings)
-export type BuildingId = 
-  | 'townhall' | 'house' | 'farm' | 'bakery' | 'huntershut' | 'fisher'
-  | 'storage' | 'market' | 'woodcutter' | 'claypit' | 'ironmine' 
-  | 'coalpit' | 'barracks' | 'wall';
+export type BuildingId =
+  | "townhall"
+  | "house"
+  | "farm"
+  | "bakery"
+  | "huntershut"
+  | "fisher"
+  | "storage"
+  | "market"
+  | "woodcutter"
+  | "claypit"
+  | "ironmine"
+  | "coalpit"
+  | "barracks"
+  | "wall";
 
 export interface BuildingDef {
   id: BuildingId;
@@ -44,7 +62,7 @@ export interface BuildingDef {
   costs(level: number): Amounts;
   productionPerHour?(level: number): Amounts;
   effects?(level: number): Record<string, number>;
-  category: 'economy' | 'resource' | 'military' | 'defense';
+  category: "economy" | "resource" | "military" | "defense";
 }
 
 export interface Building {
@@ -58,8 +76,16 @@ export interface Building {
 
 // Unit types following guidelines (10 units)
 export type UnitId =
-  | 'spearman' | 'swordsman' | 'axeman' | 'archer' | 'crossbow'
-  | 'lightcav' | 'knight' | 'pikeman' | 'ram' | 'trebuchet';
+  | "spearman"
+  | "swordsman"
+  | "axeman"
+  | "archer"
+  | "crossbow"
+  | "lightcav"
+  | "knight"
+  | "pikeman"
+  | "ram"
+  | "trebuchet";
 
 export interface UnitDef {
   id: UnitId;
@@ -69,10 +95,12 @@ export interface UnitDef {
   carry: number;
   trainCost: Amounts;
   trainTime: number; // seconds
-  attackType: 'inf' | 'cav' | 'ranged' | 'siege';
+  attackType: "inf" | "cav" | "ranged" | "siege";
   attack: number;
   def: { inf: number; cav: number; ranged: number };
-  counters?: Partial<Record<UnitId | 'class:cav' | 'class:inf' | 'class:ranged' | 'class:siege', number>>; // %
+  counters?: Partial<
+    Record<UnitId | "class:cav" | "class:inf" | "class:ranged" | "class:siege", number>
+  >; // %
   buildingRequired: BuildingId;
   buildingLevelRequired: number;
 }
@@ -128,7 +156,7 @@ export interface VillageInfo {
 }
 
 // Tech & Progression following guidelines
-export type Era = 'village' | 'settlement' | 'city' | 'duchy';
+export type Era = "village" | "settlement" | "city" | "duchy";
 
 export interface TechTree {
   era: Era;
@@ -143,7 +171,14 @@ export interface TechTree {
 }
 
 // Screen types following guidelines (4 tabs + resources + additional screens)
-export type ScreenType = 'city' | 'world' | 'army' | 'resources' | 'more' | 'stats' | 'achievements';
+export type ScreenType =
+  | "city"
+  | "world"
+  | "army"
+  | "resources"
+  | "more"
+  | "stats"
+  | "achievements";
 
 export interface GameState {
   village: Village;
@@ -181,7 +216,7 @@ export interface Province {
   name: string;
   x: number;
   y: number;
-  type: 'forest' | 'river' | 'hills' | 'plains' | 'coast';
+  type: "forest" | "river" | "hills" | "plains" | "coast";
   bonus: Amounts;
   owner?: string;
   villages: Village[];
@@ -190,14 +225,14 @@ export interface Province {
 
 export interface NeutralCamp {
   id: string;
-  type: 'bandit' | 'ruins' | 'resources';
+  type: "bandit" | "ruins" | "resources";
   level: number;
   rewards: Amounts;
   army: Army;
 }
 
 // Combat & Reports following guidelines
-export type AttackType = 'raid' | 'siege' | 'conquer';
+export type AttackType = "raid" | "siege" | "conquer";
 
 export interface BattleReport {
   id: string;
@@ -209,7 +244,7 @@ export interface BattleReport {
   defenderArmy: Army;
   attackerLosses: Army;
   defenderLosses: Army;
-  winner: 'attacker' | 'defender';
+  winner: "attacker" | "defender";
   loot?: Amounts;
   factors: {
     counter: number;
@@ -224,14 +259,20 @@ export interface BattleReport {
 }
 
 export interface BattlePhase {
-  phase: 'ranged' | 'charge' | 'melee' | 'siege';
+  phase: "ranged" | "charge" | "melee" | "siege";
   attackerUnits: Army;
   defenderUnits: Army;
   damage: { attacker: number; defender: number };
 }
 
 // March/Attack planning types
-export type MarchStatus = 'planning' | 'marching' | 'arrived' | 'returning' | 'completed' | 'cancelled';
+export type MarchStatus =
+  | "planning"
+  | "marching"
+  | "arrived"
+  | "returning"
+  | "completed"
+  | "cancelled";
 
 export interface March {
   id: string;

@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/Tabs';
-import { Progress } from '../ui/Progress';
-import { ScrollArea } from '../ui/ScrollArea';
-import { Separator } from '../ui/Separator';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Clock, 
-  MapPin, 
-  Users, 
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/Card";
+import { Button } from "../ui/Button";
+import { Badge } from "../ui/Badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/Tabs";
+import { Progress } from "../ui/Progress";
+import { ScrollArea } from "../ui/ScrollArea";
+import { Separator } from "../ui/Separator";
+import {
+  TrendingUp,
+  TrendingDown,
+  Clock,
+  MapPin,
+  Users,
   Coins,
   Trophy,
   AlertTriangle,
@@ -22,9 +22,9 @@ import {
   Lightbulb,
   Swords,
   Shield,
-  Crown
-} from 'lucide-react';
-import { March, BattleReport, Army, AttackType } from '../../types/game';
+  Crown,
+} from "lucide-react";
+import { March, BattleReport, Army, AttackType } from "../../types/game";
 
 interface MarchReportsScreenProps {
   marches: March[];
@@ -32,7 +32,7 @@ interface MarchReportsScreenProps {
 }
 
 export function MarchReportsScreen({ marches, battleReports }: MarchReportsScreenProps) {
-  const [activeTab, setActiveTab] = useState('completed');
+  const [activeTab, setActiveTab] = useState("completed");
   const [selectedReport, setSelectedReport] = useState<BattleReport | null>(null);
 
   const formatNumber = (num: number) => {
@@ -42,33 +42,33 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
   };
 
   const formatTime = (timestamp: number) => {
-    return new Date(timestamp).toLocaleString('de-DE', {
-      day: '2-digit',
-      month: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(timestamp).toLocaleString("de-DE", {
+      day: "2-digit",
+      month: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const getAttackTypeInfo = (type: AttackType) => {
     switch (type) {
-      case 'raid':
+      case "raid":
         return {
-          name: 'Plünderung',
+          name: "Plünderung",
           icon: <Target className="h-4 w-4" />,
-          color: 'text-yellow-600'
+          color: "text-yellow-600",
         };
-      case 'siege':
+      case "siege":
         return {
-          name: 'Belagerung',
+          name: "Belagerung",
           icon: <Shield className="h-4 w-4" />,
-          color: 'text-orange-600'
+          color: "text-orange-600",
         };
-      case 'conquer':
+      case "conquer":
         return {
-          name: 'Eroberung',
+          name: "Eroberung",
           icon: <Crown className="h-4 w-4" />,
-          color: 'text-red-600'
+          color: "text-red-600",
         };
     }
   };
@@ -79,20 +79,20 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
 
   const calculateTotalLoot = (marches: March[]) => {
     return marches
-      .filter(m => m.loot)
+      .filter((m) => m.loot)
       .reduce((total, march) => {
         if (!march.loot) return total;
         return total + Object.values(march.loot).reduce((sum, amount) => sum + amount, 0);
       }, 0);
   };
 
-  const completedMarches = marches.filter(m => m.status === 'completed');
-  const successfulMarches = completedMarches.filter(m => m.battleReport?.winner === 'attacker');
-  const failedMarches = completedMarches.filter(m => m.battleReport?.winner === 'defender');
-  const returningMarches = marches.filter(m => m.status === 'returning');
+  const completedMarches = marches.filter((m) => m.status === "completed");
+  const successfulMarches = completedMarches.filter((m) => m.battleReport?.winner === "attacker");
+  const failedMarches = completedMarches.filter((m) => m.battleReport?.winner === "defender");
+  const returningMarches = marches.filter((m) => m.status === "returning");
 
-  const winRate = completedMarches.length > 0 ? 
-    (successfulMarches.length / completedMarches.length) * 100 : 0;
+  const winRate =
+    completedMarches.length > 0 ? (successfulMarches.length / completedMarches.length) * 100 : 0;
 
   const totalLoot = calculateTotalLoot(successfulMarches);
 
@@ -100,12 +100,8 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
     return (
       <div className="space-y-4">
         {/* Back Button */}
-        <Button 
-          variant="outline" 
-          onClick={() => setSelectedReport(null)}
-          className="min-touch"
-        >
-          ← {t('screens.marchReports.backToOverview', 'Zurück zur Übersicht')}
+        <Button variant="outline" onClick={() => setSelectedReport(null)} className="min-touch">
+          ← {t("screens.marchReports.backToOverview", "Zurück zur Übersicht")}
         </Button>
 
         {/* Battle Report Details */}
@@ -113,7 +109,8 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
-              {t('screens.marchReports.battleReportTitle', 'Kampfbericht')} #{selectedReport.id.slice(-6)}
+              {t("screens.marchReports.battleReportTitle", "Kampfbericht")} #
+              {selectedReport.id.slice(-6)}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -125,9 +122,12 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                     <div className="text-2xl font-bold text-blue-600 mb-1">
                       {selectedReport.attacker}
                     </div>
-                    <div className="text-sm text-muted-foreground">{t('battle.attacker', 'Angreifer')}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {t("battle.attacker", "Angreifer")}
+                    </div>
                     <div className="text-xs mt-2">
-                      {getTotalUnits(selectedReport.attackerArmy)} {t('screens.marchReports.units', 'Einheiten')}
+                      {getTotalUnits(selectedReport.attackerArmy)}{" "}
+                      {t("screens.marchReports.units", "Einheiten")}
                     </div>
                   </div>
                 </CardContent>
@@ -139,9 +139,12 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                     <div className="text-2xl font-bold text-red-600 mb-1">
                       {selectedReport.defender}
                     </div>
-                    <div className="text-sm text-muted-foreground">{t('battle.defender', 'Verteidiger')}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {t("battle.defender", "Verteidiger")}
+                    </div>
                     <div className="text-xs mt-2">
-                      {getTotalUnits(selectedReport.defenderArmy)} {t('screens.marchReports.units', 'Einheiten')}
+                      {getTotalUnits(selectedReport.defenderArmy)}{" "}
+                      {t("screens.marchReports.units", "Einheiten")}
                     </div>
                   </div>
                 </CardContent>
@@ -151,16 +154,20 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
             {/* Winner */}
             <div className="text-center p-4 bg-muted rounded-lg">
               <div className="flex items-center justify-center gap-2 mb-2">
-                {selectedReport.winner === 'attacker' ? 
-                  <Trophy className="h-6 w-6 text-yellow-500" /> :
+                {selectedReport.winner === "attacker" ? (
+                  <Trophy className="h-6 w-6 text-yellow-500" />
+                ) : (
                   <Shield className="h-6 w-6 text-blue-500" />
-                }
+                )}
                 <span className="text-xl font-bold">
-                  {selectedReport.winner === 'attacker' ? t('battle.victory', 'Sieg') : t('battle.defeat', 'Niederlage')}
+                  {selectedReport.winner === "attacker"
+                    ? t("battle.victory", "Sieg")
+                    : t("battle.defeat", "Niederlage")}
                 </span>
               </div>
               <div className="text-sm text-muted-foreground">
-                {getAttackTypeInfo(selectedReport.attackType).name} • {formatTime(selectedReport.timestamp)}
+                {getAttackTypeInfo(selectedReport.attackType).name} •{" "}
+                {formatTime(selectedReport.timestamp)}
               </div>
             </div>
 
@@ -169,19 +176,19 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BarChart3 className="h-5 w-5" />
-                  {t('screens.marchReports.factors.title', 'Kampffaktoren')}
+                  {t("screens.marchReports.factors.title", "Kampffaktoren")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {Object.entries(selectedReport.factors).map(([factor, value]) => {
                     const factorNames = {
-                      counter: t('screens.marchReports.factors.counter', 'Konter-Bonus'),
-                      wall: t('screens.marchReports.factors.wall', 'Mauer-Bonus'),
-                      moral: t('screens.marchReports.factors.moral', 'Moral'),
-                      tech: t('screens.marchReports.factors.tech', 'Technologie'),
-                      terrain: t('screens.marchReports.factors.terrain', 'Gelände'),
-                      variance: t('screens.marchReports.factors.variance', 'Glück')
+                      counter: t("screens.marchReports.factors.counter", "Konter-Bonus"),
+                      wall: t("screens.marchReports.factors.wall", "Mauer-Bonus"),
+                      moral: t("screens.marchReports.factors.moral", "Moral"),
+                      tech: t("screens.marchReports.factors.tech", "Technologie"),
+                      terrain: t("screens.marchReports.factors.terrain", "Gelände"),
+                      variance: t("screens.marchReports.factors.variance", "Glück"),
                     };
 
                     const isPositive = value > 0;
@@ -194,13 +201,16 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                         </span>
                         <div className="flex items-center gap-2">
                           <div className="w-24 bg-muted rounded-full h-2">
-                            <div 
-                              className={`h-2 rounded-full ${isPositive ? 'bg-green-500' : 'bg-red-500'}`}
+                            <div
+                              className={`h-2 rounded-full ${isPositive ? "bg-green-500" : "bg-red-500"}`}
                               style={{ width: `${Math.min(100, percentage)}%` }}
                             />
                           </div>
-                          <span className={`text-sm font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                            {isPositive ? '+' : ''}{percentage.toFixed(0)}%
+                          <span
+                            className={`text-sm font-medium ${isPositive ? "text-green-600" : "text-red-600"}`}
+                          >
+                            {isPositive ? "+" : ""}
+                            {percentage.toFixed(0)}%
                           </span>
                         </div>
                       </div>
@@ -214,20 +224,25 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
             <div className="grid grid-cols-2 gap-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">{t('battle.losses.attacker', 'Verluste Angreifer')}</CardTitle>
+                  <CardTitle className="text-lg">
+                    {t("battle.losses.attacker", "Verluste Angreifer")}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    {Object.entries(selectedReport.attackerLosses).map(([unitType, losses]) => (
-                      losses > 0 && (
-                        <div key={unitType} className="flex justify-between text-sm">
-                          <span className="capitalize">{unitType}</span>
-                          <span className="text-red-600">-{losses}</span>
-                        </div>
-                      )
-                    ))}
+                    {Object.entries(selectedReport.attackerLosses).map(
+                      ([unitType, losses]) =>
+                        losses > 0 && (
+                          <div key={unitType} className="flex justify-between text-sm">
+                            <span className="capitalize">{unitType}</span>
+                            <span className="text-red-600">-{losses}</span>
+                          </div>
+                        ),
+                    )}
                     {getTotalUnits(selectedReport.attackerLosses) === 0 && (
-                      <p className="text-sm text-muted-foreground">{t('screens.marchReports.noLosses', 'Keine Verluste')}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {t("screens.marchReports.noLosses", "Keine Verluste")}
+                      </p>
                     )}
                   </div>
                 </CardContent>
@@ -235,20 +250,25 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">{t('battle.losses.defender', 'Verluste Verteidiger')}</CardTitle>
+                  <CardTitle className="text-lg">
+                    {t("battle.losses.defender", "Verluste Verteidiger")}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    {Object.entries(selectedReport.defenderLosses).map(([unitType, losses]) => (
-                      losses > 0 && (
-                        <div key={unitType} className="flex justify-between text-sm">
-                          <span className="capitalize">{unitType}</span>
-                          <span className="text-red-600">-{losses}</span>
-                        </div>
-                      )
-                    ))}
+                    {Object.entries(selectedReport.defenderLosses).map(
+                      ([unitType, losses]) =>
+                        losses > 0 && (
+                          <div key={unitType} className="flex justify-between text-sm">
+                            <span className="capitalize">{unitType}</span>
+                            <span className="text-red-600">-{losses}</span>
+                          </div>
+                        ),
+                    )}
                     {getTotalUnits(selectedReport.defenderLosses) === 0 && (
-                      <p className="text-sm text-muted-foreground">{t('screens.marchReports.noLosses', 'Keine Verluste')}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {t("screens.marchReports.noLosses", "Keine Verluste")}
+                      </p>
                     )}
                   </div>
                 </CardContent>
@@ -266,18 +286,19 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-3 gap-4">
-                    {Object.entries(selectedReport.loot).map(([resource, amount]) => (
-                      amount > 0 && (
-                        <div key={resource} className="text-center p-3 bg-yellow-50 rounded-lg">
-                          <div className="text-lg font-bold text-yellow-600">
-                            {formatNumber(amount)}
+                    {Object.entries(selectedReport.loot).map(
+                      ([resource, amount]) =>
+                        amount > 0 && (
+                          <div key={resource} className="text-center p-3 bg-yellow-50 rounded-lg">
+                            <div className="text-lg font-bold text-yellow-600">
+                              {formatNumber(amount)}
+                            </div>
+                            <div className="text-xs text-muted-foreground capitalize">
+                              {resource}
+                            </div>
                           </div>
-                          <div className="text-xs text-muted-foreground capitalize">
-                            {resource}
-                          </div>
-                        </div>
-                      )
-                    ))}
+                        ),
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -319,21 +340,21 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                     {selectedReport.replay.map((phase, index) => (
                       <div key={index} className="border-l-2 border-muted pl-4">
                         <div className="flex items-center gap-2 mb-2">
-                            <Badge variant="outline">
-                            {t('screens.marchReports.phase', 'Phase')} {index + 1}: {phase.phase}
-                            </Badge>
+                          <Badge variant="outline">
+                            {t("screens.marchReports.phase", "Phase")} {index + 1}: {phase.phase}
+                          </Badge>
                         </div>
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
-                            <div className="font-medium">{t('battle.attacker', 'Angreifer')}</div>
+                            <div className="font-medium">{t("battle.attacker", "Angreifer")}</div>
                             <div className="text-muted-foreground">
-                              {t('screens.marchReports.damage', 'Schaden')}: {phase.damage.attacker}
+                              {t("screens.marchReports.damage", "Schaden")}: {phase.damage.attacker}
                             </div>
                           </div>
                           <div>
-                            <div className="font-medium">{t('battle.defender', 'Verteidiger')}</div>
+                            <div className="font-medium">{t("battle.defender", "Verteidiger")}</div>
                             <div className="text-muted-foreground">
-                              {t('screens.marchReports.damage', 'Schaden')}: {phase.damage.defender}
+                              {t("screens.marchReports.damage", "Schaden")}: {phase.damage.defender}
                             </div>
                           </div>
                         </div>
@@ -356,7 +377,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BarChart3 className="h-5 w-5" />
-            {t('screens.marchReports.stats.title', 'Marsch-Statistiken')}
+            {t("screens.marchReports.stats.title", "Marsch-Statistiken")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -384,7 +405,7 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-3 w-full">
           <TabsTrigger value="completed">
-            {t('screens.marchReports.tabs.completed', 'Abgeschlossen')}
+            {t("screens.marchReports.tabs.completed", "Abgeschlossen")}
             {completedMarches.length > 0 && (
               <Badge variant="secondary" className="ml-2 text-xs">
                 {completedMarches.length}
@@ -392,41 +413,50 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
             )}
           </TabsTrigger>
           <TabsTrigger value="returning">
-            {t('screens.marchReports.tabs.returning', 'Rückkehrend')}
+            {t("screens.marchReports.tabs.returning", "Rückkehrend")}
             {returningMarches.length > 0 && (
               <Badge variant="secondary" className="ml-2 text-xs">
                 {returningMarches.length}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="analysis">{t('screens.marchReports.tabs.analysis', 'Analyse')}</TabsTrigger>
+          <TabsTrigger value="analysis">
+            {t("screens.marchReports.tabs.analysis", "Analyse")}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="completed">
           <Card>
             <CardHeader>
-              <CardTitle>{t('screens.marchReports.completed.title', 'Abgeschlossene Märsche')}</CardTitle>
+              <CardTitle>
+                {t("screens.marchReports.completed.title", "Abgeschlossene Märsche")}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {completedMarches.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-2">📜</div>
                   <p className="text-muted-foreground">
-                    {t('screens.marchReports.completed.empty', 'Noch keine abgeschlossenen Märsche')}
+                    {t(
+                      "screens.marchReports.completed.empty",
+                      "Noch keine abgeschlossenen Märsche",
+                    )}
                   </p>
                 </div>
               ) : (
                 <ScrollArea className="h-[400px]">
                   <div className="space-y-3">
-                    {completedMarches.map(march => {
-                      const isSuccess = march.battleReport?.winner === 'attacker';
+                    {completedMarches.map((march) => {
+                      const isSuccess = march.battleReport?.winner === "attacker";
                       const info = getAttackTypeInfo(march.type);
 
                       return (
-                        <div 
-                          key={march.id} 
+                        <div
+                          key={march.id}
                           className="p-4 border rounded-lg space-y-3 cursor-pointer hover:bg-muted/50"
-                          onClick={() => march.battleReport && setSelectedReport(march.battleReport)}
+                          onClick={() =>
+                            march.battleReport && setSelectedReport(march.battleReport)
+                          }
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
@@ -452,8 +482,12 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
 
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
-                              <div className="text-muted-foreground">{t('screens.marchReports.completed.target', 'Ziel')}</div>
-                              <div>({march.targetVillage.x}|{march.targetVillage.y})</div>
+                              <div className="text-muted-foreground">
+                                {t("screens.marchReports.completed.target", "Ziel")}
+                              </div>
+                              <div>
+                                ({march.targetVillage.x}|{march.targetVillage.y})
+                              </div>
                               {march.targetVillage.player && (
                                 <div className="text-xs text-muted-foreground">
                                   {march.targetVillage.player}
@@ -461,23 +495,33 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                               )}
                             </div>
                             <div>
-                              <div className="text-muted-foreground">{t('screens.marchReports.completed.arrival', 'Ankunft')}</div>
+                              <div className="text-muted-foreground">
+                                {t("screens.marchReports.completed.arrival", "Ankunft")}
+                              </div>
                               <div>{formatTime(march.arrivalTime)}</div>
                             </div>
                           </div>
 
-                          {march.loot && Object.values(march.loot).some(amount => amount > 0) && (
+                          {march.loot && Object.values(march.loot).some((amount) => amount > 0) && (
                             <div className="flex items-center gap-2 p-2 bg-yellow-50 rounded">
                               <Coins className="h-4 w-4 text-yellow-600" />
                               <span className="text-sm font-medium">
-                                {t('screens.marchReports.loot', 'Beute')}: {formatNumber(Object.values(march.loot).reduce((sum, amount) => sum + amount, 0))}
+                                {t("screens.marchReports.loot", "Beute")}:{" "}
+                                {formatNumber(
+                                  Object.values(march.loot).reduce(
+                                    (sum, amount) => sum + amount,
+                                    0,
+                                  ),
+                                )}
                               </span>
                             </div>
                           )}
 
                           {march.notes && (
                             <div className="text-sm bg-muted p-2 rounded">
-                              <span className="font-medium">{t('screens.marchReports.notes', 'Notizen')}: </span>
+                              <span className="font-medium">
+                                {t("screens.marchReports.notes", "Notizen")}:{" "}
+                              </span>
                               {march.notes}
                             </div>
                           )}
@@ -494,51 +538,69 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
         <TabsContent value="returning">
           <Card>
             <CardHeader>
-              <CardTitle>{t('screens.marchReports.returning.title', 'Rückkehrende Truppen')}</CardTitle>
+              <CardTitle>
+                {t("screens.marchReports.returning.title", "Rückkehrende Truppen")}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {returningMarches.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-2">🏃‍♂️</div>
                   <p className="text-muted-foreground">
-                    {t('screens.marchReports.returning.empty', 'Keine rückkehrenden Truppen')}
+                    {t("screens.marchReports.returning.empty", "Keine rückkehrenden Truppen")}
                   </p>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {returningMarches.map(march => {
-                    const progress = march.returnTime ? 
-                      Math.min(100, ((Date.now() - march.arrivalTime) / (march.returnTime - march.arrivalTime)) * 100) : 
-                      0;
+                  {returningMarches.map((march) => {
+                    const progress = march.returnTime
+                      ? Math.min(
+                          100,
+                          ((Date.now() - march.arrivalTime) /
+                            (march.returnTime - march.arrivalTime)) *
+                            100,
+                        )
+                      : 0;
 
                     return (
                       <div key={march.id} className="p-4 border rounded-lg space-y-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Users className="h-4 w-4 text-blue-600" />
-                            <span className="font-medium">{t('screens.marchReports.returning.from', 'Rückkehr aus')} {march.targetVillage.name}</span>
+                            <span className="font-medium">
+                              {t("screens.marchReports.returning.from", "Rückkehr aus")}{" "}
+                              {march.targetVillage.name}
+                            </span>
                           </div>
                           <Badge variant="outline">
-                            {getTotalUnits(march.army)} {t('screens.marchReports.units', 'Einheiten')}
+                            {getTotalUnits(march.army)}{" "}
+                            {t("screens.marchReports.units", "Einheiten")}
                           </Badge>
                         </div>
 
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span>{t('screens.marchReports.progress', 'Fortschritt')}</span>
+                            <span>{t("screens.marchReports.progress", "Fortschritt")}</span>
                             <span>{progress.toFixed(0)}%</span>
                           </div>
                           <Progress value={progress} className="h-2" />
                           <div className="text-xs text-muted-foreground">
-                            {t('screens.marchReports.arrival', 'Ankunft')}: {march.returnTime ? formatTime(march.returnTime) : t('screens.marchReports.unknown', 'Unbekannt')}
+                            {t("screens.marchReports.arrival", "Ankunft")}:{" "}
+                            {march.returnTime
+                              ? formatTime(march.returnTime)
+                              : t("screens.marchReports.unknown", "Unbekannt")}
                           </div>
                         </div>
 
-                        {march.loot && Object.values(march.loot).some(amount => amount > 0) && (
+                        {march.loot && Object.values(march.loot).some((amount) => amount > 0) && (
                           <div className="flex items-center gap-2 p-2 bg-yellow-50 rounded">
                             <Coins className="h-4 w-4 text-yellow-600" />
                             <span className="text-sm font-medium">
-                              {t('screens.marchReports.transporting', 'Transportiert')}: {formatNumber(Object.values(march.loot).reduce((sum, amount) => sum + amount, 0))} {t('screens.resources.resources', 'Ressourcen')}
+                              {t("screens.marchReports.transporting", "Transportiert")}:{" "}
+                              {formatNumber(
+                                Object.values(march.loot).reduce((sum, amount) => sum + amount, 0),
+                              )}{" "}
+                              {t("screens.resources.resources", "Ressourcen")}
                             </span>
                           </div>
                         )}
@@ -569,19 +631,19 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                       <div className="flex justify-between text-sm">
                         <span>Plünderungen</span>
                         <span className="text-green-600">
-                          {successfulMarches.filter(m => m.type === 'raid').length}
+                          {successfulMarches.filter((m) => m.type === "raid").length}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Belagerungen</span>
                         <span className="text-green-600">
-                          {successfulMarches.filter(m => m.type === 'siege').length}
+                          {successfulMarches.filter((m) => m.type === "siege").length}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Eroberungen</span>
                         <span className="text-green-600">
-                          {successfulMarches.filter(m => m.type === 'conquer').length}
+                          {successfulMarches.filter((m) => m.type === "conquer").length}
                         </span>
                       </div>
                     </div>
@@ -593,19 +655,19 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                       <div className="flex justify-between text-sm">
                         <span>Plünderungen</span>
                         <span className="text-red-600">
-                          {failedMarches.filter(m => m.type === 'raid').length}
+                          {failedMarches.filter((m) => m.type === "raid").length}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Belagerungen</span>
                         <span className="text-red-600">
-                          {failedMarches.filter(m => m.type === 'siege').length}
+                          {failedMarches.filter((m) => m.type === "siege").length}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Eroberungen</span>
                         <span className="text-red-600">
-                          {failedMarches.filter(m => m.type === 'conquer').length}
+                          {failedMarches.filter((m) => m.type === "conquer").length}
                         </span>
                       </div>
                     </div>
@@ -642,7 +704,8 @@ export function MarchReportsScreen({ marches, battleReports }: MarchReportsScree
                       <div>
                         <div className="font-medium text-red-800">Verbesserung nötig</div>
                         <div className="text-sm text-red-600">
-                          Deine Erfolgsquote liegt bei nur {winRate.toFixed(0)}%. Überprüfe deine Strategie.
+                          Deine Erfolgsquote liegt bei nur {winRate.toFixed(0)}%. Überprüfe deine
+                          Strategie.
                         </div>
                       </div>
                     </div>

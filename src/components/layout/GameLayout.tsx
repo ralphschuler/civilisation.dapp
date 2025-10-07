@@ -13,9 +13,7 @@ export function GameLayout() {
     return null;
   }
 
-  const storageCapacity = calculateStorageCapacity(
-    village.buildings.storage?.level || 1,
-  );
+  const storageCapacity = calculateStorageCapacity(village.buildings.storage?.level || 1);
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto">

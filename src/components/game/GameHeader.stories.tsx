@@ -79,4 +79,3 @@ export const WithHandlers: Story = {
     onNotificationsClick: () => alert("Notifications clicked"),
   },
 };
-

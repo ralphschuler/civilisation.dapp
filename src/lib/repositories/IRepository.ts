@@ -16,8 +16,8 @@ import {
   VillageInfo,
   BuildingId,
   UnitId,
-} from '@/types/game';
-import { Report } from '@/types/reports';
+} from "@/types/game";
+import { Report } from "@/types/reports";
 
 /**
  * Village Repository - Manages player villages
@@ -47,7 +47,7 @@ export interface IGameStateRepository {
 export interface IMarchRepository {
   getMarches(): Promise<March[]>;
   getMarch(marchId: string): Promise<March | null>;
-  createMarch(march: Omit<March, 'id'>): Promise<March>;
+  createMarch(march: Omit<March, "id">): Promise<March>;
   cancelMarch(marchId: string): Promise<void>;
   updateMarch(march: March): Promise<void>;
   getActiveMarchesForVillage(villageId: string): Promise<March[]>;
@@ -59,7 +59,7 @@ export interface IMarchRepository {
 export interface IMarchPresetRepository {
   getPresets(): Promise<MarchPreset[]>;
   getPreset(presetId: string): Promise<MarchPreset | null>;
-  createPreset(preset: Omit<MarchPreset, 'id'>): Promise<MarchPreset>;
+  createPreset(preset: Omit<MarchPreset, "id">): Promise<MarchPreset>;
   updatePreset(preset: MarchPreset): Promise<void>;
   deletePreset(presetId: string): Promise<void>;
 }
@@ -70,7 +70,7 @@ export interface IMarchPresetRepository {
 export interface IReportRepository {
   getReports(): Promise<Report[]>;
   getReport(reportId: string): Promise<Report | null>;
-  createReport(report: Omit<Report, 'id'>): Promise<Report>;
+  createReport(report: Omit<Report, "id">): Promise<Report>;
   markReportAsRead(reportId: string): Promise<void>;
   deleteReport(reportId: string): Promise<void>;
   getUnreadCount(): Promise<number>;
@@ -86,7 +86,7 @@ export interface IPlayerStatsRepository {
   incrementBattlesLost(): Promise<void>;
   incrementBuildingsUpgraded(): Promise<void>;
   incrementUnitsTrained(count: number): Promise<void>;
-  addResourcesGathered(resources: Partial<PlayerStats['totalResourcesGathered']>): Promise<void>;
+  addResourcesGathered(resources: Partial<PlayerStats["totalResourcesGathered"]>): Promise<void>;
 }
 
 /**
@@ -97,8 +97,11 @@ export interface ITechTreeRepository {
   updateTechTree(techTree: TechTree): Promise<void>;
   unlockBuilding(buildingId: BuildingId): Promise<void>;
   unlockUnit(unitId: UnitId): Promise<void>;
-  upgradeSmithyLine(line: 'inf' | 'cav' | 'ranged' | 'siege', stat: 'attack' | 'defense'): Promise<void>;
-  advanceEra(era: TechTree['era']): Promise<void>;
+  upgradeSmithyLine(
+    line: "inf" | "cav" | "ranged" | "siege",
+    stat: "attack" | "defense",
+  ): Promise<void>;
+  advanceEra(era: TechTree["era"]): Promise<void>;
 }
 
 /**

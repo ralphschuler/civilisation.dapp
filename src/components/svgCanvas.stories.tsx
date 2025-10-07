@@ -65,14 +65,19 @@ export const Playground: Story = {
     });
 
     return (
-      <div style={{ height: "60vh", border: "1px solid #e5e7eb", borderRadius: 8, overflow: "hidden" }}>
+      <div
+        style={{ height: "60vh", border: "1px solid #e5e7eb", borderRadius: 8, overflow: "hidden" }}
+      >
         <style>
           {`
           /* Make the inner SVG fill its container */
           div[data-testid='svg-canvas-wrapper'] svg[aria-label='SVG Canvas'] { width: 100%; height: 100%; display: block; }
         `}
         </style>
-        <div data-testid="svg-canvas-wrapper" style={{ width: "100%", height: "100%", background: "#fafafa" }}>
+        <div
+          data-testid="svg-canvas-wrapper"
+          style={{ width: "100%", height: "100%", background: "#fafafa" }}
+        >
           <SvgCanvas>
             {args.showGrid && <Grid />}
             {args.showAxes && <Axes />}
@@ -101,11 +106,16 @@ export const RandomNodes: Story = {
     });
 
     return (
-      <div style={{ height: "50vh", border: "1px solid #e5e7eb", borderRadius: 8, overflow: "hidden" }}>
+      <div
+        style={{ height: "50vh", border: "1px solid #e5e7eb", borderRadius: 8, overflow: "hidden" }}
+      >
         <style>
           {`div[data-testid='svg-canvas-wrapper'] svg[aria-label='SVG Canvas'] { width: 100%; height: 100%; display: block; }`}
         </style>
-        <div data-testid="svg-canvas-wrapper" style={{ width: "100%", height: "100%", background: "#ffffff" }}>
+        <div
+          data-testid="svg-canvas-wrapper"
+          style={{ width: "100%", height: "100%", background: "#ffffff" }}
+        >
           <SvgCanvas>
             {args.showAxes && <Axes />}
             {nodes}

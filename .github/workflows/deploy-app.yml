@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'GitHub environment to deploy the app to'
+        description: "GitHub environment to deploy the app to"
         required: true
         type: choice
         options:
