@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#14173a" />
+      <stop offset="100%" stop-color="#2b2f77" />
+    </linearGradient>
+    <linearGradient id="ground" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#1e202f" />
+      <stop offset="100%" stop-color="#0f1018" />
+    </linearGradient>
+    <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f0d39d" />
+      <stop offset="100%" stop-color="#d8b36f" />
+    </linearGradient>
+    <radialGradient id="beam" cx="0.5" cy="1" r="0.7">
+      <stop offset="0%" stop-color="#00e0ff" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#00e0ff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#sky)" />
+  <g opacity="0.6">
+    <path d="M48 196c24-28 52-44 80-44s56 16 80 44" fill="none" stroke="#00e0ff" stroke-width="2" stroke-dasharray="6 6" />
+  </g>
+  <path d="M0 196h256v60H0z" fill="url(#ground)" />
+  <g transform="translate(64 64)">
+    <rect x="48" y="84" width="32" height="44" fill="#2b2f77" stroke="#00e0ff" stroke-width="2" />
+    <path d="M32 116h64v44H32z" fill="#1a1d35" stroke="#00c4e3" stroke-width="2" />
+    <path d="M16 108h96v8H16z" fill="#d8b36f" opacity="0.75" />
+    <path d="M32 52h64v64H32z" fill="#232649" stroke="#3b3f7f" stroke-width="2" />
+    <path d="M48 24h32v28H48z" fill="#20244a" stroke="#4c5193" stroke-width="2" />
+    <path d="M64 0l28 24H36z" fill="url(#gold)" />
+    <path d="M32 44h64" stroke="#00e0ff" stroke-width="3" opacity="0.55" />
+    <g stroke="#d8b36f" stroke-width="4" stroke-linecap="round">
+      <path d="M16 148h96" />
+      <path d="M40 160h48" />
+    </g>
+    <g stroke="#00e0ff" stroke-width="2" opacity="0.4">
+      <path d="M64 24v96" stroke-dasharray="4 4" />
+      <path d="M48 64h32" />
+      <path d="M40 76h48" />
+    </g>
+  </g>
+  <path d="M128 64l64 132" stroke="#00e0ff" stroke-width="3" stroke-opacity="0.35" stroke-dasharray="8 10" />
+  <path d="M128 64l-64 132" stroke="#00e0ff" stroke-width="3" stroke-opacity="0.35" stroke-dasharray="8 10" />
+  <ellipse cx="128" cy="72" rx="52" ry="44" fill="url(#beam)" opacity="0.65" />
+  <path d="M80 212h96" stroke="#f0d39d" stroke-width="6" stroke-linecap="round" />
+  <text x="128" y="232" text-anchor="middle" font-family="'Cinzel', serif" font-size="34" fill="#f0d39d">CIVIL</text>
+</svg>

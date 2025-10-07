@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="bgAlliance" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#10132c" />
+      <stop offset="100%" stop-color="#2b2f77" />
+    </linearGradient>
+    <linearGradient id="banner" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#d8b36f" />
+      <stop offset="100%" stop-color="#8c6a2f" />
+    </linearGradient>
+    <radialGradient id="centerGlow" cx="0.5" cy="0.6" r="0.6">
+      <stop offset="0%" stop-color="#00e0ff" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#00e0ff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bgAlliance)" />
+  <circle cx="640" cy="400" r="320" fill="url(#centerGlow)" />
+  <g transform="translate(160 200)" fill="#1a1d3e" opacity="0.8">
+    <path d="M0 280l160-200 80 120 120-160 120 200 120-180 120 200 120-220 120 160 80-120 120 200 80-80 40 180H0z" />
+  </g>
+  <g transform="translate(160 240)" fill="#232649">
+    <path d="M0 240l140-180 80 120 120-160 120 200 120-180 120 200 120-220 120 160 80-120 120 200 80-80 40 160H0z" />
+  </g>
+  <g transform="translate(160 220)">
+    <path d="M120 200h80v200h-80z" fill="#101326" stroke="#d8b36f" stroke-width="6" />
+    <path d="M120 200l40-80 40 80z" fill="url(#banner)" />
+    <path d="M920 200h80v200h-80z" fill="#101326" stroke="#d8b36f" stroke-width="6" />
+    <path d="M920 200l40-80 40 80z" fill="url(#banner)" />
+  </g>
+  <g transform="translate(160 220)" stroke="#00e0ff" stroke-width="3" opacity="0.55">
+    <path d="M120 320h880" />
+    <path d="M180 260l760 120" />
+    <path d="M200 360l720-120" />
+  </g>
+  <g transform="translate(160 220)" fill="#d8b36f">
+    <circle cx="120" cy="320" r="14" />
+    <circle cx="440" cy="360" r="14" />
+    <circle cx="800" cy="280" r="14" />
+    <circle cx="1000" cy="320" r="14" />
+  </g>
+  <text x="640" y="144" font-family="'Cinzel', serif" font-size="72" fill="#f0d39d" text-anchor="middle">Epic Alliances</text>
+  <text x="640" y="196" font-family="'Montserrat', sans-serif" font-size="30" fill="#00e0ff" text-anchor="middle">Unite or be conquered.</text>
+  <text x="640" y="248" font-family="'Montserrat', sans-serif" font-size="22" fill="#f0d39d" text-anchor="middle">Banner-waving armies merging under one flag.</text>
+</svg>
