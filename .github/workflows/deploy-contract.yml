@@ -1,8 +1,8 @@
-name: Deploy Contracts
+name: Deploy Contract
 
 on:
   release:
-    types: [published, released]
+    types: [released, prereleased]
   workflow_dispatch:
     inputs:
       environment:
@@ -19,7 +19,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: deploy-contracts-${{ github.event_name == 'workflow_dispatch' && inputs.environment || github.event_name == 'release' && github.event.release.prerelease && 'testnet' || 'mainnet' }}
+  group: deploy-contract-${{ github.event_name == 'workflow_dispatch' && inputs.environment || github.event_name == 'release' && github.event.release.prerelease && 'testnet' || 'mainnet' }}
   cancel-in-progress: false
 
 jobs:

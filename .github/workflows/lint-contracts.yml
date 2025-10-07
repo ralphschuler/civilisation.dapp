@@ -1,27 +1,18 @@
-name: Lint App and Contracts
+name: Lint Contracts
 
 on:
   push:
-    branches: [main]
     paths:
-      - "src/**"
-      - "vite.config.*"
-      - "eslint.config.*"
-      - "package.json"
-      - "bun.lockb"
       - "contracts/**"
+      - "package.json"
+      - "bun.lock"
       - ".solhint.json"
-      - ".prettierrc*"
   pull_request:
     paths:
-      - "src/**"
-      - "vite.config.*"
-      - "eslint.config.*"
-      - "package.json"
-      - "bun.lockb"
       - "contracts/**"
+      - "package.json"
+      - "bun.lock"
       - ".solhint.json"
-      - ".prettierrc*"
   workflow_dispatch:
 
 jobs:
@@ -40,5 +31,5 @@ jobs:
       - name: Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: Run Lint Suite
-        run: bun run lint
+      - name: Run Solhint
+        run: bun run lint:sol

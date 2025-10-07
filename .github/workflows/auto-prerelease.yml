@@ -1,4 +1,4 @@
-name: Create Pre-release
+name: Auto Prerelease
 
 on:
   push:
