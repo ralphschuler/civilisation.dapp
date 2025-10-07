@@ -20,7 +20,7 @@
     "format:fix": "prettier --log-level warn --write .",
     "test:web": "vitest run --passWithNoTests",
     "test:contracts": "cd contracts && forge test",
-    "test": "bun run test:web; WEB_EXIT=$?; bun run test:contracts; CONTRACTS_EXIT=$?; exit $((WEB_EXIT || CONTRACTS_EXIT))",
+    "test": "node scripts/test.js",
     "prepare": "husky"
   },
   "dependencies": {
