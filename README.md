@@ -26,8 +26,7 @@ The project is organized as follows:
 
 ### Codespaces & Dev Containers
 
-Launch the repository inside GitHub Codespaces or VS Code with the Dev Containers extension to use the bundled environment unde
-r `.devcontainer/`. It provisions Bun, Node.js 20, and Foundry, installs dependencies automatically, and exposes the Vite (`5173`)
+Launch the repository inside GitHub Codespaces or VS Code with the Dev Containers extension to use the bundled environment under `.devcontainer/`. It provisions Bun, Node.js 20, and Foundry, installs dependencies automatically, and exposes the Vite (`5173`)
 and Storybook (`6006`) ports.
 
 ### Manual setup
