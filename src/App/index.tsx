@@ -27,9 +27,14 @@ import type { SupportedResourceKey } from "@/data/resourceIds";
 import { WalletConnectScreen } from "@/components/screens/WalletConnectScreen";
 import { NotFoundScreen } from "@/components/screens/NotFoundScreen";
 import type { March, MarchPreset, Village } from "@/types/game";
-import { useGameStore, useVillageStore, useMarchStore, usePlayerStatsStore } from "@/stores";
 import { ProfileScreen } from "@/components/screens/ProfileScreen";
 import { NotificationsScreen } from "@/components/screens/NotificationsScreen";
+import {
+  useGameStore,
+  useVillageStore,
+  useMarchStore,
+  usePlayerStatsStore,
+} from "@/stores";
 
 function AppContent() {
   const navigate = useNavigate();
@@ -37,6 +42,9 @@ function AppContent() {
   const village = useVillageStore((state) => state.village);
   const upgradeBuilding = useVillageStore((state) => state.upgradeBuilding);
   const collectResources = useVillageStore((state) => state.collectResources);
+  const applyCollectedResources = useVillageStore(
+    (state) => state.applyCollectedResources,
+  );
 
   const selectedBuilding = useGameStore((state) => state.selectedBuilding);
   const setSelectedBuilding = useGameStore((state) => state.setSelectedBuilding);
@@ -146,11 +154,42 @@ function AppContent() {
   const handleCollectResources = useCallback(
     (resourceType?: Parameters<typeof collectResources>[0]) => {
       if (isResourceFacetEnabled) {
-        if (resourceType && resolveOnChainResourceKey(resourceType)) {
-          void collectResourceOnChain(resourceType as SupportedResourceKey);
-        } else {
-          void collectAllOnChain();
-        }
+        void (async () => {
+          if (resourceType && resolveOnChainResourceKey(resourceType)) {
+            const collectedAmount = onChainUncollected[resourceType] ?? 0;
+
+            await collectResourceOnChain(resourceType);
+
+            if (collectedAmount > 0) {
+              await applyCollectedResources({
+                [resourceType]: collectedAmount,
+              });
+            }
+            return;
+          }
+
+          const collectedResources: Partial<Village["uncollectedResources"]> = {};
+
+          (Object.keys(onChainUncollected) as Array<
+            keyof Village["uncollectedResources"]
+          >).forEach((key) => {
+            if (!resolveOnChainResourceKey(key)) {
+              return;
+            }
+
+            const amount = onChainUncollected[key] ?? 0;
+            if (amount > 0) {
+              collectedResources[key] = amount;
+            }
+          });
+
+          await collectAllOnChain();
+
+          if (Object.keys(collectedResources).length > 0) {
+            await applyCollectedResources(collectedResources);
+          }
+        })();
+
         return;
       }
 
@@ -161,7 +200,9 @@ function AppContent() {
       collectResourceOnChain,
       collectResources,
       isResourceFacetEnabled,
+      onChainUncollected,
       resolveOnChainResourceKey,
+      applyCollectedResources,
     ],
   );
 

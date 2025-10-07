@@ -11,7 +11,7 @@ on:
       - "bun.lockb"
       - "contracts/**"
       - ".solhint.json"
-      - ".prettier*"
+      - ".prettierrc*"
   pull_request:
     paths:
       - "src/**"
@@ -21,7 +21,7 @@ on:
       - "bun.lockb"
       - "contracts/**"
       - ".solhint.json"
-      - ".prettier*"
+      - ".prettierrc*"
   workflow_dispatch:
 
 jobs:
