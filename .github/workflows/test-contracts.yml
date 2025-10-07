@@ -1,0 +1,36 @@
+name: Test Smart Contracts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "contracts/**"
+      - "foundry.toml"
+      - "foundry.lock"
+      - ".github/workflows/test-contracts.yml"
+  pull_request:
+    paths:
+      - "contracts/**"
+      - "foundry.toml"
+      - "foundry.lock"
+      - ".github/workflows/test-contracts.yml"
+  workflow_dispatch:
+
+jobs:
+  test-contracts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Run Forge Tests
+        working-directory: contracts
+        run: forge test
