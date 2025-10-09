@@ -16,8 +16,6 @@
         "vscode": {
             "extensions": [
                 "ms-vscode.remote-containers",
-                "rust-lang.rust-analyzer",
-                "tamasfe.even-better-toml",
                 "JuanBlanco.solidity"
             ]
         }
