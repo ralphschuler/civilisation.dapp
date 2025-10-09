@@ -2,6 +2,19 @@
 
 This guide explains how to install dependencies, run the app locally, execute contract tests, and build production artefacts.
 
+## Dev container (recommended)
+
+The repository ships with a [Development Container](https://containers.dev/) configuration under `.devcontainer/` that provides Bun, Node.js 20, and Foundry pre-installed. Launching the project in GitHub Codespaces or VS Code with the Dev Container
+extension automatically:
+extension automatically:
+
+- Installs frontend dependencies via `bun install`.
+- Fetches Foundry libraries inside `contracts/` with `forge install`.
+- Exposes common ports (`5173` for Vite, `6006` for Storybook).
+- Adds editor extensions for Bun, Solidity, ESLint, and Prettier.
+
+Use this environment to avoid manual toolchain setup. The sections below outline the same steps for local machines without Codespaces support.
+
 ## Prerequisites
 
 - **Node.js alternative**: [Bun](https://bun.sh/) v1.0 or newer.

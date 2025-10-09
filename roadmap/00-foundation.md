@@ -11,6 +11,7 @@ Establish a shared understanding of the current implementation, surface missing 
 - On-chain resource collection bridge implemented through `useResourceGeneration`, integrating Worldchain wallet addresses and `resourceFacet` ABI calls.
 - Zustand stores manage village, marches, player stats, and tech progression, backed by repository abstractions for persistence.
 - Continuous integration now runs dedicated `test-app` and `test-contracts` workflows covering the Vitest and Foundry suites for the React app and smart contracts.
+- A pre-configured Development Container ensures Bun, Node.js, and Foundry parity across local environments and Codespaces, lowering onboarding friction.
 
 ## Expected Outcomes
 
