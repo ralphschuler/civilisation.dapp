@@ -23,7 +23,7 @@
         }
     },
     "mounts": [
-        "source=${localEnv:HOME}/.foundry,target=/home/vscode/.foundry,type=bind,consistency=cached"
+        "source=${localEnv:HOME}/.foundry,target=/home/node/.foundry,type=bind,consistency=cached"
     ],
     "runArgs": [
         "--cap-add=SYS_PTRACE",
