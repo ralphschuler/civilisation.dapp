@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo ">> Installing Bun ${BUN_VERSION}, Foundry ${FOUNDRY_VERSION}, Codex CLI"
+echo ">> Installing Bun ${BUN_VERSION}, Foundry ${FOUNDRY_VERSION}"
 
 # --- Bun (pin exact version)
 if ! command -v bun >/dev/null 2>&1; then
