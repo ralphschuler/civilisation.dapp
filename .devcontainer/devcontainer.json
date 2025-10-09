@@ -5,16 +5,13 @@
         "args": {
             "NODE_VERSION": "22",
             "BUN_VERSION": "1.1.34",
-            "FOUNDRY_VERSION": "stable"   
+            "FOUNDRY_VERSION": "stable",
+            "USERNAME": "node"
         }
     },
-    "remoteUser": "vscode",
+    "remoteUser": "node",
     "features": {},
     "postCreateCommand": "bash /usr/local/bin/devcontainer-postcreate.sh",
-    "containerEnv": {
-        // Codex will prompt you to auth on first run; alternatively set API key
-        // "OPENAI_API_KEY": "sk-..."
-    },
     "customizations": {
         "vscode": {
             "extensions": [
