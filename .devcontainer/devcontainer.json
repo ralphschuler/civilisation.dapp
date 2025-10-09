@@ -1,49 +1,30 @@
 {
-  "name": "Civilisation DApp",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
-  "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "20"
+    "name": "debian-bun-foundry",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "NODE_VERSION": "22",
+            "BUN_VERSION": "1.1.34",
+            "FOUNDRY_VERSION": "stable",
+            "USERNAME": "node"
+        }
     },
-    "ghcr.io/devcontainers/features/bun:1": {
-      "version": "latest"
+    "remoteUser": "node",
+    "features": {},
+    "postCreateCommand": "bash /usr/local/bin/devcontainer-postcreate.sh",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.remote-containers",
+                "JuanBlanco.solidity"
+            ]
+        }
     },
-    "ghcr.io/devcontainers/features/foundry:1": {
-      "version": "latest"
-    },
-    "ghcr.io/devcontainers/features/git:1": {}
-  },
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "oven-sh.bun-vscode",
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "tintinweb.solidity-visual-auditor",
-        "JuanBlanco.solidity"
-      ],
-      "settings": {
-        "editor.formatOnSave": true,
-        "solidity.compileUsingRemoteVersion": "v0.8.23",
-        "eslint.workingDirectories": [
-          {
-            "mode": "auto"
-          }
-        ]
-      }
-    }
-  },
-  "remoteUser": "vscode",
-  "postCreateCommand": "bun install && (cd contracts && forge install)",
-  "updateContentCommand": "bun install",
-  "forwardPorts": [5173, 6006],
-  "portsAttributes": {
-    "5173": {
-      "label": "Vite Dev Server"
-    },
-    "6006": {
-      "label": "Storybook"
-    }
-  },
-  "mounts": ["source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"]
+    "mounts": [
+        "source=${localEnv:HOME}/.foundry,target=/home/node/.foundry,type=bind,consistency=cached"
+    ],
+    "runArgs": [
+        "--cap-add=SYS_PTRACE",
+        "--security-opt", "seccomp=unconfined"
+    ]
 }
