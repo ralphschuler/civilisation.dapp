@@ -41,7 +41,7 @@
     "deploy:worldchain:mainnet": "CONFIRM_MAINNET_DEPLOY=yes node scripts/deploy-worldchain-mainnet.mjs --send"
   },
   "devDependencies": {
-    "@axe-core/playwright": "4.11.0",
+    "@axe-core/playwright": "4.13.0",
     "@ethereumjs/block": "10.1.2",
     "@ethereumjs/util": "10.1.2",
     "@ethereumjs/vm": "10.1.2",
