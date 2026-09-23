@@ -175,7 +175,7 @@ jobs:
           done
           test -n "${payload:-}"
           node -e 'const value = JSON.parse(process.argv[1]); if (value.runtimeVerification?.status !== "verified") process.exit(1)' "$payload"
-      - uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
+      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
